@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import shutil
 import sys
 from pathlib import Path
@@ -11,7 +10,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from memory_nav import load_dotenv
+from memory_nav import get_env_value, load_dotenv
 from memory_nav.data.pano_visualization import (
     build_dot,
     build_floor_overview_svg,
@@ -130,7 +129,7 @@ def copy_viewer(output_dir: Path) -> None:
 
 
 def write_env_js(output_dir: Path) -> None:
-    api_key = os.environ.get("GMAPS_API_KEY", "").strip()
+    api_key = get_env_value("GMAPS_KEY", "NAV_GMAPS_KEY", "GMAPS_API_KEY")
     env_path = output_dir / ".env.js"
     if not api_key:
         env_path.unlink(missing_ok=True)

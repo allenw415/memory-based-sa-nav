@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import os
 from pathlib import Path
 
 from ._common import (
@@ -20,6 +19,7 @@ from memory_nav import (  # noqa: E402
     MemoryImageRetriever,
     MemoryRoomLocalizer,
     PassageAlignmentAdvisor,
+    get_env_value,
     load_dotenv,
     resolve_model_environment,
 )
@@ -110,7 +110,8 @@ def main() -> int:
         room_graph=room_graph,
         memory_retriever=retriever,
         model=args.llm_model,
-        api_key=args.llm_api_key or os.environ.get("ST_NAV_API_KEY"),
+        api_key=args.llm_api_key
+        or get_env_value("NAV_KEY", "NAV_API_KEY", "ST_NAV_API_KEY", "OPENAI_API_KEY"),
         api_base=args.llm_api_base,
         api_kind=args.llm_api_kind,
         request_timeout=args.llm_timeout,

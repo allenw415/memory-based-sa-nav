@@ -19,7 +19,7 @@ HTTP_RETRY_BACKOFF_SECONDS = 1.0
 
 
 def resolve_api_kind(api_kind: str | None = None) -> str:
-    value = (api_kind or os.environ.get("ST_NAV_API_KIND") or "responses").strip().lower()
+    value = (api_kind or _env_value("NAV_API", "NAV_API_KIND", "ST_NAV_API_KIND") or "responses").strip().lower()
     if value not in SUPPORTED_API_KINDS:
         supported = ", ".join(sorted(SUPPORTED_API_KINDS))
         raise ValueError(f"Unsupported API kind: {value}. Expected one of: {supported}.")
@@ -183,13 +183,30 @@ class ModelResponseClient:
         self.num_ctx = num_ctx
         self.temperature = temperature
         self.response_client = response_client
-        self.max_http_retries = max(1, int(max_http_retries or _parse_int_env("ST_NAV_MAX_HTTP_RETRIES", MAX_HTTP_RETRIES)))
+        self.max_http_retries = max(
+            1,
+            int(
+                max_http_retries
+                or _parse_int_env(
+                    MAX_HTTP_RETRIES,
+                    "NAV_HTTP_RETRIES",
+                    "NAV_MAX_HTTP_RETRIES",
+                    "ST_NAV_MAX_HTTP_RETRIES",
+                )
+            ),
+        )
         self.retry_backoff_seconds = max(
             0.0,
-            float(retry_backoff_seconds if retry_backoff_seconds is not None else _parse_float_env(
-                "ST_NAV_HTTP_RETRY_BACKOFF_SECONDS",
-                HTTP_RETRY_BACKOFF_SECONDS,
-            )),
+            float(
+                retry_backoff_seconds
+                if retry_backoff_seconds is not None
+                else _parse_float_env(
+                    HTTP_RETRY_BACKOFF_SECONDS,
+                    "NAV_HTTP_BACKOFF",
+                    "NAV_HTTP_RETRY_BACKOFF_SECONDS",
+                    "ST_NAV_HTTP_RETRY_BACKOFF_SECONDS",
+                )
+            ),
         )
 
     def is_configured(self) -> bool:
@@ -201,7 +218,10 @@ class ModelResponseClient:
 
         if self.provider in {"gemini", "gemini_api", "google_gemma_api"}:
             if not self.api_key:
-                raise RuntimeError("Missing GEMINI_API_KEY, GOOGLE_API_KEY, or ST_NAV_API_KEY for Gemini API provider.")
+                raise RuntimeError(
+                    "Missing Gemini API key. Set NAV_GEMINI_KEY, NAV_KEY, GEMINI_API_KEY, "
+                    "GOOGLE_API_KEY, or ST_NAV_API_KEY."
+                )
             endpoint = self._gemini_endpoint(request_body)
             payload = self._responses_to_gemini_generate_content_payload(request_body)
         elif self.provider == "ollama":
@@ -588,9 +608,17 @@ def _format_http_error_detail(body: str | None) -> str:
     return f" Response body: {compact}"
 
 
-def _parse_int_env(name: str, default: int) -> int:
-    value = os.environ.get(name)
-    if value is None or not value.strip():
+def _env_value(*names: str) -> str | None:
+    for name in names:
+        value = os.environ.get(name)
+        if value is not None and value.strip():
+            return value.strip()
+    return None
+
+
+def _parse_int_env(default: int, *names: str) -> int:
+    value = _env_value(*names)
+    if value is None:
         return default
     try:
         return int(value)
@@ -598,9 +626,9 @@ def _parse_int_env(name: str, default: int) -> int:
         return default
 
 
-def _parse_float_env(name: str, default: float) -> float:
-    value = os.environ.get(name)
-    if value is None or not value.strip():
+def _parse_float_env(default: float, *names: str) -> float:
+    value = _env_value(*names)
+    if value is None:
         return default
     try:
         return float(value)

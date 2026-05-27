@@ -1,4 +1,4 @@
-from .env import ModelEnvironment, load_dotenv, resolve_model_environment, resolve_task_num_ctx
+from .env import ModelEnvironment, get_env_value, load_dotenv, resolve_model_environment, resolve_task_num_ctx
 from .model_client import (
     ModelResponseClient,
     extract_output_text,
@@ -18,6 +18,7 @@ __all__ = [
     "TaskSpec",
     "compact_visual_profile",
     "extract_output_text",
+    "get_env_value",
     "load_dotenv",
     "parse_json_output",
     "parse_json_text",

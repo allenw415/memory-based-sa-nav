@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import random
 import sys
 from pathlib import Path
@@ -11,7 +10,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from memory_nav import PanoramaRenderer, load_dotenv
+from memory_nav import PanoramaRenderer, get_env_value, load_dotenv
 from memory_nav.data.memory_localization import (
     DEFAULT_SIGLIP2_MODEL,
     deduplicate_candidates_by_pano,
@@ -31,8 +30,8 @@ from memory_nav.data.memory_localization import (
 )
 
 
-
 load_dotenv(PROJECT_ROOT / ".env")
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run image-memory localization for a single pano id.")
@@ -48,7 +47,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--embedding-model", default=DEFAULT_SIGLIP2_MODEL)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--batch-size", type=int, default=8)
-    parser.add_argument("--render-api-key", default=os.environ.get("GMAPS_API_KEY"))
+    parser.add_argument(
+        "--render-api-key",
+        default=get_env_value("GMAPS_KEY", "NAV_GMAPS_KEY", "GMAPS_API_KEY"),
+    )
     parser.add_argument("--render-output-dir", default="renders/room_grounding")
     parser.add_argument("--render-seed", type=int, default=0)
     parser.add_argument("--heading-mode", choices=["museum", "cardinal", "grounding", "graph"], default="museum")
@@ -90,7 +92,7 @@ def ensure_manifest(
     height: int,
 ) -> Path:
     if not render_api_key:
-        raise RuntimeError("Missing GMAPS_API_KEY to render pano views.")
+        raise RuntimeError("Missing GMAPS_KEY or GMAPS_API_KEY to render pano views.")
     manifest = renderer.render(
         pano_id=pano_id,
         api_key=render_api_key,

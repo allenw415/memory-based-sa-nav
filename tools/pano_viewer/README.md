@@ -9,7 +9,7 @@ python3 tools/pano_viewer/export.py
 ```
 
 The exporter copies viewer assets from `tools/pano_viewer/web`. It also reads
-`GMAPS_API_KEY` from the project `.env` and writes a generated `.env.js` next to
+`GMAPS_KEY` from the project `.env` and writes a generated `.env.js` next to
 the exported viewer files so the Street View panel can load.
 
 Serve the copied viewer:
@@ -25,7 +25,7 @@ The export writes:
 - `pano_graph.gexf` and `pano_graph.graphml` for Gephi/Sigma-style workflows
 - `pano_graph_floor0.dot` for Graphviz
 - `publication/floor_*_overview.svg` for report figures
-- `.env.js` for the local Street View API key when `GMAPS_API_KEY` is set
+- `.env.js` for the local Street View API key when `GMAPS_KEY` is set
 
 Street View uses the generated `.env.js` in the exported viewer folder:
 

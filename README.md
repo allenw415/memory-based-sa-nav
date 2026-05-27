@@ -27,14 +27,14 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-For hosted VLM guidance, configure one of these environment variables:
+For model guidance, configure `.env` or your shell with the concise `NAV_<profile>_<field>` keys:
 
 ```bash
-export ST_NAV_API_KEY=...
-# optional
-export ST_NAV_MODEL_NAME=gpt-5-mini
-export ST_NAV_API_KIND=responses
-export ST_NAV_API_BASE=https://api.openai.com/v1
+export NAV_PROFILE=openai
+export NAV_OPENAI_KEY=...
+export NAV_OPENAI_MODEL=gpt-5-mini
+export NAV_OPENAI_API=responses
+export NAV_OPENAI_BASE=https://api.openai.com/v1
 ```
 
 ## Run One Guidance Step
@@ -56,7 +56,7 @@ Then open `http://127.0.0.1:8765`.
 
 ## Rebuild Memory Index
 
-Set `GMAPS_API_KEY` in your shell or pass `--render-api-key`, then rebuild the default floor-0 image memory index:
+Set `GMAPS_KEY` in your shell or pass `--render-api-key`, then rebuild the default floor-0 image memory index:
 
 ```bash
 python3 tools/data/build_memory_localization_index.py \

@@ -473,7 +473,7 @@ async function loadSelectedStreetView() {
   state.streetViewLoaded = true;
   const key = window.GMAPS_API_KEY;
   if (!key) {
-    els.streetViewStatus.textContent = "Set window.GMAPS_API_KEY in .env.js to enable Street View.";
+    els.streetViewStatus.textContent = "Set GMAPS_KEY and rerun the viewer export to enable Street View.";
     return;
   }
   if (!window.google?.maps?.StreetViewPanorama) {

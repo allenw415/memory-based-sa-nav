@@ -5,6 +5,17 @@ import os
 from pathlib import Path
 
 DEFAULT_GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta"
+GEMINI_PROVIDERS = {"gemini", "gemini_api", "google_gemma_api"}
+PROFILE_PROVIDER_ALIASES = {
+    "GEMINI": "gemini",
+    "GOOGLE": "gemini",
+    "OLLAMA": "ollama",
+    "OPENAI": "openai",
+}
+TASK_CTX_ALIASES = {
+    "LOCALIZATION": ("LOCALIZE",),
+    "PARSE_INSTRUCTION": ("PARSE",),
+}
 
 
 def load_dotenv(dotenv_path: str | Path) -> None:
@@ -29,6 +40,14 @@ def load_dotenv(dotenv_path: str | Path) -> None:
         os.environ[key] = value
 
 
+def get_env_value(*names: str) -> str | None:
+    for name in names:
+        value = os.environ.get(name)
+        if value is not None and value.strip():
+            return value.strip()
+    return None
+
+
 @dataclass(frozen=True)
 class ModelEnvironment:
     provider: str | None = None
@@ -49,41 +68,48 @@ def resolve_model_environment(
     default_api_kind: str | None = None,
     profile: str | None = None,
 ) -> ModelEnvironment:
-    active_profile = (profile or os.environ.get("ST_NAV_ACTIVE_PROFILE") or os.environ.get("ST_NAV_PROFILE") or "").strip()
+    active_profile = (
+        profile
+        or get_env_value("NAV_PROFILE", "NAV_ACTIVE_PROFILE", "ST_NAV_ACTIVE_PROFILE", "ST_NAV_PROFILE")
+        or ""
+    ).strip()
 
-    def lookup(name: str, *legacy_names: str) -> str | None:
+    def lookup(short_name: str, *legacy_suffixes: str, legacy_names: tuple[str, ...] = ()) -> str | None:
         candidates: list[str] = []
+        suffixes = (short_name, *legacy_suffixes)
         if active_profile:
             normalized_profile = _normalize_profile_name(active_profile)
-            candidates.append(f"ST_NAV_PROFILE_{normalized_profile}_{name}")
-        candidates.append(f"ST_NAV_{name}")
+            candidates.extend(f"NAV_{normalized_profile}_{suffix}" for suffix in suffixes)
+            candidates.extend(f"ST_NAV_PROFILE_{normalized_profile}_{suffix}" for suffix in suffixes)
+        candidates.extend(f"NAV_{suffix}" for suffix in suffixes)
+        candidates.extend(f"ST_NAV_{suffix}" for suffix in suffixes)
         candidates.extend(legacy_names)
-        for candidate in candidates:
-            value = os.environ.get(candidate)
-            if value is not None and value.strip():
-                return value.strip()
-        return None
+        return get_env_value(*candidates)
 
-    provider = lookup("MODEL_PROVIDER")
-    api_key = lookup("API_KEY", "OPENAI_API_KEY")
-    if api_key is None and provider in {"gemini", "gemini_api", "google_gemma_api"}:
-        api_key = lookup("API_KEY", "GEMINI_API_KEY", "GOOGLE_API_KEY")
-    api_base = lookup("API_BASE")
-    if api_base is None and provider in {"gemini", "gemini_api", "google_gemma_api"}:
+    provider = lookup("PROVIDER", "MODEL_PROVIDER")
+    if provider is None and active_profile:
+        provider = PROFILE_PROVIDER_ALIASES.get(_normalize_profile_name(active_profile))
+    provider = (provider or "").strip().lower() or None
+
+    if provider in GEMINI_PROVIDERS:
+        api_key = lookup("KEY", "API_KEY", legacy_names=("GEMINI_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY"))
+    else:
+        api_key = lookup("KEY", "API_KEY", legacy_names=("OPENAI_API_KEY",))
+    api_base = lookup("BASE", "API_BASE")
+    if api_base is None and provider in GEMINI_PROVIDERS:
         api_base = DEFAULT_GEMINI_API_BASE
 
     return ModelEnvironment(
         provider=provider,
-        model_name=lookup("MODEL_NAME") or default_model,
+        model_name=lookup("MODEL", "MODEL_NAME") or default_model,
         api_key=api_key,
         api_base=api_base or default_api_base,
-        api_kind=lookup("API_KIND") or default_api_kind,
-        request_timeout=_parse_float(lookup("REQUEST_TIMEOUT")),
-        num_ctx=_parse_int(lookup("NUM_CTX")),
-        temperature=_parse_float(lookup("TEMPERATURE")),
+        api_kind=lookup("API", "API_KIND") or default_api_kind,
+        request_timeout=_parse_float(lookup("TIMEOUT", "REQUEST_TIMEOUT")),
+        num_ctx=_parse_int(lookup("CTX", "NUM_CTX")),
+        temperature=_parse_float(lookup("TEMP", "TEMPERATURE")),
         active_profile=active_profile or None,
     )
-
 
 
 def resolve_task_num_ctx(
@@ -98,7 +124,18 @@ def resolve_task_num_ctx(
 
     normalized_task_name = _normalize_profile_name(task_name)
     if normalized_task_name:
-        task_value = _parse_int(os.environ.get(f"ST_NAV_{normalized_task_name}_NUM_CTX"))
+        aliases = (normalized_task_name, *TASK_CTX_ALIASES.get(normalized_task_name, ()))
+        candidates: list[str] = []
+        for alias in aliases:
+            candidates.extend(
+                (
+                    f"NAV_{alias}_CTX",
+                    f"NAV_{alias}_NUM_CTX",
+                    f"ST_NAV_{alias}_CTX",
+                    f"ST_NAV_{alias}_NUM_CTX",
+                )
+            )
+        task_value = _parse_int(get_env_value(*candidates))
         if task_value is not None:
             return task_value
 

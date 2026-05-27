@@ -4,7 +4,6 @@ import argparse
 import base64
 import json
 import mimetypes
-import os
 import sys
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -17,7 +16,7 @@ WEB_ROOT = Path(__file__).resolve().parent / "web"
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from memory_nav import load_dotenv, resolve_model_environment  # noqa: E402
+from memory_nav import get_env_value, load_dotenv, resolve_model_environment  # noqa: E402
 from memory_nav.cli._common import load_normalized_artifacts, resolve_project_path  # noqa: E402
 from memory_nav.memory import (  # noqa: E402
     InteractiveMemoryNavigator,
@@ -113,7 +112,9 @@ class MemoryGuidanceWebApp:
             room_graph=room_graph,
             memory_retriever=retriever,
             model=model_env.model_name,
-            api_key=self.args.llm_api_key or model_env.api_key or os.environ.get("ST_NAV_API_KEY"),
+            api_key=self.args.llm_api_key
+            or model_env.api_key
+            or get_env_value("NAV_KEY", "NAV_API_KEY", "ST_NAV_API_KEY", "OPENAI_API_KEY"),
             api_base=model_env.api_base,
             api_kind=model_env.api_kind,
             request_timeout=self.args.llm_timeout,

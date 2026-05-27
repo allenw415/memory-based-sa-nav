@@ -1,0 +1,1838 @@
+{
+  "seed": {
+    "lat": 51.5194081,
+    "lng": -0.1282627
+  },
+  "search_radius_m": 200,
+  "max_nodes": 1000000000000,
+  "polygon_outer": [
+    [
+      51.5179913047608,
+      -0.1274930953694786
+    ],
+    [
+      51.5190945536866,
+      -0.1247929489885435
+    ],
+    [
+      51.52080957599166,
+      -0.1268217162760588
+    ],
+    [
+      51.52063012081255,
+      -0.1272786575380569
+    ],
+    [
+      51.52023340716495,
+      -0.1281517692664635
+    ],
+    [
+      51.51966828879372,
+      -0.1292779607019712
+    ],
+    [
+      51.5188093801848,
+      -0.1283640345254933
+    ],
+    [
+      51.5179913047608,
+      -0.1274930953694786
+    ]
+  ],
+  "panos": {
+    "Kp0ctox3L9I59IT4kHhv_Q": {
+      "pano": "Kp0ctox3L9I59IT4kHhv_Q",
+      "lat": 51.51940806138488,
+      "lng": -0.12826266002877978,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "wAamvyZU2BFeBlS0pOh_fQ",
+          "heading": 183.05138,
+          "description": null
+        },
+        {
+          "pano": "SB9qUqo4DaZG3bOqTuI0Xg",
+          "heading": 232.80122,
+          "description": null
+        },
+        {
+          "pano": "jjL1Edg1iFssT9YYpopEoA",
+          "heading": 46.277813,
+          "description": null
+        },
+        {
+          "pano": "WyD3y5nYT3mynkbAuwXmSQ",
+          "heading": 7.2755895,
+          "description": null
+        },
+        {
+          "pano": "tVIBJz9kKRIaS2qO1exzvQ",
+          "heading": 108.63885,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 0.005107403956614076
+    },
+    "wAamvyZU2BFeBlS0pOh_fQ": {
+      "pano": "wAamvyZU2BFeBlS0pOh_fQ",
+      "lat": 51.519335382175974,
+      "lng": -0.12826887746406507,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "V9sig8EFMQ_mz5UvT2uOlA",
+          "heading": 142.94939,
+          "description": null
+        },
+        {
+          "pano": "ymUqWWyoCeWLlPT-UJWjCw",
+          "heading": 37.82025,
+          "description": null
+        },
+        {
+          "pano": "Kp0ctox3L9I59IT4kHhv_Q",
+          "heading": 3.0513701,
+          "description": null
+        },
+        {
+          "pano": "aRyO4CitV9stI_ctDqHpbA",
+          "heading": 323.43735,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 8.097142259790257
+    },
+    "SB9qUqo4DaZG3bOqTuI0Xg": {
+      "pano": "SB9qUqo4DaZG3bOqTuI0Xg",
+      "lat": 51.51939712720013,
+      "lng": -0.12828585400951492,
+      "imageDate": "2015-02",
+      "links": [],
+      "inside_polygon": true,
+      "dist_m_from_seed": 2.0137658701710417
+    },
+    "jjL1Edg1iFssT9YYpopEoA": {
+      "pano": "jjL1Edg1iFssT9YYpopEoA",
+      "lat": 51.51941923140852,
+      "lng": -0.1282438646824411,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "tVIBJz9kKRIaS2qO1exzvQ",
+          "heading": 147.94135,
+          "description": null
+        },
+        {
+          "pano": "Kp0ctox3L9I59IT4kHhv_Q",
+          "heading": 226.27782,
+          "description": null
+        },
+        {
+          "pano": "WyD3y5nYT3mynkbAuwXmSQ",
+          "heading": 321.89288,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 1.797347862851108
+    },
+    "WyD3y5nYT3mynkbAuwXmSQ": {
+      "pano": "WyD3y5nYT3mynkbAuwXmSQ",
+      "lat": 51.51943052584758,
+      "lng": -0.12825809646928504,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "Kp0ctox3L9I59IT4kHhv_Q",
+          "heading": 187.27559,
+          "description": null
+        },
+        {
+          "pano": "jjL1Edg1iFssT9YYpopEoA",
+          "heading": 141.89288,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 2.513901266245405
+    },
+    "tVIBJz9kKRIaS2qO1exzvQ": {
+      "pano": "tVIBJz9kKRIaS2qO1exzvQ",
+      "lat": 51.519400081669374,
+      "lng": -0.12822457104460208,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "ymUqWWyoCeWLlPT-UJWjCw",
+          "heading": 143.87318,
+          "description": null
+        },
+        {
+          "pano": "jjL1Edg1iFssT9YYpopEoA",
+          "heading": 327.94135,
+          "description": null
+        },
+        {
+          "pano": "Kp0ctox3L9I59IT4kHhv_Q",
+          "heading": 288.63885,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 2.7847696248821765
+    },
+    "V9sig8EFMQ_mz5UvT2uOlA": {
+      "pano": "V9sig8EFMQ_mz5UvT2uOlA",
+      "lat": 51.51932096301188,
+      "lng": -0.1282514005103668,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "ayCyeHR96K-ovfFGDA6BsA",
+          "heading": 141.72484,
+          "description": null
+        },
+        {
+          "pano": "OXEzeaerGOnlDmN8iLYEkw",
+          "heading": 36.663002,
+          "description": null
+        },
+        {
+          "pano": "wAamvyZU2BFeBlS0pOh_fQ",
+          "heading": 322.94937,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 9.720682610593839
+    },
+    "ymUqWWyoCeWLlPT-UJWjCw": {
+      "pano": "ymUqWWyoCeWLlPT-UJWjCw",
+      "lat": 51.51938502098416,
+      "lng": -0.12820691165073683,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "tVIBJz9kKRIaS2qO1exzvQ",
+          "heading": 323.87317,
+          "description": null
+        },
+        {
+          "pano": "OXEzeaerGOnlDmN8iLYEkw",
+          "heading": 143.41632,
+          "description": null
+        },
+        {
+          "pano": "wAamvyZU2BFeBlS0pOh_fQ",
+          "heading": 217.82025,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 4.635271329097048
+    },
+    "aRyO4CitV9stI_ctDqHpbA": {
+      "pano": "aRyO4CitV9stI_ctDqHpbA",
+      "lat": 51.5193490004934,
+      "lng": -0.12828518406381823,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "wAamvyZU2BFeBlS0pOh_fQ",
+          "heading": 143.43735,
+          "description": null
+        },
+        {
+          "pano": "SB9qUqo4DaZG3bOqTuI0Xg",
+          "heading": 359.48102,
+          "description": null
+        },
+        {
+          "pano": "AwZL4W7eY20SZgTPR2gSPQ",
+          "heading": 322.02917,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 6.753196228555763
+    },
+    "ayCyeHR96K-ovfFGDA6BsA": {
+      "pano": "ayCyeHR96K-ovfFGDA6BsA",
+      "lat": 51.51930638450074,
+      "lng": -0.12823293564615545,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "WS9MqORMeoSdlEBUntPL8w",
+          "heading": 94.448204,
+          "description": null
+        },
+        {
+          "pano": "FOpnn24IMpL4Xce7HdBvhg",
+          "heading": 145.62593,
+          "description": null
+        },
+        {
+          "pano": "V9sig8EFMQ_mz5UvT2uOlA",
+          "heading": 321.72482,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 11.496214117680461
+    },
+    "OXEzeaerGOnlDmN8iLYEkw": {
+      "pano": "OXEzeaerGOnlDmN8iLYEkw",
+      "lat": 51.519371562778986,
+      "lng": -0.1281908750675176,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "ymUqWWyoCeWLlPT-UJWjCw",
+          "heading": 323.41632,
+          "description": null
+        },
+        {
+          "pano": "mHbwxI3shmFJ8DfPKFlISw",
+          "heading": 142.69093,
+          "description": null
+        },
+        {
+          "pano": "V9sig8EFMQ_mz5UvT2uOlA",
+          "heading": 216.663,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 6.418978808087877
+    },
+    "AwZL4W7eY20SZgTPR2gSPQ": {
+      "pano": "AwZL4W7eY20SZgTPR2gSPQ",
+      "lat": 51.51936397977192,
+      "lng": -0.12830392008373778,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "22lRPJxxj6lZzH_f7ZaKHA",
+          "heading": 354.98993,
+          "description": null
+        },
+        {
+          "pano": "aRyO4CitV9stI_ctDqHpbA",
+          "heading": 142.02916,
+          "description": null
+        },
+        {
+          "pano": "rMJTfxKez4TeJ99Gvr56_g",
+          "heading": 323.30725,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 5.674728717762946
+    },
+    "WS9MqORMeoSdlEBUntPL8w": {
+      "pano": "WS9MqORMeoSdlEBUntPL8w",
+      "lat": 51.5193048939316,
+      "lng": -0.1282022357802432,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "HqU6E4mjGdEv0g98vkTUeg",
+          "heading": 51.39674,
+          "description": null
+        },
+        {
+          "pano": "ayCyeHR96K-ovfFGDA6BsA",
+          "heading": 274.4482,
+          "description": null
+        },
+        {
+          "pano": "FOpnn24IMpL4Xce7HdBvhg",
+          "heading": 212.66438,
+          "description": null
+        },
+        {
+          "pano": "Hd3OM2_iGpQVWBym56ZN3Q",
+          "heading": 164.76974,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 12.214775802108077
+    },
+    "FOpnn24IMpL4Xce7HdBvhg": {
+      "pano": "FOpnn24IMpL4Xce7HdBvhg",
+      "lat": 51.51929124255012,
+      "lng": -0.12821626313212636,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "WS9MqORMeoSdlEBUntPL8w",
+          "heading": 32.66438,
+          "description": null
+        },
+        {
+          "pano": "ayCyeHR96K-ovfFGDA6BsA",
+          "heading": 325.62592,
+          "description": null
+        },
+        {
+          "pano": "Hd3OM2_iGpQVWBym56ZN3Q",
+          "heading": 115.05383,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 13.38530383700422
+    },
+    "mHbwxI3shmFJ8DfPKFlISw": {
+      "pano": "mHbwxI3shmFJ8DfPKFlISw",
+      "lat": 51.51935714369318,
+      "lng": -0.12817330841436167,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "HqU6E4mjGdEv0g98vkTUeg",
+          "heading": 188.08919,
+          "description": null
+        },
+        {
+          "pano": "OXEzeaerGOnlDmN8iLYEkw",
+          "heading": 322.69095,
+          "description": null
+        },
+        {
+          "pano": "RZBUkLWcHAFvE87QTy6vcg",
+          "heading": 143.35654,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 8.388080929374063
+    },
+    "22lRPJxxj6lZzH_f7ZaKHA": {
+      "pano": "22lRPJxxj6lZzH_f7ZaKHA",
+      "lat": 51.519386916976536,
+      "lng": -0.12830716664356126,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "SB9qUqo4DaZG3bOqTuI0Xg",
+          "heading": 52.476,
+          "description": null
+        },
+        {
+          "pano": "AwZL4W7eY20SZgTPR2gSPQ",
+          "heading": 174.98993,
+          "description": null
+        },
+        {
+          "pano": "rMJTfxKez4TeJ99Gvr56_g",
+          "heading": 225.26517,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 3.874809908644622
+    },
+    "rMJTfxKez4TeJ99Gvr56_g": {
+      "pano": "rMJTfxKez4TeJ99Gvr56_g",
+      "lat": 51.51937831901927,
+      "lng": -0.12832112750460167,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "22lRPJxxj6lZzH_f7ZaKHA",
+          "heading": 45.26517,
+          "description": null
+        },
+        {
+          "pano": "AwZL4W7eY20SZgTPR2gSPQ",
+          "heading": 143.30724,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 5.225808714417126
+    },
+    "HqU6E4mjGdEv0g98vkTUeg": {
+      "pano": "HqU6E4mjGdEv0g98vkTUeg",
+      "lat": 51.51931437986892,
+      "lng": -0.12818307378546995,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "WS9MqORMeoSdlEBUntPL8w",
+          "heading": 231.39674,
+          "description": null
+        },
+        {
+          "pano": "mHbwxI3shmFJ8DfPKFlISw",
+          "heading": 8.08919,
+          "description": null
+        },
+        {
+          "pano": "sgCIS5XpsGUgjpxaW-OiSw",
+          "heading": 55.819748,
+          "description": null
+        },
+        {
+          "pano": "8DNmxdIMD1N48rL3cpyVsA",
+          "heading": 148.51035,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 11.787926286446334
+    },
+    "Hd3OM2_iGpQVWBym56ZN3Q": {
+      "pano": "Hd3OM2_iGpQVWBym56ZN3Q",
+      "lat": 51.51928452969494,
+      "lng": -0.1281933471712582,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "_WELXdLriBskeDAYLwNEVg",
+          "heading": 109.61929,
+          "description": null
+        },
+        {
+          "pano": "WS9MqORMeoSdlEBUntPL8w",
+          "heading": 344.76974,
+          "description": null
+        },
+        {
+          "pano": "FOpnn24IMpL4Xce7HdBvhg",
+          "heading": 295.05383,
+          "description": null
+        },
+        {
+          "pano": "WRkiKxMaMEfWEH1b3HNGkA",
+          "heading": 140.9912,
+          "description": null
+        },
+        {
+          "pano": "FaezjS5XEtD5c-_P85gNQQ",
+          "heading": 177.7234,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 14.554204909501022
+    },
+    "RZBUkLWcHAFvE87QTy6vcg": {
+      "pano": "RZBUkLWcHAFvE87QTy6vcg",
+      "lat": 51.51934224372725,
+      "lng": -0.12815538059486878,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "sgCIS5XpsGUgjpxaW-OiSw",
+          "heading": 185.96378,
+          "description": null
+        },
+        {
+          "pano": "zjsuNgj7qsqXuhPQgwziXQ",
+          "heading": 144.67616,
+          "description": null
+        },
+        {
+          "pano": "mHbwxI3shmFJ8DfPKFlISw",
+          "heading": 323.35654,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 10.428963573427486
+    },
+    "sgCIS5XpsGUgjpxaW-OiSw": {
+      "pano": "sgCIS5XpsGUgjpxaW-OiSw",
+      "lat": 51.51932483441037,
+      "lng": -0.12815835200465178,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "HqU6E4mjGdEv0g98vkTUeg",
+          "heading": 235.81975,
+          "description": null
+        },
+        {
+          "pano": "RZBUkLWcHAFvE87QTy6vcg",
+          "heading": 5.9637823,
+          "description": null
+        },
+        {
+          "pano": "zjsuNgj7qsqXuhPQgwziXQ",
+          "heading": 78.06376,
+          "description": null
+        },
+        {
+          "pano": "9ryE_5NYlquwQSQUAW541Q",
+          "heading": 132.17249,
+          "description": null
+        },
+        {
+          "pano": "ojg0tlG6wZQcRqkBDmp6Ow",
+          "heading": 162.26903,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 11.741012458175975
+    },
+    "8DNmxdIMD1N48rL3cpyVsA": {
+      "pano": "8DNmxdIMD1N48rL3cpyVsA",
+      "lat": 51.519285774827175,
+      "lng": -0.12815485206134838,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "_b4JV-tEpX7vJBLfXHUgUw",
+          "heading": 170.7575,
+          "description": null
+        },
+        {
+          "pano": "_WELXdLriBskeDAYLwNEVg",
+          "heading": 229.50601,
+          "description": null
+        },
+        {
+          "pano": "HqU6E4mjGdEv0g98vkTUeg",
+          "heading": 328.51035,
+          "description": null
+        },
+        {
+          "pano": "ojg0tlG6wZQcRqkBDmp6Ow",
+          "heading": 54.61699,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 15.514377238722252
+    },
+    "_WELXdLriBskeDAYLwNEVg": {
+      "pano": "_WELXdLriBskeDAYLwNEVg",
+      "lat": 51.51927886242635,
+      "lng": -0.12816783341478638,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "_b4JV-tEpX7vJBLfXHUgUw",
+          "heading": 135.75345,
+          "description": null
+        },
+        {
+          "pano": "8DNmxdIMD1N48rL3cpyVsA",
+          "heading": 49.506016,
+          "description": null
+        },
+        {
+          "pano": "Hd3OM2_iGpQVWBym56ZN3Q",
+          "heading": 289.6193,
+          "description": null
+        },
+        {
+          "pano": "WRkiKxMaMEfWEH1b3HNGkA",
+          "heading": 233.69981,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 15.798675264224105
+    },
+    "WRkiKxMaMEfWEH1b3HNGkA": {
+      "pano": "WRkiKxMaMEfWEH1b3HNGkA",
+      "lat": 51.51927371644638,
+      "lng": -0.12817920745916153,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "FaezjS5XEtD5c-_P85gNQQ",
+          "heading": 228.12196,
+          "description": null
+        },
+        {
+          "pano": "G3-7vGwJ1WJ8nFPiHZInTw",
+          "heading": 173.04323,
+          "description": null
+        },
+        {
+          "pano": "Hd3OM2_iGpQVWBym56ZN3Q",
+          "heading": 320.99118,
+          "description": null
+        },
+        {
+          "pano": "_WELXdLriBskeDAYLwNEVg",
+          "heading": 53.699814,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 16.02059273811268
+    },
+    "FaezjS5XEtD5c-_P85gNQQ": {
+      "pano": "FaezjS5XEtD5c-_P85gNQQ",
+      "lat": 51.519266483196645,
+      "lng": -0.12819218733381715,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "NkRBSR9LY0ZCnkL1uXvCtw",
+          "heading": 229.54887,
+          "description": null
+        },
+        {
+          "pano": "G3-7vGwJ1WJ8nFPiHZInTw",
+          "heading": 138.67058,
+          "description": null
+        },
+        {
+          "pano": "WRkiKxMaMEfWEH1b3HNGkA",
+          "heading": 48.121964,
+          "description": null
+        },
+        {
+          "pano": "Hd3OM2_iGpQVWBym56ZN3Q",
+          "heading": 357.7234,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 16.485550623628434
+    },
+    "zjsuNgj7qsqXuhPQgwziXQ": {
+      "pano": "zjsuNgj7qsqXuhPQgwziXQ",
+      "lat": 51.519327422800664,
+      "lng": -0.12813853011105467,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "RZBUkLWcHAFvE87QTy6vcg",
+          "heading": 324.67615,
+          "description": null
+        },
+        {
+          "pano": "sgCIS5XpsGUgjpxaW-OiSw",
+          "heading": 258.06375,
+          "description": null
+        },
+        {
+          "pano": "9ryE_5NYlquwQSQUAW541Q",
+          "heading": 173.68263,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 12.421348044993742
+    },
+    "9ryE_5NYlquwQSQUAW541Q": {
+      "pano": "9ryE_5NYlquwQSQUAW541Q",
+      "lat": 51.51931218536928,
+      "lng": -0.12813585753149967,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "zjsuNgj7qsqXuhPQgwziXQ",
+          "heading": 353.68262,
+          "description": null
+        },
+        {
+          "pano": "sgCIS5XpsGUgjpxaW-OiSw",
+          "heading": 312.1725,
+          "description": null
+        },
+        {
+          "pano": "0IFr1u-95yTY4aaSqdsvTA",
+          "heading": 161.69025,
+          "description": null
+        },
+        {
+          "pano": "ry-o7nnG1HcuEmRMznshBA",
+          "heading": 120.66847,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 13.812005877945797
+    },
+    "ojg0tlG6wZQcRqkBDmp6Ow": {
+      "pano": "ojg0tlG6wZQcRqkBDmp6Ow",
+      "lat": 51.51929172527117,
+      "lng": -0.12814132781540155,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "sgCIS5XpsGUgjpxaW-OiSw",
+          "heading": 342.26904,
+          "description": null
+        },
+        {
+          "pano": "gNdKeTm9Dr5TbZsHiwao4A",
+          "heading": 139.19814,
+          "description": null
+        },
+        {
+          "pano": "0IFr1u-95yTY4aaSqdsvTA",
+          "heading": 52.56347,
+          "description": null
+        },
+        {
+          "pano": "8DNmxdIMD1N48rL3cpyVsA",
+          "heading": 234.61699,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 15.426441181802922
+    },
+    "_b4JV-tEpX7vJBLfXHUgUw": {
+      "pano": "_b4JV-tEpX7vJBLfXHUgUw",
+      "lat": 51.51926757181553,
+      "lng": -0.12815010171402894,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "G3-7vGwJ1WJ8nFPiHZInTw",
+          "heading": 230.60477,
+          "description": null
+        },
+        {
+          "pano": "8DNmxdIMD1N48rL3cpyVsA",
+          "heading": 350.7575,
+          "description": null
+        },
+        {
+          "pano": "_WELXdLriBskeDAYLwNEVg",
+          "heading": 315.75345,
+          "description": null
+        },
+        {
+          "pano": "gNdKeTm9Dr5TbZsHiwao4A",
+          "heading": 54.405987,
+          "description": null
+        },
+        {
+          "pano": "zXjirMXBHPvNdNt3JblRRA",
+          "heading": 137.90004,
+          "description": null
+        },
+        {
+          "pano": "4APKwz972EcFIJCs24BKFA",
+          "heading": 173.82611,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 17.460500601835808
+    },
+    "G3-7vGwJ1WJ8nFPiHZInTw": {
+      "pano": "G3-7vGwJ1WJ8nFPiHZInTw",
+      "lat": 51.519254630032925,
+      "lng": -0.1281754402382198,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "WSoTg-_Qh90-MeTecFmxjA",
+          "heading": 138.20145,
+          "description": null
+        },
+        {
+          "pano": "_b4JV-tEpX7vJBLfXHUgUw",
+          "heading": 50.604767,
+          "description": null
+        },
+        {
+          "pano": "2nyRYburpwsypykvyP1N9Q",
+          "heading": 175.8248,
+          "description": null
+        },
+        {
+          "pano": "FaezjS5XEtD5c-_P85gNQQ",
+          "heading": 318.67056,
+          "description": null
+        },
+        {
+          "pano": "WRkiKxMaMEfWEH1b3HNGkA",
+          "heading": 353.04324,
+          "description": null
+        },
+        {
+          "pano": "6Nw8dZ57iL2XKiiJhWVO9w",
+          "heading": 230.20818,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 18.101646880052048
+    },
+    "NkRBSR9LY0ZCnkL1uXvCtw": {
+      "pano": "NkRBSR9LY0ZCnkL1uXvCtw",
+      "lat": 51.519253622986604,
+      "lng": -0.1282162697974399,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "80x4rPFQr5JUmZN83P4Rbw",
+          "heading": 144.17448,
+          "description": null
+        },
+        {
+          "pano": "FaezjS5XEtD5c-_P85gNQQ",
+          "heading": 49.54888,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 17.474893959002962
+    },
+    "0IFr1u-95yTY4aaSqdsvTA": {
+      "pano": "0IFr1u-95yTY4aaSqdsvTA",
+      "lat": 51.519297996072964,
+      "lng": -0.1281282537655876,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "9ryE_5NYlquwQSQUAW541Q",
+          "heading": 341.69025,
+          "description": null
+        },
+        {
+          "pano": "ry-o7nnG1HcuEmRMznshBA",
+          "heading": 25.733824,
+          "description": null
+        },
+        {
+          "pano": "ojg0tlG6wZQcRqkBDmp6Ow",
+          "heading": 232.56346,
+          "description": null
+        },
+        {
+          "pano": "gNdKeTm9Dr5TbZsHiwao4A",
+          "heading": 171.7798,
+          "description": null
+        },
+        {
+          "pano": "BPxX0ivhraxYrvA916ZImA",
+          "heading": 73.377495,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 15.376186728970016
+    },
+    "ry-o7nnG1HcuEmRMznshBA": {
+      "pano": "ry-o7nnG1HcuEmRMznshBA",
+      "lat": 51.51930682691018,
+      "lng": -0.1281213839036207,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "9ryE_5NYlquwQSQUAW541Q",
+          "heading": 300.6685,
+          "description": null
+        },
+        {
+          "pano": "0IFr1u-95yTY4aaSqdsvTA",
+          "heading": 205.73383,
+          "description": null
+        },
+        {
+          "pano": "BPxX0ivhraxYrvA916ZImA",
+          "heading": 131.33218,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 14.91364892494363
+    },
+    "gNdKeTm9Dr5TbZsHiwao4A": {
+      "pano": "gNdKeTm9Dr5TbZsHiwao4A",
+      "lat": 51.51927923108491,
+      "lng": -0.1281239495833039,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "ojg0tlG6wZQcRqkBDmp6Ow",
+          "heading": 319.19812,
+          "description": null
+        },
+        {
+          "pano": "0IFr1u-95yTY4aaSqdsvTA",
+          "heading": 351.7798,
+          "description": null
+        },
+        {
+          "pano": "_b4JV-tEpX7vJBLfXHUgUw",
+          "heading": 234.40599,
+          "description": null
+        },
+        {
+          "pano": "Y-NOf8w_jI3I8RBDRL5f-g",
+          "heading": 138.41425,
+          "description": null
+        },
+        {
+          "pano": "wEGamIGH7hztE7dyu0_4WQ",
+          "heading": 174.65974,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 17.24825121890079
+    },
+    "zXjirMXBHPvNdNt3JblRRA": {
+      "pano": "zXjirMXBHPvNdNt3JblRRA",
+      "lat": 51.51925571923218,
+      "lng": -0.12813281618079053,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "4APKwz972EcFIJCs24BKFA",
+          "heading": 233.0568,
+          "description": null
+        },
+        {
+          "pano": "l1w6KOE3OLmS4oKv3ncyBw",
+          "heading": 148.21796,
+          "description": null
+        },
+        {
+          "pano": "_b4JV-tEpX7vJBLfXHUgUw",
+          "heading": 317.90005,
+          "description": null
+        },
+        {
+          "pano": "wEGamIGH7hztE7dyu0_4WQ",
+          "heading": 52.197395,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 19.179695574550905
+    },
+    "4APKwz972EcFIJCs24BKFA": {
+      "pano": "4APKwz972EcFIJCs24BKFA",
+      "lat": 51.51924912651101,
+      "lng": -0.12814687593181937,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "l1w6KOE3OLmS4oKv3ncyBw",
+          "heading": 110.63546,
+          "description": null
+        },
+        {
+          "pano": "zXjirMXBHPvNdNt3JblRRA",
+          "heading": 53.056797,
+          "description": null
+        },
+        {
+          "pano": "WSoTg-_Qh90-MeTecFmxjA",
+          "heading": 232.56021,
+          "description": null
+        },
+        {
+          "pano": "_b4JV-tEpX7vJBLfXHUgUw",
+          "heading": 353.8261,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 19.408814045801197
+    },
+    "WSoTg-_Qh90-MeTecFmxjA": {
+      "pano": "WSoTg-_Qh90-MeTecFmxjA",
+      "lat": 51.519243257651034,
+      "lng": -0.1281591440971323,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "G3-7vGwJ1WJ8nFPiHZInTw",
+          "heading": 318.20145,
+          "description": null
+        },
+        {
+          "pano": "FcnMMwtw5enBl84rv9n5VA",
+          "heading": 146.35371,
+          "description": null
+        },
+        {
+          "pano": "4APKwz972EcFIJCs24BKFA",
+          "heading": 52.560204,
+          "description": null
+        },
+        {
+          "pano": "2nyRYburpwsypykvyP1N9Q",
+          "heading": 233.37053,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 19.680314807807957
+    },
+    "2nyRYburpwsypykvyP1N9Q": {
+      "pano": "2nyRYburpwsypykvyP1N9Q",
+      "lat": 51.519236745042,
+      "lng": -0.12817329395664318,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "G3-7vGwJ1WJ8nFPiHZInTw",
+          "heading": 355.8248,
+          "description": null
+        },
+        {
+          "pano": "QGcdRxQqKzWwjRzdPtKOuw",
+          "heading": 253.7007,
+          "description": null
+        },
+        {
+          "pano": "ed9ywtYhdoFTv5bMwSSmNw",
+          "heading": 182.42694,
+          "description": null
+        },
+        {
+          "pano": "WgADvlIrVFLM1wq6j7e89g",
+          "heading": 217.93515,
+          "description": null
+        },
+        {
+          "pano": "WSoTg-_Qh90-MeTecFmxjA",
+          "heading": 53.37053,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 20.03285436691374
+    },
+    "6Nw8dZ57iL2XKiiJhWVO9w": {
+      "pano": "6Nw8dZ57iL2XKiiJhWVO9w",
+      "lat": 51.51924112598202,
+      "lng": -0.12820149413292747,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "80x4rPFQr5JUmZN83P4Rbw",
+          "heading": 322.97635,
+          "description": null
+        },
+        {
+          "pano": "QGcdRxQqKzWwjRzdPtKOuw",
+          "heading": 142.13861,
+          "description": null
+        },
+        {
+          "pano": "G3-7vGwJ1WJ8nFPiHZInTw",
+          "heading": 50.208176,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 19.04351324356424
+    },
+    "80x4rPFQr5JUmZN83P4Rbw": {
+      "pano": "80x4rPFQr5JUmZN83P4Rbw",
+      "lat": 51.51924745450046,
+      "lng": -0.1282090618214732,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "6Nw8dZ57iL2XKiiJhWVO9w",
+          "heading": 142.97636,
+          "description": null
+        },
+        {
+          "pano": "NkRBSR9LY0ZCnkL1uXvCtw",
+          "heading": 324.17447,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 18.24442762111453
+    },
+    "BPxX0ivhraxYrvA916ZImA": {
+      "pano": "BPxX0ivhraxYrvA916ZImA",
+      "lat": 51.51930114310585,
+      "lng": -0.1281110370829733,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "ry-o7nnG1HcuEmRMznshBA",
+          "heading": 311.33218,
+          "description": null
+        },
+        {
+          "pano": "BAK3A2dl8mf2PdnBhjK0OQ",
+          "heading": 142.75296,
+          "description": null
+        },
+        {
+          "pano": "0IFr1u-95yTY4aaSqdsvTA",
+          "heading": 253.3775,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 15.86074140267754
+    },
+    "Y-NOf8w_jI3I8RBDRL5f-g": {
+      "pano": "Y-NOf8w_jI3I8RBDRL5f-g",
+      "lat": 51.51926753823514,
+      "lng": -0.12810729301389884,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "wEGamIGH7hztE7dyu0_4WQ",
+          "heading": 234.13092,
+          "description": null
+        },
+        {
+          "pano": "N8uzKQtYwpoPOiIJbbbrQg",
+          "heading": 147.78122,
+          "description": null
+        },
+        {
+          "pano": "gNdKeTm9Dr5TbZsHiwao4A",
+          "heading": 318.41425,
+          "description": null
+        },
+        {
+          "pano": "7Vrr0MlkjznT94Gn5LDPUQ",
+          "heading": 52.88668,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 18.971333964192862
+    },
+    "wEGamIGH7hztE7dyu0_4WQ": {
+      "pano": "wEGamIGH7hztE7dyu0_4WQ",
+      "lat": 51.519261346672906,
+      "lng": -0.12812126486567424,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "Y-NOf8w_jI3I8RBDRL5f-g",
+          "heading": 54.13092,
+          "description": null
+        },
+        {
+          "pano": "gNdKeTm9Dr5TbZsHiwao4A",
+          "heading": 354.65973,
+          "description": null
+        },
+        {
+          "pano": "zXjirMXBHPvNdNt3JblRRA",
+          "heading": 232.19739,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 19.027645779906496
+    },
+    "l1w6KOE3OLmS4oKv3ncyBw": {
+      "pano": "l1w6KOE3OLmS4oKv3ncyBw",
+      "lat": 51.519242819006934,
+      "lng": -0.1281200131232311,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "N8uzKQtYwpoPOiIJbbbrQg",
+          "heading": 55.723755,
+          "description": null
+        },
+        {
+          "pano": "k7vDiemRMPox0YpqBbaqKA",
+          "heading": 142.40762,
+          "description": null
+        },
+        {
+          "pano": "FcnMMwtw5enBl84rv9n5VA",
+          "heading": 228.69586,
+          "description": null
+        },
+        {
+          "pano": "bOZu2sVUE6hMAZZDDTrX7w",
+          "heading": 173.56203,
+          "description": null
+        },
+        {
+          "pano": "4APKwz972EcFIJCs24BKFA",
+          "heading": 290.63547,
+          "description": null
+        },
+        {
+          "pano": "zXjirMXBHPvNdNt3JblRRA",
+          "heading": 328.21796,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 20.86229539425016
+    },
+    "FcnMMwtw5enBl84rv9n5VA": {
+      "pano": "FcnMMwtw5enBl84rv9n5VA",
+      "lat": 51.519229557366124,
+      "lng": -0.12814445270156363,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "WSoTg-_Qh90-MeTecFmxjA",
+          "heading": 326.35373,
+          "description": null
+        },
+        {
+          "pano": "l1w6KOE3OLmS4oKv3ncyBw",
+          "heading": 48.69586,
+          "description": null
+        },
+        {
+          "pano": "y_kdJnPovnfHB1iEaWNGDQ",
+          "heading": 141.13997,
+          "description": null
+        },
+        {
+          "pano": "xt0a3_kySO_oZAPCvKfwpA",
+          "heading": 185.18134,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 21.47283442797821
+    },
+    "QGcdRxQqKzWwjRzdPtKOuw": {
+      "pano": "QGcdRxQqKzWwjRzdPtKOuw",
+      "lat": 51.51923335599828,
+      "lng": -0.1281917659386541,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "2nyRYburpwsypykvyP1N9Q",
+          "heading": 73.7007,
+          "description": null
+        },
+        {
+          "pano": "WgADvlIrVFLM1wq6j7e89g",
+          "heading": 140.08627,
+          "description": null
+        },
+        {
+          "pano": "6Nw8dZ57iL2XKiiJhWVO9w",
+          "heading": 322.1386,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 20.04092204057106
+    },
+    "ed9ywtYhdoFTv5bMwSSmNw": {
+      "pano": "ed9ywtYhdoFTv5bMwSSmNw",
+      "lat": 51.519219818979195,
+      "lng": -0.12817447265807577,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "2nyRYburpwsypykvyP1N9Q",
+          "heading": 2.4269447,
+          "description": null
+        },
+        {
+          "pano": "IhYOOA287FEj1w81H9DCAQ",
+          "heading": 140.9926,
+          "description": null
+        },
+        {
+          "pano": "WgADvlIrVFLM1wq6j7e89g",
+          "heading": 322.82034,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 21.807732469591045
+    },
+    "WgADvlIrVFLM1wq6j7e89g": {
+      "pano": "WgADvlIrVFLM1wq6j7e89g",
+      "lat": 51.519227909614465,
+      "lng": -0.12818438180279798,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "ed9ywtYhdoFTv5bMwSSmNw",
+          "heading": 142.82033,
+          "description": null
+        },
+        {
+          "pano": "QGcdRxQqKzWwjRzdPtKOuw",
+          "heading": 320.08627,
+          "description": null
+        },
+        {
+          "pano": "2nyRYburpwsypykvyP1N9Q",
+          "heading": 37.935146,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 20.756115283201204
+    },
+    "BAK3A2dl8mf2PdnBhjK0OQ": {
+      "pano": "BAK3A2dl8mf2PdnBhjK0OQ",
+      "lat": 51.51929321268375,
+      "lng": -0.12810130817486082,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "TwWvFtPbQubDjEE-PeQFSw",
+          "heading": 141.56683,
+          "description": null
+        },
+        {
+          "pano": "BPxX0ivhraxYrvA916ZImA",
+          "heading": 322.75296,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 16.967522012776843
+    },
+    "N8uzKQtYwpoPOiIJbbbrQg": {
+      "pano": "N8uzKQtYwpoPOiIJbbbrQg",
+      "lat": 51.51925407749919,
+      "lng": -0.12809358994421663,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "faW7GRAcxWxYBV7SiP9DQg",
+          "heading": 172.6705,
+          "description": null
+        },
+        {
+          "pano": "2Ayg6bXbYv5jh21ejlufiQ",
+          "heading": 139.68346,
+          "description": null
+        },
+        {
+          "pano": "l1w6KOE3OLmS4oKv3ncyBw",
+          "heading": 235.72375,
+          "description": null
+        },
+        {
+          "pano": "e2Y4uF9aqifb8aEF599B3w",
+          "heading": 36.618935,
+          "description": null
+        },
+        {
+          "pano": "Y-NOf8w_jI3I8RBDRL5f-g",
+          "heading": 327.78122,
+          "description": null
+        },
+        {
+          "pano": "7Vrr0MlkjznT94Gn5LDPUQ",
+          "heading": 358.48453,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 20.74196334096206
+    },
+    "7Vrr0MlkjznT94Gn5LDPUQ": {
+      "pano": "7Vrr0MlkjznT94Gn5LDPUQ",
+      "lat": 51.519273648313884,
+      "lng": -0.12809448747534555,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "TwWvFtPbQubDjEE-PeQFSw",
+          "heading": 6.4949574,
+          "description": null
+        },
+        {
+          "pano": "e2Y4uF9aqifb8aEF599B3w",
+          "heading": 101.62503,
+          "description": null
+        },
+        {
+          "pano": "Y0rt-r34PQDBSrV-szMLdQ",
+          "heading": 59.82344,
+          "description": null
+        },
+        {
+          "pano": "Y-NOf8w_jI3I8RBDRL5f-g",
+          "heading": 232.88669,
+          "description": null
+        },
+        {
+          "pano": "N8uzKQtYwpoPOiIJbbbrQg",
+          "heading": 178.48451,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 18.946627067248397
+    },
+    "k7vDiemRMPox0YpqBbaqKA": {
+      "pano": "k7vDiemRMPox0YpqBbaqKA",
+      "lat": 51.519229121160734,
+      "lng": -0.1281030781399038,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "l1w6KOE3OLmS4oKv3ncyBw",
+          "heading": 322.40762,
+          "description": null
+        },
+        {
+          "pano": "faW7GRAcxWxYBV7SiP9DQg",
+          "heading": 53.213512,
+          "description": null
+        },
+        {
+          "pano": "bOZu2sVUE6hMAZZDDTrX7w",
+          "heading": 234.18156,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 22.760719963801268
+    },
+    "bOZu2sVUE6hMAZZDDTrX7w": {
+      "pano": "bOZu2sVUE6hMAZZDDTrX7w",
+      "lat": 51.519223170824546,
+      "lng": -0.12811651260823642,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "k7vDiemRMPox0YpqBbaqKA",
+          "heading": 54.18156,
+          "description": null
+        },
+        {
+          "pano": "y_kdJnPovnfHB1iEaWNGDQ",
+          "heading": 233.98608,
+          "description": null
+        },
+        {
+          "pano": "l1w6KOE3OLmS4oKv3ncyBw",
+          "heading": 353.562,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 22.916265615114167
+    },
+    "y_kdJnPovnfHB1iEaWNGDQ": {
+      "pano": "y_kdJnPovnfHB1iEaWNGDQ",
+      "lat": 51.519217542507704,
+      "lng": -0.12812887161032813,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "bOZu2sVUE6hMAZZDDTrX7w",
+          "heading": 53.98608,
+          "description": null
+        },
+        {
+          "pano": "FcnMMwtw5enBl84rv9n5VA",
+          "heading": 321.13998,
+          "description": null
+        },
+        {
+          "pano": "xt0a3_kySO_oZAPCvKfwpA",
+          "heading": 237.12827,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 23.123961257010613
+    },
+    "xt0a3_kySO_oZAPCvKfwpA": {
+      "pano": "xt0a3_kySO_oZAPCvKfwpA",
+      "lat": 51.51921014297979,
+      "lng": -0.1281472354083769,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "IhYOOA287FEj1w81H9DCAQ",
+          "heading": 282.64935,
+          "description": null
+        },
+        {
+          "pano": "zKCqjBKgBgGQwc0wsrO3cg",
+          "heading": 237.32312,
+          "description": null
+        },
+        {
+          "pano": "FcnMMwtw5enBl84rv9n5VA",
+          "heading": 5.1813316,
+          "description": null
+        },
+        {
+          "pano": "y_kdJnPovnfHB1iEaWNGDQ",
+          "heading": 57.128265,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 23.416793148365638
+    },
+    "IhYOOA287FEj1w81H9DCAQ": {
+      "pano": "IhYOOA287FEj1w81H9DCAQ",
+      "lat": 51.51921269020116,
+      "lng": -0.12816519615503855,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "ed9ywtYhdoFTv5bMwSSmNw",
+          "heading": 320.9926,
+          "description": null
+        },
+        {
+          "pano": "zKCqjBKgBgGQwc0wsrO3cg",
+          "heading": 161.35463,
+          "description": null
+        },
+        {
+          "pano": "xt0a3_kySO_oZAPCvKfwpA",
+          "heading": 102.64937,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 22.751814221874437
+    },
+    "TwWvFtPbQubDjEE-PeQFSw": {
+      "pano": "TwWvFtPbQubDjEE-PeQFSw",
+      "lat": 51.51928608369655,
+      "lng": -0.12809221117005504,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "7Vrr0MlkjznT94Gn5LDPUQ",
+          "heading": 186.49496,
+          "description": null
+        },
+        {
+          "pano": "BAK3A2dl8mf2PdnBhjK0OQ",
+          "heading": 321.56683,
+          "description": null
+        },
+        {
+          "pano": "Y0rt-r34PQDBSrV-szMLdQ",
+          "heading": 141.33923,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 17.978666489890045
+    },
+    "faW7GRAcxWxYBV7SiP9DQg": {
+      "pano": "faW7GRAcxWxYBV7SiP9DQg",
+      "lat": 51.519235392245506,
+      "lng": -0.12808973488687458,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "2Ayg6bXbYv5jh21ejlufiQ",
+          "heading": 55.142094,
+          "description": null
+        },
+        {
+          "pano": "N8uzKQtYwpoPOiIJbbbrQg",
+          "heading": 352.6705,
+          "description": null
+        },
+        {
+          "pano": "k7vDiemRMPox0YpqBbaqKA",
+          "heading": 233.21352,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 22.628012292455075
+    },
+    "2Ayg6bXbYv5jh21ejlufiQ": {
+      "pano": "2Ayg6bXbYv5jh21ejlufiQ",
+      "lat": 51.51924126256334,
+      "lng": -0.12807612055683368,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "faW7GRAcxWxYBV7SiP9DQg",
+          "heading": 235.14209,
+          "description": null
+        },
+        {
+          "pano": "N8uzKQtYwpoPOiIJbbbrQg",
+          "heading": 319.68347,
+          "description": null
+        },
+        {
+          "pano": "e2Y4uF9aqifb8aEF599B3w",
+          "heading": 3.249,
+          "description": null
+        },
+        {
+          "pano": "X9UZlw2Xf25wSWp0kKM4DA",
+          "heading": 52.965946,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 22.60124061508678
+    },
+    "e2Y4uF9aqifb8aEF599B3w": {
+      "pano": "e2Y4uF9aqifb8aEF599B3w",
+      "lat": 51.51927094397806,
+      "lng": -0.12807347466147792,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "7Vrr0MlkjznT94Gn5LDPUQ",
+          "heading": 281.62503,
+          "description": null
+        },
+        {
+          "pano": "Y0rt-r34PQDBSrV-szMLdQ",
+          "heading": 323.55,
+          "description": null
+        },
+        {
+          "pano": "2Ayg6bXbYv5jh21ejlufiQ",
+          "heading": 183.249,
+          "description": null
+        },
+        {
+          "pano": "s3ZRT25raC_PxFukOYnXPg",
+          "heading": 145.22931,
+          "description": null
+        },
+        {
+          "pano": "N8uzKQtYwpoPOiIJbbbrQg",
+          "heading": 216.61893,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 20.100090555444623
+    },
+    "Y0rt-r34PQDBSrV-szMLdQ": {
+      "pano": "Y0rt-r34PQDBSrV-szMLdQ",
+      "lat": 51.51927815386103,
+      "lng": -0.12808194380702698,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "7Vrr0MlkjznT94Gn5LDPUQ",
+          "heading": 239.82344,
+          "description": null
+        },
+        {
+          "pano": "e2Y4uF9aqifb8aEF599B3w",
+          "heading": 143.54999,
+          "description": null
+        },
+        {
+          "pano": "TwWvFtPbQubDjEE-PeQFSw",
+          "heading": 321.33923,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 19.110252118175215
+    },
+    "zKCqjBKgBgGQwc0wsrO3cg": {
+      "pano": "zKCqjBKgBgGQwc0wsrO3cg",
+      "lat": 51.51920467361764,
+      "lng": -0.12816094131486463,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "IhYOOA287FEj1w81H9DCAQ",
+          "heading": 341.35464,
+          "description": null
+        },
+        {
+          "pano": "xt0a3_kySO_oZAPCvKfwpA",
+          "heading": 57.32312,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 23.690429093803864
+    },
+    "X9UZlw2Xf25wSWp0kKM4DA": {
+      "pano": "X9UZlw2Xf25wSWp0kKM4DA",
+      "lat": 51.51924713160989,
+      "lng": -0.1280636729065738,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "zlWNILU_z2aKH777aoHHrw",
+          "heading": 34.056675,
+          "description": null
+        },
+        {
+          "pano": "s3ZRT25raC_PxFukOYnXPg",
+          "heading": 358.19604,
+          "description": null
+        },
+        {
+          "pano": "2Ayg6bXbYv5jh21ejlufiQ",
+          "heading": 232.96594,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 22.583341812337412
+    },
+    "s3ZRT25raC_PxFukOYnXPg": {
+      "pano": "s3ZRT25raC_PxFukOYnXPg",
+      "lat": 51.5192629325629,
+      "lng": -0.12806446337236735,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "zlWNILU_z2aKH777aoHHrw",
+          "heading": 144.60722,
+          "description": null
+        },
+        {
+          "pano": "X9UZlw2Xf25wSWp0kKM4DA",
+          "heading": 178.19604,
+          "description": null
+        },
+        {
+          "pano": "e2Y4uF9aqifb8aEF599B3w",
+          "heading": 325.2293,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 21.182416936906346
+    },
+    "zlWNILU_z2aKH777aoHHrw": {
+      "pano": "zlWNILU_z2aKH777aoHHrw",
+      "lat": 51.51925484113159,
+      "lng": -0.12805527223255692,
+      "imageDate": "2015-02",
+      "links": [
+        {
+          "pano": "s3ZRT25raC_PxFukOYnXPg",
+          "heading": 324.6072,
+          "description": null
+        },
+        {
+          "pano": "X9UZlw2Xf25wSWp0kKM4DA",
+          "heading": 214.05667,
+          "description": null
+        }
+      ],
+      "inside_polygon": true,
+      "dist_m_from_seed": 22.28005420378008
+    }
+  }
+}

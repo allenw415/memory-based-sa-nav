@@ -1,0 +1,1162 @@
+{
+  "Room 26": {
+    "name": "Room 26",
+    "Level": 0,
+    "category": "Americas",
+    "title": "North America",
+    "links": [
+      {
+        "direction": "left",
+        "name": "Room 24"
+      },
+      {
+        "direction": "right",
+        "name": "Room 27"
+      }
+    ]
+  },
+  "Room 27": {
+    "name": "Room 27",
+    "Level": 0,
+    "category": "Americas",
+    "title": "Mexico",
+    "links": [
+      {
+        "direction": "left",
+        "name": "Room 26"
+      },
+      {
+        "direction": "down",
+        "name": ["East Stairs", "Toilets", "Accessible toilet", "Baby changing"]
+      }
+    ]
+  },
+  "Room 4": {
+    "name": "Room 4",
+    "Level": 0,
+    "category": "Ancient Egypt",
+    "title": "Egyptian sculpture",
+    "links": [
+      {
+        "direction": "up",
+        "name": "West Stairs"
+      },
+      {
+        "direction": "right",
+        "name": "Collections Shop"
+      },
+      {
+        "direction": "down",
+        "name": "Room 6"
+      },
+      {
+        "direction": "left",
+        "name": "Room 8"
+      }
+    ]
+  },
+  "Room 6 bottom": {
+    "name": "Room 6",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Early Greece",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 6"
+      },
+      {
+        "direction": "left",
+        "name": "Room 11"
+      },
+      {
+        "direction": "right",
+        "name": ["Shop", "Vistor and Member cloakroom"]
+      }
+    ]
+  },
+  "Room 11": {
+    "name": "Room 11",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Cycladic Islands",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 6 bottom"
+      },
+      {
+        "direction": "left",
+        "name": "Room 12"
+      }
+    ]
+  },
+  "Room 12": {
+    "name": "Room 12",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": ["Greece: Minoans and Mycenaeans", "The Arthur | Fleischman Gallery"],
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 13"
+      },
+      {
+        "direction": "right",
+        "name": "Room 11"
+      },
+      {
+        "direction": "left",
+        "name": ["Toilets", "Level access lift 1", "Stairs 2", "Pizzaria"]
+      }
+    ]
+  },
+  "Room 13": {
+    "name": "Room 13",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Greece 1050–520 BC",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 14"
+      },
+      {
+        "direction": "down",
+        "name": "Room 12"
+      }
+    ]
+  },
+  "Room 14": {
+    "name": "Room 14",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Greek vases",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 15"
+      },
+      {
+        "direction": "down",
+        "name": "Room 13"
+      }
+    ]
+  },
+  "Room 15": {
+    "name": "Room 15",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Athens and Lycia",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 16"
+      },
+      {
+        "direction": "down",
+        "name": "Room 14"
+      }
+    ]
+  },
+  "Room 16": {
+    "name": "Room 16",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Bassai sculptures",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 17"
+      },
+      {
+        "direction": "down",
+        "name": "Room 15"
+      }
+    ]
+  },
+  "Room 17": {
+    "name": "Room 17",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Nereid Monument",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 19"
+      },
+      {
+        "direction": "down",
+        "name": "Room 16"
+      },
+      {
+        "direction": "left",
+        "name": ["Room 18a", "Room 18b"]
+      }
+    ]
+  },
+  "Room 18a": {
+    "name": "Room 18",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Parthenon",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 17"
+      },
+      {
+        "direction": "down",
+        "name": "Room 18b"
+      },
+      {
+        "direction": "left",
+        "name": "Room 18"
+      }
+    ]
+  },
+  "Room 18b": {
+    "name": "Room 18",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Parthenon",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 18a"
+      },
+      {
+        "direction": "right",
+        "name": "Room 17"
+      },
+      {
+        "direction": "left",
+        "name": "Room 18"
+      }
+    ]
+  },
+  "Room 18": {
+    "name": "Room 18",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Parthenon",
+    "links": [
+      {
+        "direction": "right",
+        "name": ["Room 18a", "Room 18b"]
+      }
+    ]
+  },
+  "Room 19": {
+    "name": "Room 19",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Athens",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 20"
+      },
+      {
+        "direction": "down",
+        "name": "Room 17"
+      }
+    ]
+  },
+  "Room 20": {
+    "name": "Room 20",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Greeks and Lycians 400–325 BC",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 21"
+      },
+      {
+        "direction": "down",
+        "name": "Room 19"
+      }
+    ]
+  },
+  "Room 21": {
+    "name": "Room 21",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Mausoleum of Halikarnassos",
+    "links": [
+      {
+        "direction": "right",
+        "name": "West Stairs"
+      },
+      {
+        "direction": "down",
+        "name": "Room 22"
+      },
+      {
+        "direction": "left",
+        "name": "Room 20"
+      }
+    ]
+  },
+  "Room 22": {
+    "name": "Room 22",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "The world of Alexander",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 21"
+      },
+      {
+        "direction": "down",
+        "name": "Room 23"
+      }
+    ]
+  },
+  "Room 23": {
+    "name": "Room 23",
+    "Level": 0,
+    "category": "Ancient Greece and Rome",
+    "title": "Greek and Roman sculpture",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 22"
+      },
+      {
+        "direction": "right",
+        "name": "Room 8"
+      },
+      {
+        "direction": "down",
+        "name": "Room 10"
+      },
+      {
+        "direction": "left",
+        "name": "Room 17"
+      }
+    ]
+  },
+  "Room 29a": {
+    "name": "Room 29a",
+    "Level": 0,
+    "category": "Asia",
+    "title": "India",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 29b"
+      }
+    ]
+  },
+  "Room 29b": {
+    "name": "Room 29b",
+    "Level": 0,
+    "category": "Asia",
+    "title": "India",
+    "links": [
+      {
+        "direction": "left",
+        "name": "Room 29a"
+      },
+      {
+        "direction": "right",
+        "name": "Room 24"
+      }
+    ]
+  },
+  "Room 33": {
+    "name": "Room 33",
+    "Level": 1,
+    "category": "Asia",
+    "title": ["China and South Asia", "The Sir Joseph Hotung Gallery"],
+    "links": [
+      {
+        "direction": "down",
+        "name": "Room 33b"
+      },
+      {
+        "direction": "down",
+        "name": "North Stairs"
+      },
+      {
+        "direction": "left",
+        "name": "Room 33a"
+      }
+    ]
+  },
+  "Room 33a": {
+    "name": "Room 33",
+    "Level": 1,
+    "category": "Asia",
+    "title": ["India: Amaravati", "The Asahi Shimbun Gallery"],
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 33"
+      },
+      {
+        "direction": "left",
+        "name": "Lift 1"
+      }
+    ]
+  },
+  "Room 33b": {
+    "name": "Room 33",
+    "Level": 1,
+    "category": "Asia",
+    "title": ["Chinese jade", "The Selwyn and Ellie Alleyne Gallery"],
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 33"
+      }
+    ]
+  },
+  "Room 67": {
+    "name": "Room 67",
+    "Level": 2,
+    "category": "Asia",
+    "title": ["Korea", "The Korea Foundation Gallery"],
+    "links": [
+      {
+        "direction": "down",
+        "name": "North Stairs"
+      },
+      {
+        "direction": "left",
+        "name": "Room 95"
+      }
+    ]
+  },
+  "Room 95": {
+    "name": "Room 95",
+    "Level": 2,
+    "category": "Asia",
+    "title": ["Chinese ceramics – Sir Percival David Collection", "The Sir Joseph Hotung Centre for Ceramic Studies"],
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 67"
+      },
+      {
+        "direction": "left",
+        "name": "Lift 1"
+      }
+    ]
+  },
+  "Room 6": {
+    "name": "Room 6",
+    "Level": 0,
+    "category": "Middle East",
+    "title": "Assyrian sculpture and Balawat Gates",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 4"
+      },
+      {
+        "direction": "up",
+        "name": "Room 7"
+      },
+      {
+        "direction": "down",
+        "name": "Room 6 bottom"
+      }
+    ]
+  },
+  "Room 7": {
+    "name": "Room 7",
+    "Level": 0,
+    "category": "Middle East",
+    "title": "Assyria: Nimrud",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 8"
+      },
+      {
+        "direction": "down",
+        "name": "Room 6"
+      }
+    ]
+  },
+  "Room 8": {
+    "name": "Room 8",
+    "Level": 0,
+    "category": "Middle East",
+    "title": "Assyria: Nimrud",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 9"
+      },
+      {
+        "direction": "right",
+        "name": "Room 4"
+      },
+      {
+        "direction": "down",
+        "name": "Room 7"
+      },
+      {
+        "direction": "left",
+        "name": "Room 23"
+      }
+    ]
+  },
+  "Room 9": {
+    "name": "Room 9",
+    "Level": 0,
+    "category": "Middle East",
+    "title": "Assyria: Nineveh",
+    "links": [
+      {
+        "direction": "left",
+        "name": "Room 4"
+      },
+      {
+        "direction": "down",
+        "name": "Room 8"
+      },
+      {
+        "direction": "right",
+        "name": "Room 23"
+      }
+    ]
+  },
+  "Room 10": {
+    "name": "Room 10",
+    "Level": 0,
+    "category": "Middle East",
+    "title": "Assyria: Lion hunts, Siege of Lachish and Khorsabad",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 23"
+      },
+      {
+        "direction": "right",
+        "name": "Room 7"
+      }
+    ]
+  },
+  "Room 30": {
+    "name": "Room 30",
+    "Level": 0,
+    "category": "Exhibitions",
+    "title": ["Special exhibitions", "The Sainsbury Exhibitions Gallery"],
+    "links": [
+      {
+        "direction": "down",
+        "name": "West Stairs"
+      }
+    ]
+  },
+  "Room 1": {
+    "name": "Room 1",
+    "Level": 0,
+    "category": "Themes",
+    "title": "Enlightenment",
+    "links": [
+      {
+        "direction": "top",
+        "name": ["East Stairs", "Toilets", "Accessible toilet", "Baby changing"]
+      },
+      {
+        "direction": "down",
+        "name": "Room 2"
+      },
+      {
+        "direction": "left",
+        "name": "Book Shop"
+      }
+    ]
+  },
+  "Room 2": {
+    "name": "Room 2",
+    "Level": 0,
+    "category": "Themes",
+    "title": "Collecting the world",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 1"
+      },
+      {
+        "direction": "down",
+        "name": "Room 2a"
+      },
+      {
+        "direction": "left",
+        "name": "Grenville Room"
+      }
+    ]
+  },
+  "Room 2a": {
+    "name": "Room 2a",
+    "Level": 0,
+    "category": "Themes",
+    "title": ["The Waddesdon Bequest", "Funded by The Rothschild Foundation"],
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 2"
+      }
+    ]
+  },
+  "Room 24": {
+    "name": "Room 24",
+    "Level": 0,
+    "category": "Themes",
+    "title": ["Living and Dying", "The Wellcome Trust Gallery"],
+    "links": [
+      {
+        "direction": "left",
+        "name": "Room 29b"
+      },
+      {
+        "direction": "right",
+        "name": "Room 26"
+      },
+      {
+        "direction": "down",
+        "name": "Stairs 1"
+      },
+      {
+        "direction": "down",
+        "name": "Great Court Shop"
+      }
+    ]
+  },
+  "Room 92": {
+    "name": "Room 92",
+    "Level": 5,
+    "category": "Japan",
+    "title": "The Mitsubishi Corporation Galleries",
+    "links": [
+      {
+        "direction": "down",
+        "name": "North Stairs"
+      },
+      {
+        "direction": "left",
+        "name": "Room 93"
+      }
+    ]
+  },
+  "Room 93": {
+    "name": "Room 93",
+    "Level": 5,
+    "category": "Japan",
+    "title": "The Mitsubishi Corporation Galleries",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 92"
+      },
+      {
+        "direction": "left",
+        "name": "Room 94"
+      },
+      {
+        "direction": "down",
+        "name": "Stairs 5"
+      }
+    ]
+  },
+  "Room 94": {
+    "name": "Room 94",
+    "Level": 5,
+    "category": "Japan",
+    "title": "The Mitsubishi Corporation Galleries",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 93"
+      },
+      {
+        "direction": "right",
+        "name": "Stairs 5"
+      }
+    ]
+  },
+  "Room 42": {
+    "name": "Room 42",
+    "Level": 3,
+    "category": "Middle East",
+    "title": ["The Islamic world", "The Albukhary Foundation Gallery"],
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 43a"
+      },
+      {
+        "direction": "left",
+        "name": "Room 41"
+      }
+    ]
+  },
+  "Room 43": {
+    "name": "Room 43",
+    "Level": 3,
+    "category": "Middle East",
+    "title": ["The Islamic world", "The Albukhary Foundation Gallery"],
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 43a"
+      },
+      {
+        "direction": "left",
+        "name": "Room 46"
+      }
+    ]
+  },
+  "Room 52": {
+    "name": "Room 52",
+    "Level": 3,
+    "category": "Middle East",
+    "title": ["Ancient Iran", "The Rahim Irvani Gallery"],
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 53"
+      },
+      {
+        "direction": "down",
+        "name": "Room 51"
+      }
+    ]
+  },
+  "Room 53": {
+    "name": "Room 53",
+    "Level": 3,
+    "category": "Middle East",
+    "title": "Ancient South Arabia",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 65"
+      },
+      {
+        "direction": "right",
+        "name": "East Stairs"
+      },
+      {
+        "direction": "down",
+        "name": "Room 52"
+      },
+      {
+        "direction": "left",
+        "name": "Room 54"
+      }
+    ]
+  },
+  "Room 54": {
+    "name": "Room 54",
+    "Level": 3,
+    "category": "Middle East",
+    "title": "Anatolia and Urartu 7000–300 BC",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 53"
+      },
+      {
+        "direction": "left",
+        "name": "Room 55"
+      }
+    ]
+  },
+  "Room 55": {
+    "name": "Room 55",
+    "Level": 3,
+    "category": "Middle East",
+    "title": "Mesopotamia 1500–539 BC",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 54"
+      },
+      {
+        "direction": "left",
+        "name": "Room 56"
+      }
+    ]
+  },
+  "Room 56": {
+    "name": "Room 56",
+    "Level": 3,
+    "category": "Middle East",
+    "title": "Mesopotamia 6000–1500 BC",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 63"
+      },
+      {
+        "direction": "right",
+        "name": "Room 55"
+      },
+      {
+        "direction": "down",
+        "name": "Great Court Restaurant"
+      },
+      {
+        "direction": "left",
+        "name": "Room 57"
+      }
+    ]
+  },
+  "Room 57": {
+    "name": "Room 57",
+    "Level": 3,
+    "category": "Middle East",
+    "title": "Ancient Levant",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 56"
+      },
+      {
+        "direction": "left",
+        "name": "Room 58"
+      }
+    ]
+  },
+  "Room 58": {
+    "name": "Room 58",
+    "Level": 3,
+    "category": "Middle East",
+    "title": "Ancient Levant",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 57"
+      },
+      {
+        "direction": "left",
+        "name": "Room 59"
+      }
+    ]
+  },
+  "Room 59": {
+    "name": "Room 59",
+    "Level": 3,
+    "category": "Middle East",
+    "title": "Ancient Levant",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 61"
+      },
+      {
+        "direction": "right",
+        "name": "Room 58"
+      },
+      {
+        "direction": "right",
+        "name": "Lift 2"
+      },
+      {
+        "direction": "down",
+        "name": "Room 73"
+      },
+      {
+        "direction": "left",
+        "name": "West Stairs"
+      }
+    ]
+  },
+  "Room 38": {
+    "name": "Room 38",
+    "Level": 3,
+    "category": "Themes",
+    "title": ["Clocks and watches", "The Sir Harry and Lady Djanogly Gallery"],
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 39"
+      },
+      {
+        "direction": "left",
+        "name": "Room 37"
+      }
+    ]
+  },
+  "Room 39": {
+    "name": "Room 39",
+    "Level": 3,
+    "category": "Themes",
+    "title": ["Clocks and watches", "The Sir Harry and Lady Djanogly Gallery"],
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 40"
+      },
+      {
+        "direction": "left",
+        "name": "Room 38"
+      }
+    ]
+  },
+  "Room 68": {
+    "name": "Room 40",
+    "Level": 3,
+    "category": "Themes",
+    "title": "Room 40",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 37"
+      },
+      {
+        "direction": "left",
+        "name": "Room 69"
+      }
+    ]
+  },
+  "Room 40": {
+    "name": "Room 40",
+    "Level": 3,
+    "category": "Europe",
+    "title": ["Medieval Europe 1050–1500", "The Sir Paul and Lady Ruddock Gallery"],
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 41"
+      },
+      {
+        "direction": "down",
+        "name": "Room 39"
+      },
+      {
+        "direction": "left",
+        "name": "Room 36"
+      }
+    ]
+  },
+  "Room 41": {
+    "name": "Room 41",
+    "Level": 3,
+    "category": "Europe",
+    "title": ["Sutton Hoo and Europe AD 300–1100", "The Sir Paul and Lady Ruddock Gallery"],
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 49"
+      },
+      {
+        "direction": "right",
+        "name": "Room 42"
+      },
+      {
+        "direction": "down",
+        "name": "Room 47"
+      },
+      {
+        "direction": "left",
+        "name": "Room 40"
+      }
+    ]
+  },
+  "Room 46": {
+    "name": "Room 46",
+    "Level": 3,
+    "category": "Europe",
+    "title": "Europe 1400–1800",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 43"
+      },
+      {
+        "direction": "left",
+        "name": "Room 47"
+      }
+    ]
+  },
+  "Room 47": {
+    "name": "Room 47",
+    "Level": 3,
+    "category": "Europe",
+    "title": "Europe 1800–1900",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 41"
+      },
+      {
+        "direction": "right",
+        "name": "Room 46"
+      },
+      {
+        "direction": "down",
+        "name": "Room 48"
+      }
+    ]
+  },
+  "Room 48": {
+    "name": "Room 48",
+    "Level": 3,
+    "category": "Europe",
+    "title": "Europe 1900 to the present",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 47"
+      }
+    ]
+  },
+  "Room 49": {
+    "name": "Room 49",
+    "Level": 3,
+    "category": "Europe",
+    "title": ["Roman Britain", "The Weston Gallery"],
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 49"
+      },
+      {
+        "direction": "down",
+        "name": "Room 41"
+      }
+    ]
+  },
+  "Room 50": {
+    "name": "Room 50",
+    "Level": 3,
+    "category": "Europe",
+    "title": "Britain and Europe 800 BC–AD 43",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 51"
+      },
+      {
+        "direction": "down",
+        "name": "Room 49"
+      }
+    ]
+  },
+  "Room 51": {
+    "name": "Room 51",
+    "Level": 3,
+    "category": "Europe",
+    "title": ["Europe and Middle East 10,000–800 BC", "The Sheikh Zayed Bin Sultan Al Nahyan Gallery"],
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 52"
+      },
+      {
+        "direction": "down",
+        "name": "Room 50"
+      }
+    ]
+  },
+  "Room 35": {
+    "name": "Room 35",
+    "Level": 3,
+    "category": "Exhibitions",
+    "title": ["Special exhibitions", "The Joseph Hotung Great Court Gallery"],
+    "links": [
+      {
+        "direction": "up",
+        "name": "Great Court Restaurant"
+      },
+      {
+        "direction": "up",
+        "name": "Lift 3"
+      },
+      {
+        "direction": "right",
+        "name": "Stairs 3"
+      }
+    ]
+  },
+  "Room 90": {
+    "name": "Room 90",
+    "Level": 4,
+    "category": "Exhibitions",
+    "title": "Prints and drawings",
+    "links": [
+      {
+        "direction": "right",
+        "name": "Room 90a"
+      },
+      {
+        "direction": "down",
+        "name": "North Stairs"
+      },
+      {
+        "direction": "left",
+        "name": "Stairs 5"
+      }
+    ]
+  },
+  "Room 90a": {
+    "name": "Room 90",
+    "Level": 4,
+    "category": "Exhibitions",
+    "title": "Prints and drawings",
+    "links": [
+      {
+        "direction": "left",
+        "name": "Room 90"
+      },
+      {
+        "direction": "down",
+        "name": "North Stairs"
+      }
+    ]
+  },
+  "Room 36": {
+    "name": "Room 36",
+    "Level": 3,
+    "category": "",
+    "title": "",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Lift 4"
+      },
+      {
+        "direction": "right",
+        "name": "Room 40"
+      },
+      {
+        "direction": "down",
+        "name": "Room 37"
+      },
+      {
+        "direction": "left",
+        "name": "South Stairs"
+      }
+    ]
+  },
+  "Room 37": {
+    "name": "Room 37",
+    "Level": 3,
+    "category": "",
+    "title": "",
+    "links": [
+      {
+        "direction": "up",
+        "name": "Room 36"
+      },
+      {
+        "direction": "right",
+        "name": "Room 38"
+      },
+      {
+        "direction": "left",
+        "name": "Room 68"
+      }
+    ]
+  }
+}

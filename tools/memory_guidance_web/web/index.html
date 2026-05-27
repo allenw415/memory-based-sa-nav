@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RAG 記憶導航 Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Interactive RAG Memory Navigation</p>
+        <h1>拍一張照片，讓系統判斷你在哪裡，並建議往哪個通道走。</h1>
+        <p class="lede">
+          這個 demo 會把定位照片丟進 panorama memory index，使用 room graph 推進 waypoint，
+          再用 VLM 或 fallback 規則產生中文導航回饋。
+        </p>
+      </section>
+
+      <form id="guidance-form" class="panel">
+        <label>
+          目標展廳
+          <input id="target-room" value="Room 23" required />
+        </label>
+
+        <label>
+          Waypoints，可留空，逗號分隔
+          <input id="waypoints" placeholder="Room 9,Room 17" />
+        </label>
+
+        <label>
+          定位照片（會在本次瀏覽器 session 內累積）
+          <input id="localization-images" type="file" accept="image/*" multiple />
+        </label>
+        <div class="photo-memory">
+          <div>
+            <strong id="localization-count">已累積 0 張定位照片</strong>
+            <p>如果系統要求補拍，直接再選新照片即可；下一次送出會把前面的照片一起納入檢索評分。</p>
+          </div>
+          <button id="clear-localization-images" type="button" class="secondary">清空定位照片</button>
+        </div>
+        <ul id="localization-list" class="photo-list"></ul>
+
+        <fieldset>
+          <legend>候選通道照片</legend>
+          <label>左側 <input id="passage-left" type="file" accept="image/*" /></label>
+          <label>前方 <input id="passage-front" type="file" accept="image/*" /></label>
+          <label>右側 <input id="passage-right" type="file" accept="image/*" /></label>
+          <label>後方 <input id="passage-back" type="file" accept="image/*" /></label>
+        </fieldset>
+
+        <button type="submit">取得導航建議</button>
+      </form>
+
+      <section class="panel result-panel">
+        <h2>系統回饋</h2>
+        <div id="message" class="message">尚未送出照片。</div>
+        <pre id="json-output">{}</pre>
+      </section>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>

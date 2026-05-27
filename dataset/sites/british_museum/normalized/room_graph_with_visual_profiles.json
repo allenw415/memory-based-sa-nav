@@ -1,0 +1,1138 @@
+{
+  "Room 1": {
+    "room_id": "Room 1",
+    "display_name": "Room 1",
+    "floor": "0",
+    "category": "Themes",
+    "title": "Enlightenment",
+    "aliases": [
+      "Enlightenment",
+      "Room 1"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 2",
+        "target_display_name": "Room 2",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Enlightenment gallery about 18th-century collecting, scientific discovery, classification, empire, and the early British Museum.",
+      "visual_cues": [
+        "long historic library-like gallery",
+        "oldest room / King's Library setting",
+        "dense wall display cases and classified collections",
+        "18th-century collecting and Enlightenment interpretation panels",
+        "Sir Hans Sloane or King George III Library references"
+      ]
+    }
+  },
+  "Room 2": {
+    "room_id": "Room 2",
+    "display_name": "Room 2",
+    "floor": "0",
+    "category": "Themes",
+    "title": "Collecting the world",
+    "aliases": [
+      "Collecting the world",
+      "Room 2"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 1",
+        "target_display_name": "Room 1",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Gallery about collectors and the formation of the British Museum as a collection of collections.",
+      "visual_cues": [
+        "collector-focused displays",
+        "Knucklebone player sculpture",
+        "Tudor Heart pendant display",
+        "objects and labels about the founding and development of the British Museum",
+        "material about Sir Hans Sloane or collecting history"
+      ]
+    }
+  },
+  "Room 4": {
+    "room_id": "Room 4",
+    "display_name": "Room 4",
+    "floor": "0",
+    "category": "Ancient Egypt",
+    "title": "Egyptian sculpture",
+    "aliases": [
+      "Egyptian sculpture",
+      "Room 4"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 6",
+        "target_display_name": "Room 6",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 8",
+        "target_display_name": "Room 8",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 9",
+        "target_display_name": "Room 9",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Ancient Egyptian sculpture gallery with major pharaonic monuments and the Rosetta Stone.",
+      "visual_cues": [
+        "Rosetta Stone in a crowded display case",
+        "large Egyptian royal statues and colossal heads",
+        "statues of Ramesses II or Amenhotep III",
+        "sarcophagus of Nectanebo II",
+        "hieroglyphic inscriptions on stone monuments",
+        "Egyptian temple or tomb sculpture"
+      ]
+    }
+  },
+  "Room 6": {
+    "room_id": "Room 6",
+    "display_name": "Room 6",
+    "floor": "0",
+    "category": "Middle East",
+    "title": "Assyrian sculpture and Balawat Gates",
+    "aliases": [
+      "Assyrian sculpture and Balawat Gates",
+      "Early Greece",
+      "Room 6",
+      "Room 6 bottom"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 11",
+        "target_display_name": "Room 11",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 4",
+        "target_display_name": "Room 4",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 7",
+        "target_display_name": "Room 7",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Assyrian sculpture and Balawat Gates gallery with colossal winged lions, bronze gate fragments, obelisks, and stelae.",
+      "visual_cues": [
+        "Black Obelisk of Shalmaneser III",
+        "colossal winged human-headed lions",
+        "bronze Balawat Gates fragments or replicas",
+        "standing lion from the Temple of Ishtar",
+        "Assyrian obelisks and vertical inscribed stelae"
+      ]
+    }
+  },
+  "Room 7": {
+    "room_id": "Room 7",
+    "display_name": "Room 7",
+    "floor": "0",
+    "category": "Middle East",
+    "title": "Assyria: Nimrud",
+    "aliases": [
+      "Assyria: Nimrud",
+      "Room 7"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 8",
+        "target_display_name": "Room 8",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 6",
+        "target_display_name": "Room 6",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 10",
+        "target_display_name": "Room 10",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Assyria: Nimrud gallery showing reliefs from Ashurnasirpal II's Northwest Palace at Nimrud.",
+      "visual_cues": [
+        "Nimrud palace wall reliefs",
+        "Ashurnasirpal II panels",
+        "Northwest Palace reliefs",
+        "reliefs of king, courtiers, protective demons, ritual scenes, or hunting",
+        "walls lined with Neo-Assyrian carved stone panels"
+      ]
+    }
+  },
+  "Room 8": {
+    "room_id": "Room 8",
+    "display_name": "Room 8",
+    "floor": "0",
+    "category": "Middle East",
+    "title": "Assyria: Nimrud",
+    "aliases": [
+      "Assyria: Nimrud",
+      "Room 8"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 9",
+        "target_display_name": "Room 9",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 4",
+        "target_display_name": "Room 4",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 7",
+        "target_display_name": "Room 7",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 23",
+        "target_display_name": "Room 23",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Assyria: Nimrud gallery showing reliefs from Ashurnasirpal II's Northwest Palace at Nimrud.",
+      "visual_cues": [
+        "Nimrud palace wall reliefs",
+        "Ashurnasirpal II panels",
+        "Northwest Palace reliefs",
+        "reliefs of king, courtiers, protective demons, ritual scenes, or hunting"
+      ]
+    }
+  },
+  "Room 9": {
+    "room_id": "Room 9",
+    "display_name": "Room 9",
+    "floor": "0",
+    "category": "Middle East",
+    "title": "Assyria: Nineveh",
+    "aliases": [
+      "Assyria: Nineveh",
+      "Room 9"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 4",
+        "target_display_name": "Room 4",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 8",
+        "target_display_name": "Room 8",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Assyria: Nineveh gallery with Sennacherib's Southwest Palace carved stone panels, including lamassu transport and military campaign scenes.",
+      "visual_cues": [
+        "Sennacherib palace relief panels",
+        "Southwest Palace at Nineveh labels",
+        "reliefs showing transport of colossal human-headed winged bulls",
+        "lamassu transport or quarrying scenes",
+        "military campaign relief panels",
+        "walls lined with carved Neo-Assyrian stone panels from Nineveh"
+      ]
+    }
+  },
+  "Room 10": {
+    "room_id": "Room 10",
+    "display_name": "Room 10",
+    "floor": "0",
+    "category": "Middle East",
+    "title": "Assyria: Lion hunts, Siege of Lachish and Khorsabad",
+    "aliases": [
+      "Assyria: Lion hunts, Siege of Lachish and Khorsabad",
+      "Room 10"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 23",
+        "target_display_name": "Room 23",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 7",
+        "target_display_name": "Room 7",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Assyria gallery focused on lion hunts, the Siege of Lachish, and Khorsabad palace reliefs across Rooms 10a-10c.",
+      "visual_cues": [
+        "lion hunting reliefs",
+        "wounded or dying lion scenes",
+        "Siege of Lachish reliefs",
+        "Lachish siege weapons or Assyrian campaign panels",
+        "Khorsabad palace scenes",
+        "Sargon II palace winged bulls",
+        "Ashurbanipal North Palace panels"
+      ]
+    }
+  },
+  "Room 11": {
+    "room_id": "Room 11",
+    "display_name": "Room 11",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Cycladic Islands",
+    "aliases": [
+      "Greece: Cycladic Islands",
+      "Room 11"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 6",
+        "target_display_name": "Room 6",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 12",
+        "target_display_name": "Room 12",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Greece: Cycladic Islands gallery with Early Bronze Age Cycladic marble figures, stone vessels, and pottery.",
+      "visual_cues": [
+        "Cycladic marble figurines",
+        "small white marble folded-arm figures",
+        "Cycladic stone vessels and marble cups",
+        "Early or Middle Cycladic pottery",
+        "Aegean island Bronze Age display cases"
+      ]
+    }
+  },
+  "Room 12": {
+    "room_id": "Room 12",
+    "display_name": "Room 12",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Minoans and Mycenaeans; The Arthur | Fleischman Gallery",
+    "aliases": [
+      "Greece: Minoans and Mycenaeans",
+      "Room 12",
+      "The Arthur | Fleischman Gallery"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 13",
+        "target_display_name": "Room 13",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 11",
+        "target_display_name": "Room 11",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Greece: Minoans and Mycenaeans gallery about Bronze Age Aegean cultures, including Crete, the Cyclades, Greece, and the Troad.",
+      "visual_cues": [
+        "Minoan and Mycenaean Bronze Age display cases",
+        "large pottery storage jar / pithos",
+        "gold goblet or jewellery treasure",
+        "Knossos palace material",
+        "Linear A or Linear B writing references",
+        "bull-jumping bronze figure",
+        "Mycenaean pottery from Rhodes or Cyprus"
+      ]
+    }
+  },
+  "Room 13": {
+    "room_id": "Room 13",
+    "display_name": "Room 13",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Greece 1050–520 BC",
+    "aliases": [
+      "Greece 1050–520 BC",
+      "Room 13"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 14",
+        "target_display_name": "Room 14",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 12",
+        "target_display_name": "Room 12",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Greece 1050-520 BC gallery about post-Mycenaean Greek cultural revival, Geometric and Orientalising pottery, sculpture, jewellery, coins, and early Greek script.",
+      "visual_cues": [
+        "Geometric style pottery",
+        "Orientalising animal and floral motifs",
+        "black-figured amphora or early Greek wine jar",
+        "griffin-head spout jug",
+        "early Greek script or Phoenician alphabet references",
+        "displays of sculpture, painted pottery, jewellery, and coins from Athens, Sparta, Corinth, East Greece, or Egypt"
+      ]
+    }
+  },
+  "Room 14": {
+    "room_id": "Room 14",
+    "display_name": "Room 14",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Greek vases",
+    "aliases": [
+      "Greek vases",
+      "Room 14"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 15",
+        "target_display_name": "Room 15",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 13",
+        "target_display_name": "Room 13",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Greek vases gallery centered on Athenian pottery, amphorae, and red-figure / black-figure vase painting around 530-500 BC.",
+      "visual_cues": [
+        "display cases filled with Greek amphorae and vases",
+        "Athenian pottery depicting hunting, dancing, or mythology",
+        "red-figure pottery with red figures on black background",
+        "black-figure neck amphora",
+        "signed vase by Andokides"
+      ]
+    }
+  },
+  "Room 15": {
+    "room_id": "Room 15",
+    "display_name": "Room 15",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Athens and Lycia",
+    "aliases": [
+      "Athens and Lycia",
+      "Room 15"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 16",
+        "target_display_name": "Room 16",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 14",
+        "target_display_name": "Room 14",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Greece: Athens and Lycia gallery about Athenian empire, painted pottery, democracy, the human body, and Lycian Xanthos tomb and shrine sculpture.",
+      "visual_cues": [
+        "Athens and Lycia signage",
+        "Room 15 room number sign",
+        "Athenian painted pottery with democracy or empire themes",
+        "Harpy Tomb relief panel",
+        "Lycian Xanthos tomb or shrine sculpture",
+        "objects about relations between Athens and Lycians"
+      ]
+    }
+  },
+  "Room 16": {
+    "room_id": "Room 16",
+    "display_name": "Room 16",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Bassai sculptures",
+    "aliases": [
+      "Greece: Bassai sculptures",
+      "Room 16"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 17",
+        "target_display_name": "Room 17",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 15",
+        "target_display_name": "Room 15",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Greece: Bassai sculptures gallery with the Phigaleian Frieze from the Temple of Apollo Epikourios at Bassai.",
+      "visual_cues": [
+        "Bassai Sculptures signage",
+        "Phigaleian Frieze marble blocks",
+        "Temple of Apollo Epikourios references",
+        "frieze panels showing Greeks and Amazons or Lapiths and Centaurs",
+        "upper and lower level display of temple fragments"
+      ]
+    }
+  },
+  "Room 17": {
+    "room_id": "Room 17",
+    "display_name": "Room 17",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Nereid Monument",
+    "aliases": [
+      "Nereid Monument",
+      "Room 17"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 19",
+        "target_display_name": "Room 19",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 16",
+        "target_display_name": "Room 16",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 18a",
+        "target_display_name": "Room 18",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 18b",
+        "target_display_name": "Room 18",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 23",
+        "target_display_name": "Room 23",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Nereid Monument gallery dominated by a reconstructed Lycian monumental tomb from Xanthos with Greek and Lycian-style sculpture.",
+      "visual_cues": [
+        "large reconstructed Nereid Monument temple-like tomb",
+        "Ionic columns on a high podium",
+        "statues between columns interpreted as Nereids",
+        "Lycian Xanthos tomb sculpture",
+        "decorative friezes around the walls"
+      ]
+    }
+  },
+  "Room 18": {
+    "room_id": "Room 18",
+    "display_name": "Room 18",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Parthenon",
+    "aliases": [
+      "Greece: Parthenon",
+      "Room 18"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 18a",
+        "target_display_name": "Room 18",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 18b",
+        "target_display_name": "Room 18",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Greece: Parthenon gallery with sculptures from the Parthenon temple on the Acropolis of Athens.",
+      "visual_cues": [
+        "Parthenon sculptures",
+        "West Pediment view",
+        "marble pediment figures, metopes, or frieze panels",
+        "Panathenaic procession frieze",
+        "large white marble architectural sculpture",
+        "Athena or Acropolis interpretation"
+      ]
+    }
+  },
+  "Room 18a": {
+    "room_id": "Room 18a",
+    "display_name": "Room 18",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Parthenon",
+    "aliases": [
+      "Greece: Parthenon",
+      "Room 18",
+      "Room 18a"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 17",
+        "target_display_name": "Room 17",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 18b",
+        "target_display_name": "Room 18",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 18",
+        "target_display_name": "Room 18",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Parthenon side gallery with fragments of Parthenon sculpture, architecture, models, casts, and explanatory video displays.",
+      "visual_cues": [
+        "Parthenon architectural fragments",
+        "frieze casts or fragments",
+        "computer graphics displays explaining sculpture placement",
+        "touch tour model or plaster casts",
+        "side-room view connected to the main Parthenon gallery"
+      ]
+    }
+  },
+  "Room 18b": {
+    "room_id": "Room 18b",
+    "display_name": "Room 18",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Parthenon",
+    "aliases": [
+      "Greece: Parthenon",
+      "Room 18",
+      "Room 18b"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 18a",
+        "target_display_name": "Room 18",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 17",
+        "target_display_name": "Room 17",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 18",
+        "target_display_name": "Room 18",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Parthenon side gallery with fragments of Parthenon sculpture, architecture, models, casts, and explanatory video displays.",
+      "visual_cues": [
+        "Parthenon architectural fragments",
+        "frieze casts or fragments",
+        "computer graphics displays explaining sculpture placement",
+        "touch tour model or plaster casts",
+        "side-room view connected to the main Parthenon gallery"
+      ]
+    }
+  },
+  "Room 19": {
+    "room_id": "Room 19",
+    "display_name": "Room 19",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Greece: Athens",
+    "aliases": [
+      "Greece: Athens",
+      "Room 19"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 20",
+        "target_display_name": "Room 20",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 17",
+        "target_display_name": "Room 17",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Greece: Athens gallery about 5th-century Athenian sculpture and architecture from the Acropolis, including Athena Nike, Erechtheion, and Caryatid material.",
+      "visual_cues": [
+        "statue of Athena",
+        "Acropolis sculpture and architecture labels",
+        "Temple of Athena Nike reliefs",
+        "Erechtheion architectural sculpture",
+        "Caryatid reference or female architectural support figure",
+        "Athenian golden age sculpture"
+      ]
+    }
+  },
+  "Room 20": {
+    "room_id": "Room 20",
+    "display_name": "Room 20",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Greeks and Lycians 400–325 BC",
+    "aliases": [
+      "Greeks and Lycians 400–325 BC",
+      "Room 20"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 21",
+        "target_display_name": "Room 21",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 19",
+        "target_display_name": "Room 19",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Greeks and Lycians 400-325 BC gallery about fourth-century Greek and Lycian culture, dominated by the Tomb of Payava from Xanthos.",
+      "visual_cues": [
+        "Tomb of Payava dominating the gallery",
+        "Lycian Xanthos tomb structure",
+        "gold jewellery and Persian-influenced metalwork",
+        "Aberdeen Head marble head",
+        "private luxury and fourth-century Greek display cases"
+      ]
+    }
+  },
+  "Room 21": {
+    "room_id": "Room 21",
+    "display_name": "Room 21",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Mausoleum of Halikarnassos",
+    "aliases": [
+      "Mausoleum of Halikarnassos",
+      "Room 21"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 22",
+        "target_display_name": "Room 22",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 20",
+        "target_display_name": "Room 20",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Mausoleum of Halikarnassos gallery with colossal sculpture, relief slabs, and chariot fragments from one of the Seven Wonders of the Ancient World.",
+      "visual_cues": [
+        "colossal free-standing statues from the Mausoleum",
+        "large marble relief slabs",
+        "fragments of a huge marble four-horse chariot / quadriga",
+        "colossal horse fragments",
+        "Maussollos or Halikarnassos labels"
+      ]
+    }
+  },
+  "Room 22": {
+    "room_id": "Room 22",
+    "display_name": "Room 22",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "The world of Alexander",
+    "aliases": [
+      "Room 22",
+      "The world of Alexander"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 21",
+        "target_display_name": "Room 21",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 23",
+        "target_display_name": "Room 23",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "stairs"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "The world of Alexander gallery about the Hellenistic world after Alexander, including the Temple of Artemis at Ephesos, Demeter from Knidos, Greek bronzes, and luxury objects.",
+      "visual_cues": [
+        "carved column drum from the Temple of Artemis at Ephesos",
+        "Demeter from Knidos marble statue",
+        "Hellenistic Greek bronzes",
+        "small goldsmithing, metalwork, pottery, terracotta figurines, or gem-cutting displays",
+        "Alexander or Hellenistic period labels"
+      ]
+    }
+  },
+  "Room 23": {
+    "room_id": "Room 23",
+    "display_name": "Room 23",
+    "floor": "0",
+    "category": "Ancient Greece and Rome",
+    "title": "Greek and Roman sculpture",
+    "aliases": [
+      "Greek and Roman sculpture",
+      "Room 23"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 22",
+        "target_display_name": "Room 22",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "stairs"
+      },
+      {
+        "target_room_id": "Room 8",
+        "target_display_name": "Room 8",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 10",
+        "target_display_name": "Room 10",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 17",
+        "target_display_name": "Room 17",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Greek and Roman sculpture gallery of Roman versions of Greek originals, including marble statues of gods, athletes, heroic figures, Aphrodite and Dionysos subjects, and decorative reliefs.",
+      "visual_cues": [
+        "Roman marble statues based on Greek originals",
+        "Aphrodite / Townley Venus display",
+        "Dionysos-related sculpture",
+        "naked male athlete statues",
+        "Greek and Roman marble sculptures in a sculpture gallery",
+        "boy with horse marble relief or Westmacott athlete"
+      ]
+    }
+  },
+  "Room 24": {
+    "room_id": "Room 24",
+    "display_name": "Room 24",
+    "floor": "0",
+    "category": "Themes",
+    "title": "Living and Dying; The Wellcome Trust Gallery",
+    "aliases": [
+      "Living and Dying",
+      "Room 24",
+      "The Wellcome Trust Gallery"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 29b",
+        "target_display_name": "Room 29b",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 26",
+        "target_display_name": "Room 26",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Living and Dying / Wellcome Trust Gallery about health, wellbeing, life, and death across cultures, including Cradle to Grave and Hoa Hakananai'a.",
+      "visual_cues": [
+        "Hoa Hakananai'a / Easter Island Moai stone ancestor figure",
+        "Cradle to Grave medical installation",
+        "global health, wellbeing, life and death displays",
+        "Wellcome Trust Gallery signage",
+        "Pukara collaborative painting or diverse ritual/health objects"
+      ]
+    }
+  },
+  "Room 26": {
+    "room_id": "Room 26",
+    "display_name": "Room 26",
+    "floor": "0",
+    "category": "Americas",
+    "title": "North America",
+    "aliases": [
+      "North America",
+      "Room 26"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 24",
+        "target_display_name": "Room 24",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 27",
+        "target_display_name": "Room 27",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "North America gallery about Native North American cultural identities from ancient times to the present.",
+      "visual_cues": [
+        "Native North American ceremonial headwear or clothing",
+        "animal-shaped pipes from Hopewell culture",
+        "warrior shirts",
+        "textiles, carved posts, pottery, tools, or clothing from North America",
+        "European contact and colonisation interpretation"
+      ]
+    }
+  },
+  "Room 27": {
+    "room_id": "Room 27",
+    "display_name": "Room 27",
+    "floor": "0",
+    "category": "Americas",
+    "title": "Mexico",
+    "aliases": [
+      "Mexico",
+      "Room 27"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 26",
+        "target_display_name": "Room 26",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Mexico gallery about Olmec, Maya, Aztec, Mixtec and other Mexican cultures, with turquoise mosaics, relief sculpture, jade, ceramics, and a distinctive red gallery design.",
+      "visual_cues": [
+        "turquoise double-headed serpent mosaic",
+        "deep red walls and corbelled roof",
+        "Maya, Aztec, Mixtec, or Olmec objects",
+        "turquoise mosaics, gold filigree, jade figures, painted ceramics",
+        "Mexican relief sculpture"
+      ]
+    }
+  },
+  "Room 29a": {
+    "room_id": "Room 29a",
+    "display_name": "Room 29a",
+    "floor": "0",
+    "category": "Asia",
+    "title": "India",
+    "aliases": [
+      "India",
+      "Room 29a"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 29b",
+        "target_display_name": "Room 29b",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Ground-floor room near the West stairs and Members' Room access; local graph labels this node as India but no current public British Museum gallery page was found.",
+      "visual_cues": [
+        "Room 29a sign or room number",
+        "West stairs / lift access signage",
+        "Members' Room access signage",
+        "transition area near Rooms 24, 29b, and 30",
+        "possible South Asian / India-related objects if the local India label is visible"
+      ]
+    }
+  },
+  "Room 29b": {
+    "room_id": "Room 29b",
+    "display_name": "Room 29b",
+    "floor": "0",
+    "category": "Asia",
+    "title": "India",
+    "aliases": [
+      "India",
+      "Room 29b"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 29a",
+        "target_display_name": "Room 29a",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 24",
+        "target_display_name": "Room 24",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Ground-floor connector room near Room 29a, Room 24, East stairs, and Members' Room access; local graph labels this node as India but no current public British Museum gallery page was found.",
+      "visual_cues": [
+        "Room 29b sign or room number",
+        "East stairs or down-to-Room-25 signage",
+        "Members' Room access signage",
+        "transition area between Room 24 and Room 29a",
+        "possible South Asian / India-related objects if the local India label is visible"
+      ]
+    }
+  }
+}

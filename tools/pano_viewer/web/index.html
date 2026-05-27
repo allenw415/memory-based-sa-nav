@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Panorama Graph Viewer</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <header>
+          <h1>Panorama Graph</h1>
+          <p id="summaryText"></p>
+        </header>
+
+        <section class="filter-section">
+          <div class="filter-header">
+            <h2>Floors</h2>
+            <button id="clearFloorsButton" type="button">All</button>
+          </div>
+          <div id="floorOptions" class="filter-options"></div>
+        </section>
+
+        <section class="filter-section">
+          <div class="filter-header">
+            <h2>Rooms</h2>
+            <button id="clearRoomsButton" type="button">All</button>
+          </div>
+          <div id="roomOptions" class="filter-options room-options"></div>
+        </section>
+
+        <label>
+          Status
+          <select id="statusSelect">
+            <option value="all">All</option>
+            <option value="room">Room grounded</option>
+            <option value="null">Null</option>
+            <option value="unknown">Unknown</option>
+          </select>
+        </label>
+
+        <label>
+          Search
+          <input id="searchInput" type="search" placeholder="pano id / room id" />
+        </label>
+
+        <div class="toggle-row" role="group" aria-label="View mode">
+          <button id="mapModeButton" class="active" type="button">Map</button>
+          <button id="topologyModeButton" type="button">Topology</button>
+        </div>
+
+        <section class="route-panel">
+          <h2>Route</h2>
+          <label>
+            Source pano
+            <input id="routeSourceInput" type="text" />
+          </label>
+          <label>
+            Target pano
+            <input id="routeTargetInput" type="text" />
+          </label>
+          <button id="routeButton" type="button">Find Path</button>
+          <p id="routeText"></p>
+        </section>
+
+        <section>
+          <h2>Legend</h2>
+          <div class="legend-row"><span class="swatch room"></span>Room grounded</div>
+          <div class="legend-row"><span class="swatch null"></span>Null</div>
+          <div class="legend-row"><span class="swatch unknown"></span>Unknown</div>
+          <div class="legend-row"><span class="line-swatch"></span>Route</div>
+        </section>
+      </aside>
+
+      <main class="graph-stage">
+        <canvas id="graphCanvas"></canvas>
+        <div id="tooltip" class="tooltip" hidden></div>
+      </main>
+
+      <aside class="details">
+        <section>
+          <h2>Selected Pano</h2>
+          <dl id="detailsList"></dl>
+        </section>
+        <section>
+          <h2>Neighbors</h2>
+          <ol id="neighborList"></ol>
+        </section>
+        <section class="streetview-section">
+          <div class="streetview-header">
+            <h2>Street View</h2>
+            <button id="streetViewButton" type="button">Load</button>
+          </div>
+          <div id="streetViewPane" class="streetview-pane"></div>
+          <p id="streetViewStatus"></p>
+        </section>
+      </aside>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>

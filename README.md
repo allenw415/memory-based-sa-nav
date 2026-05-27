@@ -7,10 +7,14 @@ This repository contains the memory-based navigation pipeline for interactive mu
 ## What Is Included
 
 - `memory_nav/memory/`: memory image retrieval, room localization, passage alignment, and interactive guidance orchestration
-- `memory_nav/data/`: memory localization utilities and British Museum graph normalization helpers
+- `memory_nav/data/`: memory localization utilities, pano visualization helpers, and British Museum graph normalization helpers
 - `memory_nav/common/`: minimal model/environment utilities used by the memory advisor
+- `memory_nav/perception/renderer.py`: Google Street View pano rendering used to rebuild memory indexes
 - `memory_nav/spatial/routing.py`: room graph route planning used by the memory navigator
 - `tools/memory_guidance_web/`: local browser demo for uploading localization and passage images
+- `tools/pano_viewer/`: static panorama graph viewer and export tooling
+- `tools/data/build_memory_localization_index.py`: render pano views and rebuild SigLIP2/FAISS memory indexes
+- `tools/data/demo_memory_localization.py`: single-pano memory localization/debug run
 - `tools/data/eval_memory_localization.py`: offline evaluation for the image-memory localization index
 - `dataset/sites/british_museum/`: British Museum site assets retained from the original project
 - `artifacts/memory_localization/`: prebuilt memory localization indexes
@@ -49,6 +53,37 @@ python3 tools/memory_guidance_web/server.py --port 8765
 ```
 
 Then open `http://127.0.0.1:8765`.
+
+## Rebuild Memory Index
+
+Set `GMAPS_API_KEY` in your shell or pass `--render-api-key`, then rebuild the default floor-0 image memory index:
+
+```bash
+python3 tools/data/build_memory_localization_index.py \
+  --floor 0 \
+  --include-sources manual:accepted \
+  --heading-mode museum \
+  --max-captures 8 \
+  --render-output-dir renders/room_grounding \
+  --output-dir artifacts/memory_localization \
+  --output-prefix floor0_siglip2_images
+```
+
+The renderer caches pano manifests/images under `renders/`, so repeated rebuilds skip already-rendered captures when settings match.
+
+## Pano Viewer
+
+Export the static panorama graph viewer and visualization artifacts:
+
+```bash
+python3 tools/pano_viewer/export.py
+```
+
+Serve the exported viewer locally:
+
+```bash
+python3 -m http.server 8000 --directory artifacts/pano_viewer/british_museum
+```
 
 ## Evaluate Memory Localization
 

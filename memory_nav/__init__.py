@@ -8,6 +8,7 @@ from .common import (
     resolve_api_kind,
     resolve_model_environment,
 )
+from .perception import PanoramaRenderer
 from .memory import (
     InteractiveMemoryNavigator,
     MemoryImageRetriever,
@@ -25,6 +26,7 @@ __all__ = [
     "MemoryRoomLocalizer",
     "ModelEnvironment",
     "ModelResponseClient",
+    "PanoramaRenderer",
     "PassageAlignmentAdvisor",
     "extract_output_text",
     "load_dotenv",

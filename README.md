@@ -11,8 +11,7 @@ This repository contains the memory-based navigation pipeline for interactive mu
 - `memory_nav/common/`: minimal model/environment utilities used by the memory advisor
 - `memory_nav/perception/renderer.py`: Google Street View pano rendering used to rebuild memory indexes
 - `memory_nav/spatial/routing.py`: room graph route planning used by the memory navigator
-- `tools/memory_guidance_web/`: local browser demo for uploading localization and passage images
-- `tools/pano_viewer/`: static panorama graph viewer and export tooling
+- `memory_nav/web/`: unified FastAPI web server and static assets for memory guidance and pano viewer
 - `tools/data/build_memory_localization_index.py`: render pano views and rebuild SigLIP2/FAISS memory indexes
 - `tools/data/demo_memory_localization.py`: single-pano memory localization/debug run
 - `tools/data/eval_memory_localization.py`: offline evaluation for the image-memory localization index
@@ -46,13 +45,16 @@ python3 -m memory_nav.cli.run_memory_guidance \
   --passage-images front=path/to/front.jpg left=path/to/left.jpg
 ```
 
-## Web Demo
+## Web Tools
 
 ```bash
-python3 tools/memory_guidance_web/server.py --port 8765
+python3 -m memory_nav.web --port 8765
 ```
 
-Then open `http://127.0.0.1:8765`.
+Then open:
+
+- `http://127.0.0.1:8765/memory-guidance/`
+- `http://127.0.0.1:8765/pano-viewer/`.
 
 ## Rebuild Memory Index
 
@@ -73,17 +75,10 @@ The renderer caches pano manifests/images under `renders/`, so repeated rebuilds
 
 ## Pano Viewer
 
-Export the static panorama graph viewer and visualization artifacts:
-
-```bash
-python3 tools/pano_viewer/export.py
-```
-
-Serve the exported viewer locally:
-
-```bash
-python3 -m http.server 8000 --directory artifacts/pano_viewer/british_museum
-```
+The unified web server exports and serves the panorama viewer automatically by
+default. Use `--pano-export missing` to export only when the viewer artifact is
+missing, or `--pano-export never` to serve an existing export without refreshing
+it.
 
 ## Evaluate Memory Localization
 

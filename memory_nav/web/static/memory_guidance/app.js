@@ -75,7 +75,7 @@ document.getElementById("guidance-form").addEventListener("submit", async (event
   };
 
   try {
-    const response = await fetch("/api/guide", {
+    const response = await fetch("api/guide", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

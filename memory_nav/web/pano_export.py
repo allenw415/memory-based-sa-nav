@@ -1,16 +1,13 @@
 from __future__ import annotations
 
-import argparse
 import json
 import shutil
-import sys
+from dataclasses import dataclass, field
 from pathlib import Path
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+from typing import Any
 
 from memory_nav import get_env_value, load_dotenv
+from memory_nav.cli._common import PROJECT_ROOT
 from memory_nav.data.pano_visualization import (
     build_dot,
     build_floor_overview_svg,
@@ -22,37 +19,36 @@ from memory_nav.data.pano_visualization import (
     shortest_pano_path,
 )
 
-DEFAULT_ARTIFACTS_DIR = PROJECT_ROOT / "dataset/sites/british_museum/normalized"
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "artifacts/pano_viewer/british_museum"
-VIEWER_SOURCE_DIR = PROJECT_ROOT / "tools/pano_viewer/web"
+
+DEFAULT_PANO_ARTIFACTS_DIR = PROJECT_ROOT / "dataset/sites/british_museum/normalized"
+DEFAULT_PANO_OUTPUT_DIR = PROJECT_ROOT / "artifacts/pano_viewer/british_museum"
+PANO_VIEWER_STATIC_ROOT = Path(__file__).resolve().parent / "static/pano_viewer"
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Export panorama graph visualization artifacts.")
-    parser.add_argument("--artifacts-dir", default=str(DEFAULT_ARTIFACTS_DIR))
-    parser.add_argument("--pano-graph-path")
-    parser.add_argument("--room-graph-path")
-    parser.add_argument("--grounding-path")
-    parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
-    parser.add_argument("--dot-floor", default="0")
-    parser.add_argument("--dot-room-id", action="append", default=[])
-    parser.add_argument("--route-source-pano-id")
-    parser.add_argument("--route-target-pano-id")
-    parser.add_argument("--copy-viewer", action=argparse.BooleanOptionalAction, default=True)
-    parser.add_argument("--write-env-js", action=argparse.BooleanOptionalAction, default=True)
-    return parser.parse_args()
+@dataclass(frozen=True)
+class PanoExportConfig:
+    artifacts_dir: str = str(DEFAULT_PANO_ARTIFACTS_DIR)
+    output_dir: str = str(DEFAULT_PANO_OUTPUT_DIR)
+    pano_graph_path: str | None = None
+    room_graph_path: str | None = None
+    grounding_path: str | None = None
+    dot_floor: str = "0"
+    dot_room_id: list[str] = field(default_factory=list)
+    route_source_pano_id: str | None = None
+    route_target_pano_id: str | None = None
+    copy_viewer: bool = True
+    write_env_js: bool = True
 
 
-def main() -> None:
+def export_pano_viewer(config: PanoExportConfig) -> dict[str, Any]:
     load_dotenv(PROJECT_ROOT / ".env")
-    args = parse_args()
-    artifacts_dir = Path(args.artifacts_dir)
-    output_dir = Path(args.output_dir)
+    artifacts_dir = project_path(config.artifacts_dir)
+    output_dir = project_path(config.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    pano_graph_path = Path(args.pano_graph_path) if args.pano_graph_path else artifacts_dir / "pano_graph.json"
-    room_graph_path = Path(args.room_graph_path) if args.room_graph_path else artifacts_dir / "room_graph.json"
-    grounding_path = Path(args.grounding_path) if args.grounding_path else artifacts_dir / "pano_room_grounding.json"
+    pano_graph_path = project_path(config.pano_graph_path) if config.pano_graph_path else artifacts_dir / "pano_graph.json"
+    room_graph_path = project_path(config.room_graph_path) if config.room_graph_path else artifacts_dir / "room_graph.json"
+    grounding_path = project_path(config.grounding_path) if config.grounding_path else artifacts_dir / "pano_room_grounding.json"
 
     pano_graph = load_json(pano_graph_path)
     room_graph = load_json(room_graph_path) if room_graph_path.exists() else {}
@@ -60,8 +56,8 @@ def main() -> None:
     payload = build_visualization_payload(pano_graph, room_graph=room_graph, grounding_payload=grounding)
 
     route_pano_ids: list[str] = []
-    if args.route_source_pano_id and args.route_target_pano_id:
-        route_pano_ids = shortest_pano_path(payload, args.route_source_pano_id, args.route_target_pano_id)
+    if config.route_source_pano_id and config.route_target_pano_id:
+        route_pano_ids = shortest_pano_path(payload, config.route_source_pano_id, config.route_target_pano_id)
 
     write_json(output_dir / "viewer_data.json", payload)
     write_json(output_dir / "pano_nodes.geojson", build_geojson(payload, feature_type="nodes"))
@@ -69,11 +65,11 @@ def main() -> None:
     write_text(output_dir / "pano_graph.gexf", build_gexf(payload))
     write_text(output_dir / "pano_graph.graphml", build_graphml(payload))
     write_text(
-        output_dir / f"pano_graph_floor{safe_name(args.dot_floor)}.dot",
+        output_dir / f"pano_graph_floor{safe_name(config.dot_floor)}.dot",
         build_dot(
             payload,
-            floor=args.dot_floor,
-            room_ids=set(args.dot_room_id),
+            floor=config.dot_floor,
+            room_ids=set(config.dot_room_id),
             route_pano_ids=route_pano_ids,
         ),
     )
@@ -95,8 +91,8 @@ def main() -> None:
         },
         "summary": payload["summary"],
         "route": {
-            "source_pano_id": args.route_source_pano_id,
-            "target_pano_id": args.route_target_pano_id,
+            "source_pano_id": config.route_source_pano_id,
+            "target_pano_id": config.route_target_pano_id,
             "pano_ids": route_pano_ids,
         },
         "files": [
@@ -105,27 +101,35 @@ def main() -> None:
             "pano_edges.geojson",
             "pano_graph.gexf",
             "pano_graph.graphml",
-            f"pano_graph_floor{safe_name(args.dot_floor)}.dot",
+            f"pano_graph_floor{safe_name(config.dot_floor)}.dot",
             "publication/",
         ],
     }
     write_json(output_dir / "manifest.json", manifest)
 
-    if args.copy_viewer:
+    if config.copy_viewer:
         copy_viewer(output_dir)
-    if args.write_env_js:
+    if config.write_env_js:
         write_env_js(output_dir)
 
-    print(
-        "[pano-viz] "
-        f"nodes={payload['summary']['node_count']} edges={payload['summary']['edge_count']} "
-        f"floors={len(payload['floors'])} output={output_dir}"
-    )
+    return {
+        "output_dir": str(output_dir),
+        "summary": payload["summary"],
+        "route": manifest["route"],
+        "files": manifest["files"],
+    }
+
+
+def project_path(path: str | Path) -> Path:
+    candidate = Path(path)
+    if candidate.is_absolute():
+        return candidate.resolve()
+    return (PROJECT_ROOT / candidate).resolve()
 
 
 def copy_viewer(output_dir: Path) -> None:
     for name in ("index.html", "app.js", "styles.css"):
-        shutil.copy2(VIEWER_SOURCE_DIR / name, output_dir / name)
+        shutil.copy2(PANO_VIEWER_STATIC_ROOT / name, output_dir / name)
 
 
 def write_env_js(output_dir: Path) -> None:
@@ -151,7 +155,3 @@ def write_text(path: Path, text: str) -> None:
 def safe_name(value: object) -> str:
     text = str(value)
     return "".join(ch if ch.isalnum() or ch in {"-", "_"} else "_" for ch in text)
-
-
-if __name__ == "__main__":
-    main()

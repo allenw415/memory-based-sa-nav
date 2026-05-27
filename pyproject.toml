@@ -12,6 +12,9 @@ dependencies = [
   "Pillow",
   "huggingface_hub",
   "safetensors",
+  "fastapi",
+  "uvicorn",
+  "httpx",
 ]
 
 [build-system]

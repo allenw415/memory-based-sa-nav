@@ -7,10 +7,18 @@ from pathlib import Path
 from typing import Sequence
 
 DEFAULT_SIGLIP2_MODEL = "google/siglip2-base-patch16-224"
+DEFAULT_DINOV2_SALAD_MODEL = "dinov2-salad"
+DEFAULT_EMBEDDING_MODEL = DEFAULT_SIGLIP2_MODEL
 SIGLIP2_MODEL_ALIASES = {
     "siglip2": DEFAULT_SIGLIP2_MODEL,
     "siglip2-base": DEFAULT_SIGLIP2_MODEL,
     "siglip2-so400m": "google/siglip2-so400m-patch14-384",
+}
+DINOV2_SALAD_MODEL_ALIASES = {
+    "dinov2-salad",
+    "dino-salad",
+    "salad",
+    "dinov2_salad",
 }
 
 
@@ -34,6 +42,17 @@ def write_json(path: str | Path, payload: dict) -> None:
 def resolve_siglip2_model_name(model_name: str | None) -> str:
     normalized = (model_name or "siglip2").strip().lower()
     return SIGLIP2_MODEL_ALIASES.get(normalized, model_name or DEFAULT_SIGLIP2_MODEL)
+
+
+def is_dinov2_salad_model_name(model_name: str | None) -> bool:
+    normalized = (model_name or "").strip().lower()
+    return normalized in DINOV2_SALAD_MODEL_ALIASES
+
+
+def resolve_embedding_model_name(model_name: str | None) -> str:
+    if is_dinov2_salad_model_name(model_name):
+        return DEFAULT_DINOV2_SALAD_MODEL
+    return resolve_siglip2_model_name(model_name)
 
 
 def parse_csv_argument(value: str | None) -> list[str]:
@@ -484,3 +503,107 @@ class SigLIP2Embedder:
         if not batches:
             return self.np.zeros((0, 0), dtype=self.np.float32)
         return self.np.concatenate(batches, axis=0).astype(self.np.float32)
+
+
+class DINOv2SALADEmbedder:
+    def __init__(
+        self,
+        *,
+        model_name: str = DEFAULT_DINOV2_SALAD_MODEL,
+        device: str = "auto",
+        batch_size: int = 8,
+        image_size: int = 322,
+        torch_hub_repo: str = "serizba/salad",
+    ):
+        if not is_dinov2_salad_model_name(model_name):
+            raise ValueError(f"Unsupported DINOv2-SALAD model name: {model_name}")
+        self.np = _require_numpy()
+        self.Image = _require_pil_image()
+        self.torch = _require_torch()
+        self.model_name = DEFAULT_DINOV2_SALAD_MODEL
+        self.torch_hub_repo = torch_hub_repo
+        self.batch_size = max(int(batch_size), 1)
+        self.image_size = int(image_size)
+        self.device = self._resolve_device(device)
+        self.model = self._load_model().eval()
+        self.model.to(self.device)
+
+    def _resolve_device(self, requested_device: str) -> str:
+        normalized = (requested_device or "auto").strip().lower()
+        if normalized != "auto":
+            return normalized
+        if self.torch.cuda.is_available():
+            return "cuda"
+        mps_backend = getattr(self.torch.backends, "mps", None)
+        if mps_backend is not None and mps_backend.is_available():
+            return "mps"
+        return "cpu"
+
+    def _load_model(self):
+        try:
+            try:
+                return self.torch.hub.load(
+                    self.torch_hub_repo,
+                    "dinov2_salad",
+                    trust_repo=True,
+                )
+            except TypeError:
+                return self.torch.hub.load(self.torch_hub_repo, "dinov2_salad")
+        except ModuleNotFoundError as exc:
+            missing_name = getattr(exc, "name", None) or "unknown"
+            raise MissingDependencyError(
+                "Missing a DINOv2-SALAD Torch Hub dependency "
+                f"({missing_name}). Install the optional SALAD runtime dependencies, "
+                "including torchvision, pytorch-lightning, and pytorch-metric-learning."
+            ) from exc
+
+    def encode_image_paths(self, image_paths: Sequence[str | Path]):
+        batches = []
+        for start in range(0, len(image_paths), self.batch_size):
+            batch_paths = image_paths[start : start + self.batch_size]
+            tensors = [self._preprocess_image(path) for path in batch_paths]
+            if not tensors:
+                continue
+            inputs = self.torch.stack(tensors, dim=0).to(self.device)
+            with self.torch.inference_mode():
+                embeddings = self.model(inputs)
+            if not hasattr(embeddings, "norm"):
+                raise TypeError(
+                    f"Expected tensor-like image embeddings from {self.model_name}, got {type(embeddings).__name__}."
+                )
+            embeddings = embeddings / embeddings.norm(p=2, dim=-1, keepdim=True).clamp(min=1e-12)
+            batches.append(embeddings.detach().cpu().to(self.torch.float32).numpy())
+        if not batches:
+            return self.np.zeros((0, 0), dtype=self.np.float32)
+        return self.np.concatenate(batches, axis=0).astype(self.np.float32)
+
+    def _preprocess_image(self, image_path: str | Path):
+        resampling = getattr(getattr(self.Image, "Resampling", self.Image), "BICUBIC")
+        with self.Image.open(Path(image_path)) as opened_image:
+            image = opened_image.convert("RGB").resize((self.image_size, self.image_size), resampling)
+            array = self.np.asarray(image, dtype=self.np.float32) / 255.0
+        array = array.transpose(2, 0, 1)
+        tensor = self.torch.from_numpy(array)
+        mean = self.torch.tensor([0.485, 0.456, 0.406], dtype=tensor.dtype).view(3, 1, 1)
+        std = self.torch.tensor([0.229, 0.224, 0.225], dtype=tensor.dtype).view(3, 1, 1)
+        return (tensor - mean) / std
+
+
+def create_image_embedder(
+    *,
+    model_name: str | None = DEFAULT_EMBEDDING_MODEL,
+    device: str = "auto",
+    batch_size: int = 8,
+):
+    resolved_model_name = resolve_embedding_model_name(model_name)
+    if resolved_model_name == DEFAULT_DINOV2_SALAD_MODEL:
+        return DINOv2SALADEmbedder(
+            model_name=resolved_model_name,
+            device=device,
+            batch_size=batch_size,
+        )
+    return SigLIP2Embedder(
+        model_name=resolved_model_name,
+        device=device,
+        batch_size=batch_size,
+    )

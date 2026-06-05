@@ -23,7 +23,7 @@ from memory_nav import (  # noqa: E402
     load_dotenv,
     resolve_model_environment,
 )
-from memory_nav.data.memory_localization import DEFAULT_SIGLIP2_MODEL  # noqa: E402
+from memory_nav.data.memory_localization import DEFAULT_EMBEDDING_MODEL  # noqa: E402
 
 load_dotenv(PROJECT_ROOT / ".env")
 MODEL_ENV = resolve_model_environment(
@@ -48,7 +48,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--metadata-path", default="artifacts/memory_localization/floor0_siglip2_images.metadata.json")
     parser.add_argument("--faiss-path", default="artifacts/memory_localization/floor0_siglip2_images.faiss")
     parser.add_argument("--no-faiss", action="store_true")
-    parser.add_argument("--embedding-model", default=DEFAULT_SIGLIP2_MODEL)
+    parser.add_argument("--embedding-model", default=DEFAULT_EMBEDDING_MODEL)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--retrieval-top-k", type=int, default=10)

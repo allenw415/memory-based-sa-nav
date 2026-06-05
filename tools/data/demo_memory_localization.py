@@ -12,18 +12,18 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from memory_nav import PanoramaRenderer, get_env_value, load_dotenv
 from memory_nav.data.memory_localization import (
-    DEFAULT_SIGLIP2_MODEL,
+    DEFAULT_EMBEDDING_MODEL,
+    create_image_embedder,
     deduplicate_candidates_by_pano,
     is_valid_room_id,
     MissingDependencyError,
-    SigLIP2Embedder,
     brute_force_search,
     load_faiss_index,
     load_image_index_artifacts,
     load_json,
     load_manifest_captures,
     predict_room_from_candidates,
-    resolve_siglip2_model_name,
+    resolve_embedding_model_name,
     search_image_index,
     select_query_capture_records,
     write_json,
@@ -44,7 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--faiss-path", default="artifacts/memory_localization/floor0_siglip2_images.faiss")
     parser.add_argument("--no-faiss", action="store_true")
     parser.add_argument("--artifacts-dir", default="dataset/sites/british_museum/normalized")
-    parser.add_argument("--embedding-model", default=DEFAULT_SIGLIP2_MODEL)
+    parser.add_argument("--embedding-model", default=DEFAULT_EMBEDDING_MODEL)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument(
@@ -136,8 +136,8 @@ def main() -> int:
 
     try:
         image_embeddings = load_image_index_artifacts(index_path)
-        embedder = SigLIP2Embedder(
-            model_name=resolve_siglip2_model_name(args.embedding_model),
+        embedder = create_image_embedder(
+            model_name=resolve_embedding_model_name(args.embedding_model),
             device=args.device,
             batch_size=args.batch_size,
         )

@@ -13,15 +13,15 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from memory_nav import PanoramaRenderer, get_env_value, load_dotenv
 from memory_nav.data.memory_localization import (
-    DEFAULT_SIGLIP2_MODEL,
+    DEFAULT_EMBEDDING_MODEL,
+    DEFAULT_DINOV2_SALAD_MODEL,
     MissingDependencyError,
-    SigLIP2Embedder,
     build_faiss_index,
+    create_image_embedder,
     load_json,
     load_manifest_captures,
     parse_csv_argument,
-    require_faiss,
-    resolve_siglip2_model_name,
+    resolve_embedding_model_name,
     save_faiss_index,
     save_image_index_artifacts,
     select_memory_items,
@@ -33,7 +33,7 @@ load_dotenv(PROJECT_ROOT / ".env")
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Build an image-memory localization index with SigLIP2 + FAISS.")
+    parser = argparse.ArgumentParser(description="Build an image-memory localization index with an image embedder + FAISS.")
     parser.add_argument("--artifacts-dir", default="dataset/sites/british_museum/normalized")
     parser.add_argument(
         "--grounding-path",
@@ -42,11 +42,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--floor", default="0")
     parser.add_argument("--include-sources", default="manual:accepted")
     parser.add_argument("--limit", type=int)
-    parser.add_argument("--embedding-model", default=DEFAULT_SIGLIP2_MODEL)
+    parser.add_argument("--embedding-model", default=DEFAULT_EMBEDDING_MODEL)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--output-dir", default="artifacts/memory_localization")
-    parser.add_argument("--output-prefix", default="floor0_siglip2_images")
+    parser.add_argument("--output-prefix")
     parser.add_argument(
         "--render-api-key",
         default=get_env_value("GMAPS_KEY", "NAV_GMAPS_KEY", "GMAPS_API_KEY"),
@@ -77,6 +77,14 @@ def format_duration(seconds: float) -> str:
     if minutes:
         return f"{minutes}m{secs:02d}s"
     return f"{secs}s"
+
+
+def default_output_prefix(*, floor: str, embedding_model: str, fov: int) -> str:
+    if embedding_model == DEFAULT_DINOV2_SALAD_MODEL:
+        return f"floor{floor}_dinov2_salad_images_fov{int(fov)}"
+    if int(fov) == 45:
+        return f"floor{floor}_siglip2_images"
+    return f"floor{floor}_siglip2_images_fov{int(fov)}"
 
 
 def ensure_manifest(
@@ -130,9 +138,9 @@ def main() -> int:
         raise RuntimeError("No labeled panos selected for the image memory index.")
 
     try:
-        require_faiss()
-        embedder = SigLIP2Embedder(
-            model_name=resolve_siglip2_model_name(args.embedding_model),
+        resolved_embedding_model = resolve_embedding_model_name(args.embedding_model)
+        embedder = create_image_embedder(
+            model_name=resolved_embedding_model,
             device=args.device,
             batch_size=args.batch_size,
         )
@@ -202,7 +210,11 @@ def main() -> int:
     image_embeddings = np.stack(all_image_embeddings, axis=0).astype(np.float32)
     faiss_index = build_faiss_index(image_embeddings)
 
-    output_prefix = args.output_prefix or f"floor{args.floor}_siglip2_images"
+    output_prefix = args.output_prefix or default_output_prefix(
+        floor=str(args.floor),
+        embedding_model=resolved_embedding_model,
+        fov=args.fov,
+    )
     index_path = output_dir / f"{output_prefix}.npz"
     faiss_path = output_dir / f"{output_prefix}.faiss"
     metadata_path = output_dir / f"{output_prefix}.metadata.json"

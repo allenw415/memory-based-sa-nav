@@ -6,8 +6,8 @@ from typing import Iterable, Sequence
 
 from memory_nav.data.memory_localization import (
     DEFAULT_SIGLIP2_MODEL,
+    create_image_embedder,
     MissingDependencyError,
-    SigLIP2Embedder,
     brute_force_search,
     deduplicate_candidates_by_pano,
     is_valid_room_id,
@@ -15,7 +15,7 @@ from memory_nav.data.memory_localization import (
     load_image_index_artifacts,
     load_json,
     predict_room_from_candidates,
-    resolve_siglip2_model_name,
+    resolve_embedding_model_name,
     search_image_index,
 )
 
@@ -91,13 +91,13 @@ class MemoryImageRetriever:
         metadata_items: Sequence[dict] | None = None,
         image_embeddings=None,
         image_index=None,
-        embedder: SigLIP2Embedder | None = None,
+        embedder=None,
     ):
         self.project_root = Path(project_root or Path.cwd()).resolve()
         self.index_path = Path(index_path).resolve() if index_path is not None else None
         self.metadata_path = Path(metadata_path).resolve() if metadata_path is not None else None
         self.faiss_path = Path(faiss_path).resolve() if faiss_path is not None else None
-        self.embedding_model = resolve_siglip2_model_name(embedding_model)
+        self.embedding_model = resolve_embedding_model_name(embedding_model)
         self.device = device
         self.batch_size = int(batch_size)
         self.use_faiss = bool(use_faiss)
@@ -431,10 +431,10 @@ class MemoryImageRetriever:
             exclude_indices=excluded_indices,
         )
 
-    def _ensure_embedder(self) -> SigLIP2Embedder:
+    def _ensure_embedder(self):
         if self.embedder is None:
             try:
-                self.embedder = SigLIP2Embedder(
+                self.embedder = create_image_embedder(
                     model_name=self.embedding_model,
                     device=self.device,
                     batch_size=self.batch_size,

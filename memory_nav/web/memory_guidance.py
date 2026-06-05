@@ -9,7 +9,7 @@ from typing import Any
 
 from memory_nav import get_env_value, resolve_model_environment
 from memory_nav.cli._common import PROJECT_ROOT, load_normalized_artifacts, resolve_project_path
-from memory_nav.data.memory_localization import DEFAULT_SIGLIP2_MODEL
+from memory_nav.data.memory_localization import DEFAULT_EMBEDDING_MODEL
 from memory_nav.memory import (
     InteractiveMemoryNavigator,
     MemoryImageRetriever,
@@ -29,7 +29,7 @@ class MemoryGuidanceConfig:
     metadata_path: str = "artifacts/memory_localization/floor0_siglip2_images.metadata.json"
     faiss_path: str = "artifacts/memory_localization/floor0_siglip2_images.faiss"
     no_faiss: bool = False
-    embedding_model: str = DEFAULT_SIGLIP2_MODEL
+    embedding_model: str = DEFAULT_EMBEDDING_MODEL
     device: str = "auto"
     batch_size: int = 8
     retrieval_top_k: int = 10

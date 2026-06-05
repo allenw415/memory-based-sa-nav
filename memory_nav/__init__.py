@@ -10,6 +10,15 @@ from .common import (
     resolve_model_environment,
 )
 from .perception import PanoramaRenderer
+from .data import (
+    DEFAULT_DINOV2_SALAD_MODEL,
+    DEFAULT_EMBEDDING_MODEL,
+    DEFAULT_SIGLIP2_MODEL,
+    DINOv2SALADEmbedder,
+    SigLIP2Embedder,
+    create_image_embedder,
+    resolve_embedding_model_name,
+)
 from .memory import (
     InteractiveMemoryNavigator,
     MemoryImageRetriever,
@@ -29,11 +38,18 @@ __all__ = [
     "ModelResponseClient",
     "PanoramaRenderer",
     "PassageAlignmentAdvisor",
+    "DEFAULT_DINOV2_SALAD_MODEL",
+    "DEFAULT_EMBEDDING_MODEL",
+    "DEFAULT_SIGLIP2_MODEL",
+    "DINOv2SALADEmbedder",
+    "SigLIP2Embedder",
+    "create_image_embedder",
     "extract_output_text",
     "get_env_value",
     "load_dotenv",
     "parse_json_output",
     "parse_json_text",
     "resolve_api_kind",
+    "resolve_embedding_model_name",
     "resolve_model_environment",
 ]

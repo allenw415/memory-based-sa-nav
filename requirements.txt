@@ -1,5 +1,6 @@
 numpy
 torch
+torchvision
 transformers
 faiss-cpu
 Pillow
@@ -8,3 +9,5 @@ safetensors
 fastapi
 uvicorn
 httpx
+pytorch-lightning
+pytorch-metric-learning

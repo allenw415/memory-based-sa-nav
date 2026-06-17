@@ -128,7 +128,7 @@ def project_path(path: str | Path) -> Path:
 
 
 def copy_viewer(output_dir: Path) -> None:
-    for name in ("index.html", "app.js", "styles.css"):
+    for name in ("index.html", "trajectory.js", "app.js", "styles.css"):
         shutil.copy2(PANO_VIEWER_STATIC_ROOT / name, output_dir / name)
 
 

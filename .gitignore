@@ -16,3 +16,4 @@ outputs/
 artifacts/pano_viewer/
 .env.js
 **/.env.js
+models/

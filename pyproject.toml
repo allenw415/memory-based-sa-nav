@@ -18,6 +18,7 @@ dependencies = [
   "httpx",
   "pytorch-lightning",
   "pytorch-metric-learning",
+  "dreamsim",
 ]
 
 [build-system]

@@ -88,12 +88,16 @@ class MemoryImageRetriever:
         batch_size: int = 8,
         use_faiss: bool = True,
         project_root: str | Path | None = None,
+        render_root: str | Path | None = None,
         metadata_items: Sequence[dict] | None = None,
         image_embeddings=None,
         image_index=None,
         embedder=None,
     ):
         self.project_root = Path(project_root or Path.cwd()).resolve()
+        self.render_root = Path(
+            render_root or self.project_root / "renders/room_grounding_fov90"
+        ).resolve()
         self.index_path = Path(index_path).resolve() if index_path is not None else None
         self.metadata_path = Path(metadata_path).resolve() if metadata_path is not None else None
         self.faiss_path = Path(faiss_path).resolve() if faiss_path is not None else None
@@ -407,6 +411,21 @@ class MemoryImageRetriever:
             candidate = (self.project_root / path).resolve()
             if candidate.exists():
                 return str(candidate)
+        pano_id = metadata_item.get("pano_id")
+        if isinstance(pano_id, str) and pano_id:
+            candidate = self.render_root / pano_id / path.name
+            if candidate.exists():
+                return str(candidate.resolve())
+            capture_index = metadata_item.get("capture_index")
+            capture_label = metadata_item.get("capture_label")
+            if isinstance(capture_index, int) and isinstance(capture_label, str):
+                matches = sorted(
+                    (self.render_root / pano_id).glob(
+                        f"{pano_id}_{capture_index:02d}_{capture_label}_*.png"
+                    )
+                )
+                if matches:
+                    return str(matches[0].resolve())
         marker = "renders/room_grounding/"
         if marker in raw_path:
             suffix = raw_path.split(marker, 1)[1]
@@ -460,10 +479,19 @@ class MemoryRoomLocalizer:
         self.margin_threshold = float(margin_threshold)
         self.dedup_by_pano = bool(dedup_by_pano)
 
-    def localize_from_images(self, image_paths: Sequence[str | Path]) -> MemoryLocalizationResult:
+    def localize_from_images(
+        self,
+        image_paths: Sequence[str | Path],
+        *,
+        exclude_same_pano_ids: Iterable[str] | None = None,
+    ) -> MemoryLocalizationResult:
         if self.retriever is None:
             raise RuntimeError("MemoryRoomLocalizer requires a MemoryImageRetriever for image localization.")
-        matches = self.retriever.query_image_paths(image_paths, top_k=self.retrieval_top_k)
+        matches = self.retriever.query_image_paths(
+            image_paths,
+            top_k=self.retrieval_top_k,
+            exclude_same_pano_ids=exclude_same_pano_ids,
+        )
         return self.localize_from_matches(matches)
 
     def localize_from_matches(self, matches: Sequence[dict]) -> MemoryLocalizationResult:

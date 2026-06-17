@@ -11,3 +11,4 @@ uvicorn
 httpx
 pytorch-lightning
 pytorch-metric-learning
+dreamsim

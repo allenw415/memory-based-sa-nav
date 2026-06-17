@@ -102,6 +102,20 @@ default. Use `--pano-export missing` to export only when the viewer artifact is
 missing, or `--pano-export never` to serve an existing export without refreshing
 it.
 
+The viewer accepts navigation outputs such as
+`outputs/navigation/full_episode_erp_to_room23.json`. Open or drop the JSON in
+the **Trajectory** panel to draw the full pano path, inspect room and waypoint
+boundaries, and play the episode with step, timeline, and speed controls.
+
+Street View remains unloaded while a trajectory is opened or played. Click the
+Street View **Load** button when you want to initialize Google Maps; after that,
+the panorama follows the current playback frame and uses each movement's
+`selected_action_heading`. If that field is absent, the viewer uses the heading
+from the matching panorama graph edge.
+
+Trajectory JSON is parsed locally in the browser and is not uploaded to the web
+server.
+
 ## Evaluate Memory Localization
 
 ```bash
@@ -129,7 +143,7 @@ python3 tools/data/eval_memory_localization.py \
   --query-selection random \
   --query-random-seeds 0,1,2,3,4 \
   --include-same-pano \
-  --output-path outputs/memory_localization_eval_dinov2_salad_fov90_1to4_views.json
+  --output-path outputs/localization/memory_localization_eval_dinov2_salad_fov90_1to4_views.json
 ```
 
 The report includes overall and per-room top-1/top-3 accuracy, confidence and

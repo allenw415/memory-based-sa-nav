@@ -14,6 +14,41 @@
           <p id="summaryText"></p>
         </header>
 
+        <section class="trajectory-panel">
+          <div class="section-heading">
+            <h2>Trajectory</h2>
+            <button id="clearTrajectoryButton" type="button" disabled>Clear</button>
+          </div>
+          <label id="trajectoryDropZone" class="file-drop">
+            <strong>Open trajectory JSON</strong>
+            <span>Choose or drop a full_episode_*.json file</span>
+            <input id="trajectoryFileInput" type="file" accept=".json,application/json" />
+          </label>
+          <p id="trajectoryStatus" class="status-text">No trajectory loaded.</p>
+
+          <div class="playback-controls" role="group" aria-label="Trajectory playback">
+            <button id="resetButton" type="button" title="Reset" disabled>Reset</button>
+            <button id="previousButton" type="button" title="Previous step" disabled>Prev</button>
+            <button id="playButton" class="primary" type="button" disabled>Play</button>
+            <button id="nextButton" type="button" title="Next step" disabled>Next</button>
+          </div>
+
+          <label class="timeline-label">
+            <span id="timelineText">Step 0 / 0</span>
+            <input id="timelineInput" type="range" min="0" max="0" value="0" disabled />
+          </label>
+
+          <label>
+            Playback speed
+            <select id="playbackSpeedSelect" disabled>
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="2">2x</option>
+              <option value="4">4x</option>
+            </select>
+          </label>
+        </section>
+
         <section class="filter-section">
           <div class="filter-header">
             <h2>Floors</h2>
@@ -51,7 +86,7 @@
         </div>
 
         <section class="route-panel">
-          <h2>Route</h2>
+          <h2>Shortest Path</h2>
           <label>
             Source pano
             <input id="routeSourceInput" type="text" />
@@ -60,7 +95,7 @@
             Target pano
             <input id="routeTargetInput" type="text" />
           </label>
-          <button id="routeButton" type="button">Find Path</button>
+          <button id="routeButton" class="primary" type="button">Find Path</button>
           <p id="routeText"></p>
         </section>
 
@@ -69,7 +104,9 @@
           <div class="legend-row"><span class="swatch room"></span>Room grounded</div>
           <div class="legend-row"><span class="swatch null"></span>Null</div>
           <div class="legend-row"><span class="swatch unknown"></span>Unknown</div>
-          <div class="legend-row"><span class="line-swatch"></span>Route</div>
+          <div class="legend-row"><span class="line-swatch full-path"></span>Full trajectory</div>
+          <div class="legend-row"><span class="line-swatch progress"></span>Traversed</div>
+          <div class="legend-row"><span class="diamond-swatch"></span>Room boundary</div>
         </section>
       </aside>
 
@@ -79,6 +116,14 @@
       </main>
 
       <aside class="details">
+        <section>
+          <h2>Playback State</h2>
+          <dl id="trajectoryDetails"></dl>
+        </section>
+        <section>
+          <h2>Waypoints &amp; Boundaries</h2>
+          <ol id="waypointList" class="waypoint-list"></ol>
+        </section>
         <section>
           <h2>Selected Pano</h2>
           <dl id="detailsList"></dl>
@@ -90,13 +135,16 @@
         <section class="streetview-section">
           <div class="streetview-header">
             <h2>Street View</h2>
-            <button id="streetViewButton" type="button">Load</button>
+            <button id="streetViewButton" class="primary" type="button">Load</button>
           </div>
-          <div id="streetViewPane" class="streetview-pane"></div>
-          <p id="streetViewStatus"></p>
+          <div id="streetViewPane" class="streetview-pane">
+            <div class="streetview-placeholder">Click Load to initialize Google Street View.</div>
+          </div>
+          <p id="streetViewStatus" class="status-text">Street View is not loaded.</p>
         </section>
       </aside>
     </div>
+    <script src="./trajectory.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>

@@ -14,6 +14,9 @@ venv/
 renders/
 outputs/
 artifacts/pano_viewer/
+artifacts/memory_localization/*dinov2_salad*.faiss
+artifacts/memory_localization/*dinov2_salad*.metadata.json
+artifacts/memory_localization/*dinov2_salad*.npz
 .env.js
 **/.env.js
 models/

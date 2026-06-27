@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import random
 from dataclasses import dataclass, field
+from math import asin, cos, radians, sin, sqrt
 from pathlib import Path
 from typing import Callable, Sequence
 
@@ -11,6 +12,7 @@ from .image_goal import (
     IndexedPanoramaViewStore,
     PanoramaGraphImageGoalSimulator,
     PureVisualDirectionPolicy,
+    VisualDirectionPolicy,
 )
 from .passages import PassageSelector
 from .vlm_direction import DirectionSelector, SparseVLMDirectionSimulator
@@ -29,6 +31,7 @@ class NavigationEpisodeResult:
     step_count: int
     pano_path: list[str]
     rounds: list[dict] = field(default_factory=list)
+    navigation_metrics: dict = field(default_factory=dict)
 
     def to_dict(self) -> dict:
         return {
@@ -42,6 +45,7 @@ class NavigationEpisodeResult:
             "completed_waypoints": list(self.completed_waypoints),
             "step_count": self.step_count,
             "pano_path": list(self.pano_path),
+            "navigation_metrics": dict(self.navigation_metrics),
             "rounds": list(self.rounds),
         }
 
@@ -61,6 +65,7 @@ class NavigationEpisodeRunner:
         passage_selector: PassageSelector,
         passage_confidence_threshold: float = 0.5,
         direction_salad_alpha: float = 1.0,
+        image_goal_policy: VisualDirectionPolicy | None = None,
         direction_selector: DirectionSelector | None = None,
         direction_confidence_threshold: float = 0.5,
         direction_burst_steps: int = 3,
@@ -83,7 +88,8 @@ class NavigationEpisodeRunner:
             pano_graph=pano_graph,
             pano_room_mappings=pano_room_mappings,
             observation_provider=view_store.load_views,
-            policy=PureVisualDirectionPolicy(salad_alpha=direction_salad_alpha),
+            policy=image_goal_policy
+            or PureVisualDirectionPolicy(salad_alpha=direction_salad_alpha),
         )
         self.vlm_direction_simulator = (
             SparseVLMDirectionSimulator(
@@ -148,6 +154,11 @@ class NavigationEpisodeRunner:
                 completed_waypoints=completed_waypoints,
                 step_count=total_steps,
                 pano_path=pano_path,
+                navigation_metrics=_navigation_metrics(
+                    pano_graph=self.pano_graph,
+                    pano_room_mappings=self.pano_room_mappings,
+                    pano_path=pano_path,
+                ),
                 rounds=rounds,
             )
 
@@ -326,10 +337,19 @@ class NavigationEpisodeRunner:
 
             goal_embedding = None
             if self.vlm_direction_simulator is None:
-                goal_embedding = self.view_store.embedding_for_capture(
-                    str(chosen["pano_id"]),
-                    int(chosen["capture_index"]),
-                )
+                if getattr(self.simulator.policy, "requires_goal_image_path", False):
+                    goal_image_path = chosen.get("image_path")
+                    if not isinstance(goal_image_path, str) or not Path(
+                        goal_image_path
+                    ).exists():
+                        round_payload["failure"] = {"reason": "image_goal_missing"}
+                        return finish(False, "image_goal_missing")
+                    goal_embedding = goal_image_path
+                else:
+                    goal_embedding = self.view_store.embedding_for_capture(
+                        str(chosen["pano_id"]),
+                        int(chosen["capture_index"]),
+                    )
             round_payload["image_goal"] = {
                 "label": chosen_label,
                 "image_path": chosen.get("image_path"),
@@ -518,6 +538,116 @@ class NavigationEpisodeRunner:
         if room_id not in cache:
             cache[room_id] = [dict(item) for item in self.passage_retriever.retrieve(room_id)]
         return [dict(item) for item in cache[room_id]]
+
+
+def _navigation_metrics(
+    *,
+    pano_graph: dict[str, dict],
+    pano_room_mappings: dict[str, str | None],
+    pano_path: Sequence[str],
+) -> dict:
+    room_sequence = _room_sequence(pano_room_mappings, pano_path)
+    visited_room_ids = _unique_non_null(room_sequence)
+    distances = _path_distances_m(pano_graph, pano_path)
+    return {
+        "room_sequence": room_sequence,
+        "visited_room_ids": visited_room_ids,
+        "visited_room_count": len(visited_room_ids),
+        "room_transition_count": max(len(room_sequence) - 1, 0),
+        "pano_step_count": max(len(pano_path) - 1, 0),
+        "distance_unit": "meters",
+        "distance_source": "pano_graph_lat_lng_haversine",
+        **distances,
+    }
+
+
+def _room_sequence(
+    pano_room_mappings: dict[str, str | None],
+    pano_path: Sequence[str],
+) -> list[str | None]:
+    sequence: list[str | None] = []
+    for pano_id in pano_path:
+        room_id = pano_room_mappings.get(pano_id)
+        if not sequence or sequence[-1] != room_id:
+            sequence.append(room_id)
+    return sequence
+
+
+def _unique_non_null(values: Sequence[str | None]) -> list[str]:
+    seen = set()
+    unique = []
+    for value in values:
+        if value is None or value in seen:
+            continue
+        seen.add(value)
+        unique.append(value)
+    return unique
+
+
+def _path_distances_m(pano_graph: dict[str, dict], pano_path: Sequence[str]) -> dict:
+    missing_pano_ids = [
+        pano_id
+        for pano_id in dict.fromkeys(pano_path)
+        if _lat_lng(pano_graph.get(pano_id)) is None
+    ]
+    straight_line = None
+    if len(pano_path) >= 2:
+        straight_line = _distance_between_panos_m(
+            pano_graph,
+            pano_path[0],
+            pano_path[-1],
+        )
+
+    path_distance = 0.0
+    missing_segments = 0
+    for source, target in zip(pano_path, pano_path[1:], strict=False):
+        segment_distance = _distance_between_panos_m(pano_graph, source, target)
+        if segment_distance is None:
+            missing_segments += 1
+            continue
+        path_distance += segment_distance
+
+    return {
+        "start_to_final_straight_line_distance_m": straight_line,
+        "pano_path_distance_m": path_distance if missing_segments == 0 else None,
+        "distance_missing_pano_ids": missing_pano_ids,
+        "distance_missing_segment_count": missing_segments,
+    }
+
+
+def _distance_between_panos_m(
+    pano_graph: dict[str, dict],
+    source_pano_id: str,
+    target_pano_id: str,
+) -> float | None:
+    source = _lat_lng(pano_graph.get(source_pano_id))
+    target = _lat_lng(pano_graph.get(target_pano_id))
+    if source is None or target is None:
+        return None
+    return _haversine_m(source[0], source[1], target[0], target[1])
+
+
+def _lat_lng(record: dict | None) -> tuple[float, float] | None:
+    if not isinstance(record, dict):
+        return None
+    lat = record.get("lat")
+    lng = record.get("lng")
+    if not isinstance(lat, (int, float)) or not isinstance(lng, (int, float)):
+        return None
+    return float(lat), float(lng)
+
+
+def _haversine_m(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    earth_radius_m = 6_371_000.0
+    phi1 = radians(lat1)
+    phi2 = radians(lat2)
+    delta_phi = radians(lat2 - lat1)
+    delta_lambda = radians(lng2 - lng1)
+    a = (
+        sin(delta_phi / 2.0) ** 2
+        + cos(phi1) * cos(phi2) * sin(delta_lambda / 2.0) ** 2
+    )
+    return 2.0 * earth_radius_m * asin(sqrt(a))
 
 
 def _clean_waypoints(waypoint_room_ids: Sequence[str], target_room_id: str) -> list[str]:

@@ -68,6 +68,22 @@ class WebServerTests(unittest.TestCase):
             index_html = (output_dir / "index.html").read_text(encoding="utf-8")
             self.assertIn('<script src="./trajectory.js"></script>', index_html)
 
+    def test_panorama_frame_api_handles_empty_payload(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            client = self.make_client(tmpdir)
+            response = client.post("/pano-viewer/api/trajectory-panorama-frames", json={})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["frames"], [])
+        self.assertEqual(response.json()["missing_frames"], [])
+
+    def test_render_image_rejects_non_project_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            client = self.make_client(tmpdir)
+            response = client.get("/pano-viewer/api/render-image", params={"path": "/etc/passwd"})
+
+        self.assertEqual(response.status_code, 403)
+
 
 if __name__ == "__main__":
     unittest.main()

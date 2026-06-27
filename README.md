@@ -114,7 +114,9 @@ the panorama follows the current playback frame and uses each movement's
 from the matching panorama graph edge.
 
 Trajectory JSON is parsed locally in the browser and is not uploaded to the web
-server.
+server. When a trajectory is loaded, the viewer can also prepare local rendered
+panorama frames and export the bottom-right panorama playback as a WebM video
+with the **Export Video** button.
 
 ## Evaluate Memory Localization
 

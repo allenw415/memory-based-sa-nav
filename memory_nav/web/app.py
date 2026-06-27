@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 import mimetypes
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from memory_nav import load_dotenv
 from memory_nav.cli._common import PROJECT_ROOT
@@ -32,6 +34,9 @@ class WebConfig:
     pano_export: str = "auto"
     memory_guidance: MemoryGuidanceConfig = field(default_factory=MemoryGuidanceConfig)
     pano_viewer: PanoExportConfig = field(default_factory=PanoExportConfig)
+
+
+IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
 
 
 def create_app(config: WebConfig | None = None) -> FastAPI:
@@ -100,6 +105,35 @@ def create_app(config: WebConfig | None = None) -> FastAPI:
     def pano_viewer_index() -> Response:
         return serve_file(project_path(resolved_config.pano_viewer.output_dir), "index.html")
 
+    @app.post("/pano-viewer/api/trajectory-panorama-frames")
+    async def pano_viewer_trajectory_panorama_frames(payload_request: Request) -> JSONResponse:
+        try:
+            body = await payload_request.body()
+            payload = json.loads(body.decode("utf-8")) if body else {}
+            if not isinstance(payload, dict):
+                raise ValueError("Expected JSON object.")
+            return JSONResponse(build_panorama_frame_manifest(payload))
+        except Exception as exc:
+            return JSONResponse(
+                {
+                    "frames": [],
+                    "missing_frames": [],
+                    "error": f"{type(exc).__name__}: {exc}",
+                },
+                status_code=400,
+            )
+
+    @app.get("/pano-viewer/api/render-image", include_in_schema=False)
+    def pano_viewer_render_image(path: str) -> Response:
+        try:
+            image_path = resolve_project_image_path(path)
+        except ValueError as exc:
+            return PlainTextResponse(str(exc), status_code=403)
+        if not image_path.exists() or not image_path.is_file():
+            return PlainTextResponse("Not Found", status_code=404)
+        media_type, _ = mimetypes.guess_type(str(image_path))
+        return Response(image_path.read_bytes(), media_type=media_type or "application/octet-stream")
+
     @app.get("/pano-viewer/{path:path}", include_in_schema=False)
     def pano_viewer_static(path: str) -> Response:
         return serve_file(project_path(resolved_config.pano_viewer.output_dir), path)
@@ -146,6 +180,244 @@ def serve_file(root: Path, relative_path: str) -> Response:
         return PlainTextResponse("Not Found", status_code=404)
     media_type, _ = mimetypes.guess_type(str(candidate))
     return Response(candidate.read_bytes(), media_type=media_type or "application/octet-stream")
+
+
+
+def build_panorama_frame_manifest(payload: dict[str, Any]) -> dict[str, Any]:
+    movements = _trajectory_movements(payload)
+    frames: list[dict[str, Any]] = []
+    missing_frames: list[dict[str, Any]] = []
+
+    for frame_index, movement in enumerate(movements):
+        pano_id = _string_or_none(movement.get("current_pano_id"))
+        if not pano_id:
+            missing_frames.append({"frame_index": frame_index, "reason": "missing_current_pano_id"})
+            continue
+        image_path = _image_path_for_movement(movement)
+        if image_path is None:
+            missing_frames.append({"frame_index": frame_index, "pano_id": pano_id, "reason": "missing_render"})
+            continue
+        frames.append(
+            _panorama_frame_payload(
+                frame_index=frame_index,
+                pano_id=pano_id,
+                room_id=_string_or_none(movement.get("current_room_id")),
+                next_room_id=_string_or_none(movement.get("next_room_id")),
+                subgoal_room_id=_string_or_none(movement.get("subgoal_room_id")),
+                active_target_room_id=_string_or_none(movement.get("active_target_room_id")),
+                heading=_finite_number(movement.get("selected_action_heading")),
+                image_path=image_path,
+            )
+        )
+
+    final_pano_id = _final_pano_id(payload, movements)
+    if final_pano_id:
+        final_index = len(movements)
+        last_movement = movements[-1] if movements else {}
+        final_image_path = find_render_capture(
+            final_pano_id,
+            heading=_finite_number(last_movement.get("selected_action_heading")),
+        )
+        if final_image_path is None:
+            missing_frames.append({"frame_index": final_index, "pano_id": final_pano_id, "reason": "missing_final_render"})
+        else:
+            frames.append(
+                _panorama_frame_payload(
+                    frame_index=final_index,
+                    pano_id=final_pano_id,
+                    room_id=_string_or_none(last_movement.get("next_room_id")),
+                    next_room_id=None,
+                    subgoal_room_id=_string_or_none(last_movement.get("subgoal_room_id"))
+                    or _string_or_none(payload.get("target_room_id")),
+                    active_target_room_id=_string_or_none(last_movement.get("active_target_room_id"))
+                    or _string_or_none(payload.get("target_room_id")),
+                    heading=_finite_number(last_movement.get("selected_action_heading")),
+                    image_path=final_image_path,
+                )
+            )
+
+    return {
+        "schema_version": 1,
+        "frame_count": len(frames),
+        "missing_count": len(missing_frames),
+        "frames": frames,
+        "missing_frames": missing_frames,
+    }
+
+
+def _trajectory_movements(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    movements: list[dict[str, Any]] = []
+    for round_payload in payload.get("rounds") or []:
+        if not isinstance(round_payload, dict):
+            continue
+        for step in round_payload.get("movement_steps") or []:
+            if isinstance(step, dict):
+                movements.append(step)
+    return movements
+
+
+def _image_path_for_movement(movement: dict[str, Any]) -> Path | None:
+    pano_id = _string_or_none(movement.get("current_pano_id"))
+    if not pano_id:
+        return None
+
+    action_heading = _finite_number(movement.get("selected_action_heading"))
+    if action_heading is not None:
+        action_image = find_render_capture(pano_id, heading=action_heading)
+        if action_image is not None:
+            return action_image
+
+    selected_capture_index = _integer_or_none(movement.get("selected_capture_index"))
+    for score in _candidate_view_scores(movement, selected_capture_index):
+        raw_path = _string_or_none(score.get("path")) if isinstance(score, dict) else None
+        if not raw_path:
+            continue
+        try:
+            image_path = resolve_project_image_path(raw_path)
+        except ValueError:
+            continue
+        if image_path.exists():
+            return image_path
+
+    return find_render_capture(
+        pano_id,
+        capture_index=selected_capture_index,
+        heading=_finite_number(movement.get("selected_view_heading")),
+    )
+
+
+def _candidate_view_scores(movement: dict[str, Any], selected_capture_index: int | None) -> list[dict[str, Any]]:
+    scores = [score for score in movement.get("view_scores") or [] if isinstance(score, dict)]
+    selected = [score for score in scores if score.get("selected") is True]
+    if selected:
+        return selected + [score for score in scores if score not in selected]
+    if selected_capture_index is not None:
+        matching = [score for score in scores if _integer_or_none(score.get("capture_index")) == selected_capture_index]
+        if matching:
+            return matching + [score for score in scores if score not in matching]
+    return scores
+
+
+def _panorama_frame_payload(
+    *,
+    frame_index: int,
+    pano_id: str,
+    room_id: str | None,
+    next_room_id: str | None,
+    subgoal_room_id: str | None,
+    active_target_room_id: str | None,
+    heading: float | None,
+    image_path: Path,
+) -> dict[str, Any]:
+    return {
+        "frame_index": frame_index,
+        "pano_id": pano_id,
+        "room_id": room_id,
+        "next_room_id": next_room_id,
+        "subgoal_room_id": subgoal_room_id,
+        "active_target_room_id": active_target_room_id,
+        "heading": heading,
+        "duration_ms": 900,
+        "image_url": "/pano-viewer/api/render-image?path=" + quote(str(image_path), safe=""),
+    }
+
+
+def _final_pano_id(payload: dict[str, Any], movements: list[dict[str, Any]]) -> str | None:
+    final_pano_id = _string_or_none(payload.get("final_pano_id"))
+    if final_pano_id:
+        return final_pano_id
+    pano_path = payload.get("pano_path")
+    if isinstance(pano_path, list) and pano_path:
+        return _string_or_none(pano_path[-1])
+    if movements:
+        return _string_or_none(movements[-1].get("next_pano_id"))
+    return None
+
+
+def resolve_project_image_path(raw_path: str) -> Path:
+    if not raw_path:
+        raise ValueError("Empty image path.")
+    candidate = Path(raw_path)
+    if candidate.is_absolute():
+        resolved = candidate.resolve()
+        if not _is_allowed_image_path(resolved):
+            marker = f"{PROJECT_ROOT.name}/"
+            text = str(raw_path)
+            if marker in text:
+                resolved = (PROJECT_ROOT / text.split(marker, 1)[1]).resolve()
+    else:
+        resolved = (PROJECT_ROOT / candidate).resolve()
+    if not _is_allowed_image_path(resolved):
+        raise ValueError("Image path is outside the allowed project image directories.")
+    if resolved.suffix.lower() not in IMAGE_SUFFIXES:
+        raise ValueError("Unsupported image type.")
+    return resolved
+
+
+def find_render_capture(pano_id: str, capture_index: int | None = None, heading: float | None = None) -> Path | None:
+    pano_dir = (PROJECT_ROOT / "renders" / "room_grounding_fov90" / pano_id).resolve()
+    if not _path_is_relative_to(pano_dir, PROJECT_ROOT / "renders") or not pano_dir.is_dir():
+        return None
+    candidates = _render_candidates(pano_dir, pano_id, capture_index)
+    if not candidates:
+        candidates = _render_candidates(pano_dir, pano_id, None)
+    if not candidates:
+        return None
+    if heading is None:
+        return candidates[0]
+    return min(candidates, key=lambda path: _heading_distance(_capture_heading(path), heading))
+
+
+def _render_candidates(pano_dir: Path, pano_id: str, capture_index: int | None) -> list[Path]:
+    candidates: list[Path] = []
+    capture_prefix = None if capture_index is None else f"{pano_id}_{capture_index:02d}_"
+    for path in sorted(pano_dir.iterdir()):
+        if not path.is_file() or path.suffix.lower() not in IMAGE_SUFFIXES:
+            continue
+        if capture_prefix is not None and not path.name.startswith(capture_prefix):
+            continue
+        if capture_prefix is None and not path.name.startswith(f"{pano_id}_"):
+            continue
+        candidates.append(path)
+    return candidates
+
+
+def _capture_heading(path: Path) -> float | None:
+    match = re.search(r"_([0-9]{3})deg\.[^.]+$", path.name)
+    return float(match.group(1)) if match else None
+
+
+def _heading_distance(left: float | None, right: float) -> float:
+    if left is None:
+        return 360.0
+    return abs(((left - right + 180.0) % 360.0) - 180.0)
+
+
+def _is_allowed_image_path(path: Path) -> bool:
+    return any(_path_is_relative_to(path, root) for root in (PROJECT_ROOT / "renders", PROJECT_ROOT / "outputs"))
+
+
+def _path_is_relative_to(path: Path, root: Path) -> bool:
+    resolved_root = root.resolve()
+    return path == resolved_root or resolved_root in path.parents
+
+
+def _string_or_none(value: object) -> str | None:
+    return value.strip() if isinstance(value, str) and value.strip() else None
+
+
+def _finite_number(value: object) -> float | None:
+    return float(value) if isinstance(value, (int, float)) else None
+
+
+def _integer_or_none(value: object) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    return None
 
 
 def _index_html(config: WebConfig) -> str:

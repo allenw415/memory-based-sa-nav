@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, Sequence
+from typing import Callable, Protocol, Sequence
 
 from memory_nav.data.memory_localization import (
     DEFAULT_DINOV2_SALAD_MODEL,
@@ -88,8 +88,23 @@ class ImageGoalNavigationResult:
         }
 
 
+class VisualDirectionPolicy(Protocol):
+    requires_goal_image_path: bool
+
+    def choose_action(
+        self,
+        *,
+        goal_embedding,
+        views: Sequence[VisualView],
+        legal_action_headings: Sequence[float],
+    ) -> VisualActionDecision:
+        ...
+
+
 class PureVisualDirectionPolicy:
     """Choose a view by weighted image similarity, then map its heading to an action."""
+
+    requires_goal_image_path = False
 
     def __init__(self, *, salad_alpha: float = 1.0):
         if not 0.0 <= float(salad_alpha) <= 1.0:
@@ -189,6 +204,117 @@ class PureVisualDirectionPolicy:
                 "siglip_alpha": (1.0 - self.salad_alpha) if use_fusion else 0.0,
             },
         )
+
+
+class ImagePathSimilarityDirectionPolicy:
+    """Choose a view by encoding goal/current image paths with a live embedder."""
+
+    requires_goal_image_path = True
+
+    def __init__(
+        self,
+        *,
+        image_embedder,
+        similarity_backend: str,
+    ):
+        if not hasattr(image_embedder, "encode_image_paths"):
+            raise RuntimeError("Image-path direction policy requires encode_image_paths.")
+        self.image_embedder = image_embedder
+        self.similarity_backend = str(similarity_backend)
+        self._embedding_cache: dict[Path, object] = {}
+
+    def choose_action(
+        self,
+        *,
+        goal_embedding,
+        views: Sequence[VisualView],
+        legal_action_headings: Sequence[float],
+    ) -> VisualActionDecision:
+        if not views:
+            raise ValueError("At least one current view is required.")
+        if not legal_action_headings:
+            raise ValueError("At least one legal action heading is required.")
+
+        goal_path = _resolve_existing_image_path(goal_embedding, "Goal image")
+        view_paths = [
+            _resolve_existing_image_path(view.path, f"Current view {view.capture_index}")
+            for view in views
+        ]
+        embeddings = self._embeddings_for_paths([goal_path, *view_paths])
+
+        import numpy as np
+
+        goal_vector = normalize_rows(
+            np.asarray(embeddings[0], dtype=np.float32).reshape(1, -1)
+        )[0]
+        scored_views: list[tuple[float, VisualView]] = []
+        for view, embedding in zip(views, embeddings[1:], strict=True):
+            view_vector = normalize_rows(
+                np.asarray(embedding, dtype=np.float32).reshape(1, -1)
+            )[0]
+            scored_views.append((float(view_vector @ goal_vector), view))
+
+        scored_views.sort(key=lambda item: (-item[0], item[1].capture_index))
+        best_score, best_view = scored_views[0]
+        second_score = scored_views[1][0] if len(scored_views) > 1 else best_score
+        ranked_actions = sorted(
+            enumerate(legal_action_headings),
+            key=lambda item: (
+                angular_distance_deg(best_view.heading, float(item[1])),
+                item[0],
+            ),
+        )
+        selected_action_index, selected_action_heading = ranked_actions[0]
+        scores_by_capture = {view.capture_index: score for score, view in scored_views}
+        view_scores = []
+        for view in sorted(views, key=lambda item: item.capture_index):
+            score = scores_by_capture[view.capture_index]
+            view_scores.append(
+                {
+                    "capture_index": view.capture_index,
+                    "label": view.label,
+                    "heading": float(view.heading),
+                    "path": view.path,
+                    "similarity": float(score),
+                    "image_path_similarity": float(score),
+                    "similarity_backend": self.similarity_backend,
+                    "salad_similarity": None,
+                    "siglip_similarity": None,
+                    "selected": view.capture_index == best_view.capture_index,
+                }
+            )
+        return VisualActionDecision(
+            selected_capture_index=best_view.capture_index,
+            selected_view_label=best_view.label,
+            selected_view_heading=float(best_view.heading),
+            similarity=float(best_score),
+            second_similarity=float(second_score),
+            margin=float(best_score - second_score),
+            selected_action_index=int(selected_action_index),
+            selected_action_heading=float(selected_action_heading),
+            view_scores=view_scores,
+            scoring={
+                "mode": "image_path_similarity",
+                "similarity_backend": self.similarity_backend,
+                "goal_image_path": str(goal_path),
+            },
+        )
+
+    def _embeddings_for_paths(self, paths: Sequence[Path]) -> list[object]:
+        import numpy as np
+
+        missing = [path for path in paths if path not in self._embedding_cache]
+        if missing:
+            embeddings = np.asarray(
+                self.image_embedder.encode_image_paths(missing),
+                dtype=np.float32,
+            )
+            if embeddings.shape[0] != len(missing):
+                raise RuntimeError("Image embedder returned the wrong number of embeddings.")
+            normalized = normalize_rows(embeddings)
+            for path, embedding in zip(missing, normalized, strict=True):
+                self._embedding_cache[path] = embedding
+        return [self._embedding_cache[path] for path in paths]
 
 
 class IndexedPanoramaViewStore:
@@ -337,7 +463,7 @@ class PanoramaGraphImageGoalSimulator:
         pano_graph: dict[str, dict],
         pano_room_mappings: dict[str, str | None],
         observation_provider: Callable[[str], Sequence[VisualView]],
-        policy: PureVisualDirectionPolicy | None = None,
+        policy: VisualDirectionPolicy | None = None,
     ):
         self.pano_graph = pano_graph
         self.pano_room_mappings = pano_room_mappings
@@ -485,6 +611,15 @@ def _split_goal_embeddings(goal_embedding):
             raise ValueError("Fused goal embedding is missing SALAD data.")
         return primary, auxiliary
     return goal_embedding, None
+
+
+def _resolve_existing_image_path(value, label: str) -> Path:
+    if not isinstance(value, (str, Path)):
+        raise ValueError(f"{label} path is required.")
+    path = Path(value).resolve()
+    if not path.exists():
+        raise FileNotFoundError(f"{label} not found: {path}")
+    return path
 
 
 def resolve_goal_label(label: str, *, representatives_path: str | Path) -> dict:

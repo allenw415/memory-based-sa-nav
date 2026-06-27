@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -14,12 +15,19 @@ from memory_nav.navigation import (
     angular_distance_deg,
     resolve_goal_label,
 )
+from memory_nav.navigation.image_goal import ImagePathSimilarityDirectionPolicy
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
-def view(index: int, heading: float, embedding, auxiliary_embedding=None) -> VisualView:
+def view(
+    index: int,
+    heading: float,
+    embedding,
+    auxiliary_embedding=None,
+    path: str | Path | None = None,
+) -> VisualView:
     return VisualView(
         capture_index=index,
         label=f"view_{index}",
@@ -30,8 +38,59 @@ def view(index: int, heading: float, embedding, auxiliary_embedding=None) -> Vis
             if auxiliary_embedding is not None
             else None
         ),
+        path=str(path) if path is not None else None,
     )
 
+
+class FakePathEmbedder:
+    def __init__(self, vectors: dict[str, list[float]]):
+        self.vectors = vectors
+        self.calls: list[list[str]] = []
+
+    def encode_image_paths(self, image_paths):
+        self.calls.append([Path(path).name for path in image_paths])
+        return np.asarray(
+            [self.vectors[Path(path).name] for path in image_paths],
+            dtype=np.float32,
+        )
+
+
+class ImagePathSimilarityDirectionPolicyTests(unittest.TestCase):
+    def test_encodes_goal_and_current_view_paths_with_live_embedder(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            goal = root / "goal.png"
+            left = root / "left.png"
+            right = root / "right.png"
+            for path in [goal, left, right]:
+                path.write_bytes(b"image")
+
+            embedder = FakePathEmbedder(
+                {
+                    "goal.png": [0.0, 1.0],
+                    "left.png": [1.0, 0.0],
+                    "right.png": [0.0, 1.0],
+                }
+            )
+            decision = ImagePathSimilarityDirectionPolicy(
+                image_embedder=embedder,
+                similarity_backend="dreamsim:ensemble",
+            ).choose_action(
+                goal_embedding=goal,
+                views=[
+                    view(0, 0.0, [0.0, 0.0], path=left),
+                    view(1, 90.0, [0.0, 0.0], path=right),
+                ],
+                legal_action_headings=[10.0, 100.0],
+            )
+
+        self.assertEqual(decision.selected_capture_index, 1)
+        self.assertEqual(decision.selected_action_index, 1)
+        self.assertEqual(decision.scoring["similarity_backend"], "dreamsim:ensemble")
+        self.assertEqual(
+            decision.view_scores[1]["similarity_backend"], "dreamsim:ensemble"
+        )
+        self.assertEqual(embedder.calls, [["goal.png", "left.png", "right.png"]])
 
 class PureVisualDirectionPolicyTests(unittest.TestCase):
     def test_selects_highest_similarity_and_breaks_ties_by_capture_index(self) -> None:

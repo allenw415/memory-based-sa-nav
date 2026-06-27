@@ -22,6 +22,10 @@ const state = {
   streetViewGate: null,
   syncingStreetView: false,
   requestedStreetViewPanoId: null,
+  panoramaFrames: [],
+  panoramaFrameMap: new Map(),
+  panoramaImageCache: new Map(),
+  exportingPanoramaVideo: false,
 };
 
 const canvas = document.getElementById("graphCanvas");
@@ -60,6 +64,8 @@ const els = {
   streetViewButton: document.getElementById("streetViewButton"),
   streetViewPane: document.getElementById("streetViewPane"),
   streetViewStatus: document.getElementById("streetViewStatus"),
+  panoramaPreviewCanvas: document.getElementById("panoramaPreviewCanvas"),
+  exportVideoButton: document.getElementById("exportVideoButton"),
 };
 
 main().catch((error) => {
@@ -114,6 +120,7 @@ function bindEvents() {
   window.addEventListener("resize", () => {
     resizeCanvas();
     draw();
+    renderPanoramaPreview();
   });
   for (const el of [els.floorOptions, els.roomOptions, els.statusSelect, els.searchInput]) {
     el.addEventListener("input", () => {
@@ -127,6 +134,7 @@ function bindEvents() {
   els.topologyModeButton.addEventListener("click", () => setMode("topology"));
   els.routeButton.addEventListener("click", findRoute);
   els.streetViewButton.addEventListener("click", loadSelectedStreetView);
+  els.exportVideoButton.addEventListener("click", exportPanoramaVideo);
 
   els.trajectoryFileInput.addEventListener("change", () => {
     const file = els.trajectoryFileInput.files && els.trajectoryFileInput.files[0];
@@ -231,6 +239,7 @@ function setTrajectory(trajectory, fileName) {
   showTrajectoryFrame();
   fitToNodeIds(trajectory.panoPath);
   draw();
+  loadPanoramaFrames(trajectory.raw);
 }
 
 function clearTrajectory() {
@@ -254,8 +263,269 @@ function clearTrajectory() {
   els.trajectoryStatus.classList.remove("error");
   els.trajectoryStatus.textContent = "No trajectory loaded.";
   updateTrajectoryPanels();
+  clearPanoramaFrames();
   fitToFilteredNodes();
   draw();
+}
+
+
+async function loadPanoramaFrames(payload) {
+  state.panoramaFrames = [];
+  state.panoramaFrameMap = new Map();
+  els.exportVideoButton.disabled = true;
+  els.streetViewPane.classList.remove("has-panorama-preview");
+  if (!payload) {
+    renderPanoramaPreview();
+    return;
+  }
+  els.streetViewStatus.classList.remove("error");
+  els.streetViewStatus.textContent = "Preparing local panorama frames...";
+  try {
+    const response = await fetch("api/trajectory-panorama-frames", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || `Frame request failed (${response.status})`);
+    const frames = Array.isArray(result.frames) ? result.frames : [];
+    state.panoramaFrames = frames;
+    state.panoramaFrameMap = new Map(frames.map((frame) => [Number(frame.frame_index), frame]));
+    els.exportVideoButton.disabled = frames.length === 0;
+    const missing = Number(result.missing_count) || 0;
+    els.streetViewStatus.textContent = frames.length
+      ? `${frames.length} local panorama frames ready${missing ? ` (${missing} missing)` : ""}.`
+      : "No local panorama frames found.";
+  } catch (error) {
+    console.error(error);
+    els.streetViewStatus.classList.add("error");
+    els.streetViewStatus.textContent = String(error.message || error);
+  }
+  renderPanoramaPreview();
+}
+
+function clearPanoramaFrames() {
+  state.panoramaFrames = [];
+  state.panoramaFrameMap = new Map();
+  els.exportVideoButton.disabled = true;
+  els.exportVideoButton.textContent = "Export Video";
+  els.streetViewPane.classList.remove("has-panorama-preview");
+  renderPanoramaPreview();
+}
+
+function renderPanoramaPreview() {
+  const canvas = els.panoramaPreviewCanvas;
+  if (!canvas) return;
+  resizePanoramaCanvas(canvas);
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const frame = state.panoramaFrameMap.get(state.trajectoryIndex);
+  if (!state.trajectory || !frame) {
+    if (!state.streetViewGate?.isLoaded()) els.streetViewPane.classList.remove("has-panorama-preview");
+    return;
+  }
+  loadPanoramaImage(frame.image_url)
+    .then((image) => {
+      if (state.panoramaFrameMap.get(state.trajectoryIndex) !== frame) return;
+      if (!state.streetViewGate?.isLoaded()) els.streetViewPane.classList.add("has-panorama-preview");
+      drawPanoramaFrame(ctx, canvas, image, frame);
+    })
+    .catch((error) => {
+      console.error(error);
+      els.streetViewStatus.classList.add("error");
+      els.streetViewStatus.textContent = String(error.message || error);
+    });
+}
+
+function resizePanoramaCanvas(canvas) {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const width = Math.max(1, Math.floor(rect.width * dpr));
+  const height = Math.max(1, Math.floor(rect.height * dpr));
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+}
+
+function loadPanoramaImage(url) {
+  if (state.panoramaImageCache.has(url)) return state.panoramaImageCache.get(url);
+  const promise = new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error(`Failed to load panorama frame: ${url}`));
+    image.src = url;
+  });
+  state.panoramaImageCache.set(url, promise);
+  return promise;
+}
+
+function drawPanoramaFrame(ctx, canvas, image, frame, options = {}) {
+  const width = canvas.width;
+  const height = canvas.height;
+  ctx.fillStyle = "#0f172a";
+  ctx.fillRect(0, 0, width, height);
+  drawPanoramaImage(ctx, canvas, image, options);
+  drawPanoramaFrameLabel(ctx, canvas, frame);
+}
+
+function drawPanoramaImage(ctx, canvas, image, options = {}) {
+  const width = canvas.width;
+  const height = canvas.height;
+  const alpha = Number.isFinite(options.alpha) ? options.alpha : 1;
+  const zoom = Number.isFinite(options.zoom) ? options.zoom : 1;
+  const baseScale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+  const scale = baseScale * zoom;
+  const drawWidth = image.naturalWidth * scale;
+  const drawHeight = image.naturalHeight * scale;
+  const drawX = (width - drawWidth) / 2;
+  const drawY = (height - drawHeight) / 2;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+  ctx.restore();
+}
+
+function drawPanoramaFrameLabel(ctx, canvas, frame) {
+  const dpr = window.devicePixelRatio || 1;
+  const width = canvas.width;
+  const labelHeight = 56 * dpr;
+  const padding = 13 * dpr;
+  ctx.fillStyle = "rgba(15, 23, 42, 0.76)";
+  ctx.fillRect(0, 0, width, labelHeight);
+  ctx.fillStyle = "#ffffff";
+  ctx.font = `${14 * dpr}px system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
+  ctx.textBaseline = "top";
+  const stepText = `Step ${frame.frame_index} / ${Math.max(0, state.panoramaFrames.length - 1)}`;
+  const roomText = panoramaRoomLabel(frame);
+  ctx.fillText(`${stepText}  ${roomText}`, padding, 9 * dpr);
+  ctx.fillStyle = "rgba(255, 255, 255, 0.78)";
+  ctx.font = `${11 * dpr}px system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
+  const headingText = Number.isFinite(frame.heading) ? `heading ${formatNumber(frame.heading)} deg` : "heading -";
+  ctx.fillText(`${frame.pano_id}  ${headingText}`, padding, 32 * dpr);
+}
+
+function panoramaRoomLabel(frame) {
+  const localization = frame.room_id || "-";
+  const subgoal = frame.subgoal_room_id || frame.active_target_room_id || frame.next_room_id || "-";
+  return `Localization: ${localization} -> Subgoal: ${subgoal}`;
+}
+
+async function exportPanoramaVideo() {
+  if (!state.panoramaFrames.length || state.exportingPanoramaVideo) return;
+  if (!window.MediaRecorder || typeof HTMLCanvasElement.prototype.captureStream !== "function") {
+    els.streetViewStatus.classList.add("error");
+    els.streetViewStatus.textContent = "This browser cannot export canvas video.";
+    return;
+  }
+  stopPlayback();
+  const mimeType = supportedVideoMimeType();
+  const canvas = document.createElement("canvas");
+  canvas.width = 1280;
+  canvas.height = 960;
+  const ctx = canvas.getContext("2d");
+  const stream = canvas.captureStream(30);
+  const chunks = [];
+  const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+  recorder.addEventListener("dataavailable", (event) => {
+    if (event.data && event.data.size) chunks.push(event.data);
+  });
+  const stopped = new Promise((resolve) => recorder.addEventListener("stop", resolve, { once: true }));
+
+  state.exportingPanoramaVideo = true;
+  els.exportVideoButton.disabled = true;
+  els.exportVideoButton.textContent = "Exporting...";
+  els.streetViewStatus.classList.remove("error");
+  els.streetViewStatus.textContent = "Recording local panorama video...";
+
+  try {
+    const images = await Promise.all(state.panoramaFrames.map((frame) => loadPanoramaImage(frame.image_url)));
+    recorder.start(100);
+    const speed = Math.max(0.1, Number(els.playbackSpeedSelect.value) || 1);
+    for (let index = 0; index < state.panoramaFrames.length; index++) {
+      const frame = state.panoramaFrames[index];
+      const nextFrame = state.panoramaFrames[index + 1] || null;
+      const image = images[index];
+      const nextImage = images[index + 1] || null;
+      if (state.trajectory) setTrajectoryIndex(Number(frame.frame_index), false);
+      if (nextFrame && nextImage) {
+        await animatePanoramaTransition(
+          ctx,
+          canvas,
+          image,
+          nextImage,
+          frame,
+          nextFrame,
+          Math.max(450, (Number(frame.duration_ms) || 900) / speed),
+        );
+      } else {
+        drawPanoramaFrame(ctx, canvas, image, frame);
+        await sleep(Math.max(320, 480 / speed));
+      }
+    }
+    recorder.stop();
+    await stopped;
+    const blob = new Blob(chunks, { type: mimeType || "video/webm" });
+    downloadBlob(blob, `${sanitizeFileName(state.trajectoryFileName || "panorama_trajectory")}.webm`);
+    els.streetViewStatus.textContent = `Exported ${state.panoramaFrames.length} panorama frames as WebM.`;
+  } catch (error) {
+    if (recorder.state !== "inactive") recorder.stop();
+    console.error(error);
+    els.streetViewStatus.classList.add("error");
+    els.streetViewStatus.textContent = String(error.message || error);
+  } finally {
+    stream.getTracks().forEach((track) => track.stop());
+    state.exportingPanoramaVideo = false;
+    els.exportVideoButton.disabled = state.panoramaFrames.length === 0;
+    els.exportVideoButton.textContent = "Export Video";
+  }
+}
+
+function animatePanoramaTransition(ctx, canvas, image, nextImage, frame, nextFrame, durationMs) {
+  const startedAt = performance.now();
+  return new Promise((resolve) => {
+    function tick(now) {
+      const progress = clamp((now - startedAt) / durationMs, 0, 1);
+      const eased = progress * progress * (3 - 2 * progress);
+      ctx.fillStyle = "#0f172a";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      drawPanoramaImage(ctx, canvas, image, { alpha: 1, zoom: 1 + 0.018 * progress });
+      drawPanoramaImage(ctx, canvas, nextImage, { alpha: eased, zoom: 1.018 - 0.012 * progress });
+      drawPanoramaFrameLabel(ctx, canvas, eased < 0.55 ? frame : nextFrame);
+      if (progress >= 1) {
+        resolve();
+        return;
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+function supportedVideoMimeType() {
+  for (const mimeType of ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm"]) {
+    if (MediaRecorder.isTypeSupported(mimeType)) return mimeType;
+  }
+  return "";
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+function downloadBlob(blob, fileName) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function sanitizeFileName(value) {
+  return String(value).replace(/[^a-z0-9._-]+/gi, "_").replace(/^_+|_+$/g, "") || "panorama_trajectory";
 }
 
 function togglePlayback() {
@@ -319,6 +589,7 @@ function showTrajectoryFrame() {
   updateDetails();
   updateTrajectoryPanels();
   requestStreetViewSync();
+  renderPanoramaPreview();
   draw();
 }
 
@@ -807,6 +1078,7 @@ async function loadSelectedStreetView() {
   els.streetViewStatus.textContent = "Loading Google Street View...";
   try {
     await state.streetViewGate.load();
+    els.streetViewPane.classList.add("streetview-loaded");
     els.streetViewButton.textContent = "Loaded";
     els.streetViewStatus.textContent = state.selectedNodeId || "Street View loaded. Select a pano.";
   } catch (error) {

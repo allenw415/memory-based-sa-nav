@@ -14,6 +14,7 @@ from memory_nav.navigation import (
     NavigationEpisodeRunner,
     PassageVLMSelector,
     RecordedPassageSelector,
+    VisualActionDecision,
     VisualView,
     resolve_goal_label,
 )
@@ -245,12 +246,28 @@ class NavigationEpisodeWaypointTests(unittest.TestCase):
                     "Room 2": {"neighbors": [{"target_room_id": "Room 1"}]},
                 },
                 pano_graph={
-                    "A": {"neighbors": [{"target_pano_id": "B", "geocentric_heading_deg": 0.0}]},
-                    "B": {"neighbors": [
-                        {"target_pano_id": "A", "geocentric_heading_deg": 180.0},
-                        {"target_pano_id": "C", "geocentric_heading_deg": 0.0},
-                    ]},
-                    "C": {"neighbors": [{"target_pano_id": "B", "geocentric_heading_deg": 180.0}]},
+                    "A": {
+                        "lat": 0.0,
+                        "lng": 0.0,
+                        "neighbors": [
+                            {"target_pano_id": "B", "geocentric_heading_deg": 0.0}
+                        ],
+                    },
+                    "B": {
+                        "lat": 0.0,
+                        "lng": 0.0001,
+                        "neighbors": [
+                            {"target_pano_id": "A", "geocentric_heading_deg": 180.0},
+                            {"target_pano_id": "C", "geocentric_heading_deg": 0.0},
+                        ],
+                    },
+                    "C": {
+                        "lat": 0.0,
+                        "lng": 0.0002,
+                        "neighbors": [
+                            {"target_pano_id": "B", "geocentric_heading_deg": 180.0}
+                        ],
+                    },
                 },
                 pano_room_mappings={"A": "Room 1", "B": "Room 2", "C": "Room 2"},
                 view_store=FakeViewStore(root, {"A": 0.0, "B": 0.0, "C": 180.0}),
@@ -273,6 +290,19 @@ class NavigationEpisodeWaypointTests(unittest.TestCase):
             "simulator_room_transition",
         )
         self.assertEqual(result.rounds[1]["localization"]["predicted_room_id"], "Room 2")
+        metrics = result.to_dict()["navigation_metrics"]
+        self.assertEqual(metrics["room_sequence"], ["Room 1", "Room 2"])
+        self.assertEqual(metrics["visited_room_ids"], ["Room 1", "Room 2"])
+        self.assertEqual(metrics["visited_room_count"], 2)
+        self.assertEqual(metrics["room_transition_count"], 1)
+        self.assertEqual(metrics["pano_step_count"], 1)
+        self.assertAlmostEqual(
+            metrics["start_to_final_straight_line_distance_m"],
+            11.12,
+            places=2,
+        )
+        self.assertAlmostEqual(metrics["pano_path_distance_m"], 11.12, places=2)
+        self.assertEqual(metrics["distance_missing_segment_count"], 0)
 
     def test_low_confidence_passage_choice_stops_before_moving(self) -> None:
         class LowConfidenceSelector:
@@ -318,6 +348,82 @@ class NavigationEpisodeWaypointTests(unittest.TestCase):
         self.assertEqual(result.reason, "passage_choice_failed")
         self.assertEqual(result.step_count, 0)
         self.assertEqual(result.pano_path, ["A"])
+
+    def test_image_path_direction_policy_receives_chosen_passage_image(self) -> None:
+        class PathGoalPolicy:
+            requires_goal_image_path = True
+
+            def __init__(self):
+                self.goal_paths: list[Path] = []
+
+            def choose_action(self, *, goal_embedding, views, legal_action_headings):
+                self.goal_paths.append(Path(goal_embedding).resolve())
+                return VisualActionDecision(
+                    selected_capture_index=views[0].capture_index,
+                    selected_view_label=views[0].label,
+                    selected_view_heading=float(views[0].heading),
+                    similarity=1.0,
+                    second_similarity=1.0,
+                    margin=0.0,
+                    selected_action_index=0,
+                    selected_action_heading=float(legal_action_headings[0]),
+                    scoring={"mode": "image_path_similarity"},
+                )
+
+        class PathPassageRetriever:
+            def __init__(self, image_path: Path):
+                self.image_path = image_path
+
+            def retrieve(self, room_id: str):
+                digits = "".join(char for char in room_id if char.isdigit())
+                return [
+                    {
+                        "label": f"R{digits}P1",
+                        "room_id": room_id,
+                        "pano_id": room_id,
+                        "capture_index": 0,
+                        "image_path": str(self.image_path),
+                    }
+                ]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            passage_image = root / "chosen_passage.png"
+            passage_image.write_bytes(b"image")
+            policy = PathGoalPolicy()
+            runner = NavigationEpisodeRunner(
+                room_graph={
+                    "Room 1": {"neighbors": [{"target_room_id": "Room 2"}]},
+                    "Room 2": {"neighbors": [{"target_room_id": "Room 1"}]},
+                },
+                pano_graph={
+                    "A": {
+                        "neighbors": [
+                            {"target_pano_id": "B", "geocentric_heading_deg": 0.0}
+                        ]
+                    },
+                    "B": {
+                        "neighbors": [
+                            {"target_pano_id": "A", "geocentric_heading_deg": 180.0}
+                        ]
+                    },
+                },
+                pano_room_mappings={"A": "Room 1", "B": "Room 2"},
+                view_store=FakeViewStore(root, {"A": 0.0, "B": 180.0}),
+                localizer=MappingLocalizer({"A": "Room 1", "B": "Room 2"}),
+                passage_retriever=PathPassageRetriever(passage_image),
+                passage_selector=FirstCandidateSelector(),
+                image_goal_policy=policy,
+            )
+            result = runner.run(
+                start_pano_id="A",
+                target_room_id="Room 2",
+                max_total_steps=2,
+                max_local_steps=2,
+            )
+
+        self.assertTrue(result.success)
+        self.assertEqual(policy.goal_paths, [passage_image.resolve()])
 
     def test_waypoint_is_completed_only_after_relocalization(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

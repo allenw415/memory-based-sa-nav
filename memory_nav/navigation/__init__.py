@@ -16,6 +16,7 @@ from .passages import (
     PassageSelector,
     PassageVLMSelector,
     RecordedPassageSelector,
+    SimilarityPassageSelector,
 )
 from .vlm_direction import (
     DirectionBurstResult,
@@ -42,6 +43,7 @@ __all__ = [
     "PureVisualDirectionPolicy",
     "RecordedPassageSelector",
     "RecordedDirectionSelector",
+    "SimilarityPassageSelector",
     "SparseVLMDirectionSimulator",
     "VisualActionDecision",
     "VisualView",

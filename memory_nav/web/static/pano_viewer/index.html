@@ -135,9 +135,13 @@
         <section class="streetview-section">
           <div class="streetview-header">
             <h2>Street View</h2>
-            <button id="streetViewButton" class="primary" type="button">Load</button>
+            <div class="streetview-actions">
+              <button id="exportVideoButton" type="button" disabled>Export Video</button>
+              <button id="streetViewButton" class="primary" type="button">Load</button>
+            </div>
           </div>
           <div id="streetViewPane" class="streetview-pane">
+            <canvas id="panoramaPreviewCanvas" class="panorama-preview" aria-label="Local panorama trajectory preview"></canvas>
             <div class="streetview-placeholder">Click Load to initialize Google Street View.</div>
           </div>
           <p id="streetViewStatus" class="status-text">Street View is not loaded.</p>

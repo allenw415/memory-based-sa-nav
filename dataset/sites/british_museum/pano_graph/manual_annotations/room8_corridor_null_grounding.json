@@ -1,0 +1,322 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "site": "british_museum",
+  "created_at": "2026-07-03",
+  "description": "Manual corridor pano grounding correction: mark selected Room 8 panos as null.",
+  "pano_ids": [
+    "nc6tPn6x91aocmWAz__Xsw",
+    "pPZHOFceG3PGxC_sEZ-bvw",
+    "0WjBprwj8Pilj__gcTt2aQ",
+    "LgbocHjlT7TjrC6I8ZflTQ",
+    "Hu9x8VAzd-C28hcIi3TRnw",
+    "pMOl72E36zzuaCD2PegMnw",
+    "FXU2V5M3or9ZkbRBrBN7fw",
+    "wuFtpkJr6VGh0Mk0bhh3YA",
+    "79p-vcnKjKQ7aEd3wJkqZQ",
+    "uxeyOY2-JBUeBApUvoIfnQ",
+    "9GZ_v8bYbDTgV2Md9eV03Q",
+    "cz-P-2bFqhRZa9h9b8mMFg"
+  ],
+  "before": {
+    "nc6tPn6x91aocmWAz__Xsw": {
+      "room": "Room 8",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51907385984476,
+      "lng": -0.12755941306183372
+    },
+    "pPZHOFceG3PGxC_sEZ-bvw": {
+      "room": "Room 8",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51906368454913,
+      "lng": -0.12754868706061673
+    },
+    "0WjBprwj8Pilj__gcTt2aQ": {
+      "room": "Room 8",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.519056153609895,
+      "lng": -0.1275403962308756
+    },
+    "LgbocHjlT7TjrC6I8ZflTQ": {
+      "room": "Room 8",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51904573855615,
+      "lng": -0.1275288614600371
+    },
+    "Hu9x8VAzd-C28hcIi3TRnw": {
+      "room": "Room 9",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.519207329348774,
+      "lng": -0.1277104344785247
+    },
+    "pMOl72E36zzuaCD2PegMnw": {
+      "room": "Room 9",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51920581175556,
+      "lng": -0.1277045044039244
+    },
+    "FXU2V5M3or9ZkbRBrBN7fw": {
+      "room": "Room 26",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.52001000513288,
+      "lng": -0.12705536911989465
+    },
+    "wuFtpkJr6VGh0Mk0bhh3YA": {
+      "room": "Room 26",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.520012412000774,
+      "lng": -0.12705493134824783
+    },
+    "79p-vcnKjKQ7aEd3wJkqZQ": {
+      "room": "Room 8",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.519141700136764,
+      "lng": -0.12757704370526074
+    },
+    "uxeyOY2-JBUeBApUvoIfnQ": {
+      "room": "Room 8",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.519104038305464,
+      "lng": -0.1275421406992982
+    },
+    "9GZ_v8bYbDTgV2Md9eV03Q": {
+      "room": "Room 8",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51917782578456,
+      "lng": -0.12762315782376762
+    },
+    "cz-P-2bFqhRZa9h9b8mMFg": {
+      "room": "Room 8",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51910856489706,
+      "lng": -0.1276580207416516
+    }
+  },
+  "after": {
+    "nc6tPn6x91aocmWAz__Xsw": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "pPZHOFceG3PGxC_sEZ-bvw": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "0WjBprwj8Pilj__gcTt2aQ": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "LgbocHjlT7TjrC6I8ZflTQ": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "Hu9x8VAzd-C28hcIi3TRnw": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "pMOl72E36zzuaCD2PegMnw": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "FXU2V5M3or9ZkbRBrBN7fw": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "wuFtpkJr6VGh0Mk0bhh3YA": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "79p-vcnKjKQ7aEd3wJkqZQ": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "uxeyOY2-JBUeBApUvoIfnQ": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "9GZ_v8bYbDTgV2Md9eV03Q": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "cz-P-2bFqhRZa9h9b8mMFg": {
+      "room": "null",
+      "source": "manual:accepted"
+    }
+  },
+  "room_counts_before": {
+    "Room 8": 8,
+    "Room 9": 2,
+    "Room 26": 2
+  },
+  "room_counts_after": {
+    "null": 12
+  },
+  "notes": [
+    "These panos are corridor/transition panos, so they should not be grounded to Room 8.",
+    "Pano graph connectivity was not changed.",
+    "Follow-up update added Hu9x8VAzd-C28hcIi3TRnw and pMOl72E36zzuaCD2PegMnw as null corridor panos.",
+    "Follow-up update added FXU2V5M3or9ZkbRBrBN7fw as a null corridor pano.",
+    "Follow-up update added wuFtpkJr6VGh0Mk0bhh3YA as null.",
+    "Follow-up update added 79p-vcnKjKQ7aEd3wJkqZQ, uxeyOY2-JBUeBApUvoIfnQ, and 9GZ_v8bYbDTgV2Md9eV03Q as null.",
+    "Follow-up update added cz-P-2bFqhRZa9h9b8mMFg as null."
+  ],
+  "follow_up_updates": [
+    {
+      "created_at": "2026-07-03",
+      "description": "Added two additional corridor panos to null grounding correction.",
+      "pano_ids": [
+        "Hu9x8VAzd-C28hcIi3TRnw",
+        "pMOl72E36zzuaCD2PegMnw"
+      ],
+      "before": {
+        "Hu9x8VAzd-C28hcIi3TRnw": {
+          "room": "Room 9",
+          "source": "manual:accepted",
+          "floor": "0",
+          "lat": 51.519207329348774,
+          "lng": -0.1277104344785247
+        },
+        "pMOl72E36zzuaCD2PegMnw": {
+          "room": "Room 9",
+          "source": "manual:accepted",
+          "floor": "0",
+          "lat": 51.51920581175556,
+          "lng": -0.1277045044039244
+        }
+      },
+      "after": {
+        "Hu9x8VAzd-C28hcIi3TRnw": {
+          "room": "null",
+          "source": "manual:accepted"
+        },
+        "pMOl72E36zzuaCD2PegMnw": {
+          "room": "null",
+          "source": "manual:accepted"
+        }
+      }
+    },
+    {
+      "created_at": "2026-07-03",
+      "description": "Added one additional corridor pano to null grounding correction.",
+      "pano_ids": [
+        "FXU2V5M3or9ZkbRBrBN7fw"
+      ],
+      "before": {
+        "FXU2V5M3or9ZkbRBrBN7fw": {
+          "room": "Room 26",
+          "source": "manual:accepted",
+          "floor": "0",
+          "lat": 51.52001000513288,
+          "lng": -0.12705536911989465
+        }
+      },
+      "after": {
+        "FXU2V5M3or9ZkbRBrBN7fw": {
+          "room": "null",
+          "source": "manual:accepted"
+        }
+      }
+    },
+    {
+      "created_at": "2026-07-03",
+      "description": "Added one additional Room 26 corridor pano to null grounding correction.",
+      "pano_ids": [
+        "wuFtpkJr6VGh0Mk0bhh3YA"
+      ],
+      "before": {
+        "wuFtpkJr6VGh0Mk0bhh3YA": {
+          "room": "Room 26",
+          "source": "manual:accepted",
+          "floor": "0",
+          "lat": 51.520012412000774,
+          "lng": -0.12705493134824783
+        }
+      },
+      "after": {
+        "wuFtpkJr6VGh0Mk0bhh3YA": {
+          "room": "null",
+          "source": "manual:accepted"
+        }
+      }
+    },
+    {
+      "created_at": "2026-07-03",
+      "description": "Added three additional Room 8 corridor panos to null grounding correction.",
+      "pano_ids": [
+        "79p-vcnKjKQ7aEd3wJkqZQ",
+        "uxeyOY2-JBUeBApUvoIfnQ",
+        "9GZ_v8bYbDTgV2Md9eV03Q"
+      ],
+      "before": {
+        "79p-vcnKjKQ7aEd3wJkqZQ": {
+          "room": "Room 8",
+          "source": "manual:accepted",
+          "floor": "0",
+          "lat": 51.519141700136764,
+          "lng": -0.12757704370526074
+        },
+        "uxeyOY2-JBUeBApUvoIfnQ": {
+          "room": "Room 8",
+          "source": "manual:accepted",
+          "floor": "0",
+          "lat": 51.519104038305464,
+          "lng": -0.1275421406992982
+        },
+        "9GZ_v8bYbDTgV2Md9eV03Q": {
+          "room": "Room 8",
+          "source": "manual:accepted",
+          "floor": "0",
+          "lat": 51.51917782578456,
+          "lng": -0.12762315782376762
+        }
+      },
+      "after": {
+        "79p-vcnKjKQ7aEd3wJkqZQ": {
+          "room": "null",
+          "source": "manual:accepted"
+        },
+        "uxeyOY2-JBUeBApUvoIfnQ": {
+          "room": "null",
+          "source": "manual:accepted"
+        },
+        "9GZ_v8bYbDTgV2Md9eV03Q": {
+          "room": "null",
+          "source": "manual:accepted"
+        }
+      }
+    },
+    {
+      "created_at": "2026-07-03",
+      "description": "Added one additional Room 8 corridor pano to null grounding correction.",
+      "pano_ids": [
+        "cz-P-2bFqhRZa9h9b8mMFg"
+      ],
+      "before": {
+        "cz-P-2bFqhRZa9h9b8mMFg": {
+          "room": "Room 8",
+          "source": "manual:accepted",
+          "floor": "0",
+          "lat": 51.51910856489706,
+          "lng": -0.1276580207416516
+        }
+      },
+      "after": {
+        "cz-P-2bFqhRZa9h9b8mMFg": {
+          "room": "null",
+          "source": "manual:accepted"
+        }
+      }
+    }
+  ]
+}

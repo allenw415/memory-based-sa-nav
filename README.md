@@ -6,12 +6,12 @@ This repository contains the memory-based navigation pipeline for interactive mu
 
 ## What Is Included
 
-- `memory_nav/memory/`: memory image retrieval, room localization, passage alignment, and interactive guidance orchestration
+- `memory_nav/memory/`: memory image retrieval, room localization, passage alignment, and navigation orchestration
 - `memory_nav/data/`: memory localization utilities, SigLIP2/DINOv2-SALAD embedding helpers, pano visualization helpers, and British Museum graph normalization helpers
 - `memory_nav/common/`: minimal model/environment utilities used by the memory advisor
 - `memory_nav/perception/renderer.py`: Google Street View pano rendering used to rebuild memory indexes
 - `memory_nav/spatial/routing.py`: room graph route planning used by the memory navigator
-- `memory_nav/web/`: unified FastAPI web server and static assets for memory guidance and pano viewer
+- `memory_nav/web/`: FastAPI web server and static assets for the pano viewer
 - `tools/data/build_memory_localization_index.py`: render pano views and rebuild SigLIP2 or DINOv2-SALAD/FAISS memory indexes
 - `tools/data/demo_memory_localization.py`: single-pano memory localization/debug run
 - `tools/data/eval_memory_localization.py`: offline evaluation for the image-memory localization index
@@ -19,6 +19,14 @@ This repository contains the memory-based navigation pipeline for interactive mu
 - `artifacts/memory_localization/`: prebuilt memory localization indexes
 
 ## Setup
+
+After cloning or pulling the repository, initialize Git LFS and download the
+prebuilt memory indexes:
+
+```bash
+git lfs install
+git lfs pull
+```
 
 ```bash
 python3 -m venv .venv
@@ -36,15 +44,6 @@ export NAV_OPENAI_API=responses
 export NAV_OPENAI_BASE=https://api.openai.com/v1
 ```
 
-## Run One Guidance Step
-
-```bash
-python3 -m memory_nav.cli.run_memory_guidance \
-  --target-room-id "Room 23" \
-  --localization-images path/to/current_view.jpg \
-  --passage-images front=path/to/front.jpg left=path/to/left.jpg
-```
-
 ## Web Tools
 
 ```bash
@@ -53,31 +52,30 @@ python3 -m memory_nav.web --port 8765
 
 Then open:
 
-- `http://127.0.0.1:8765/memory-guidance/`
 - `http://127.0.0.1:8765/pano-viewer/`.
 
 ## Rebuild Memory Index
 
-Set `GMAPS_KEY` in your shell or pass `--render-api-key`, then rebuild the default floor-0 image memory index:
+Set `GMAPS_KEY` in your shell or pass `--render-api-key`, then rebuild the default Floor 0+1 FOV90 image memory index:
 
 ```bash
 python3 tools/data/build_memory_localization_index.py \
-  --floor 0 \
+  --floors 0,1 \
   --include-sources manual:accepted \
   --heading-mode museum \
+  --fov 90 \
   --max-captures 8 \
-  --render-output-dir renders/room_grounding \
-  --output-dir artifacts/memory_localization \
-  --output-prefix floor0_siglip2_images
+  --render-output-dir renders/room_grounding_fov90 \
+  --output-dir artifacts/memory_localization
 ```
 
 The renderer caches pano manifests/images under `renders/`, so repeated rebuilds skip already-rendered captures when settings match.
 
-To build the DINOv2-SALAD floor-0 fov90 index for visual place-recognition experiments:
+To build the DINOv2-SALAD Floor 0+1 FOV90 index for visual place-recognition experiments:
 
 ```bash
 python3 tools/data/build_memory_localization_index.py \
-  --floor 0 \
+  --floors 0,1 \
   --include-sources manual:accepted \
   --embedding-model dinov2-salad \
   --device cpu \
@@ -89,9 +87,9 @@ python3 tools/data/build_memory_localization_index.py \
   --output-dir artifacts/memory_localization
 ```
 
-This writes independent artifacts such as `floor0_dinov2_salad_images_fov90.npz`,
-`floor0_dinov2_salad_images_fov90.faiss`, and
-`floor0_dinov2_salad_images_fov90.metadata.json`. The first DINOv2-SALAD run
+This writes independent artifacts such as `floor0_1_dinov2_salad_images_fov90.npz`,
+`floor0_1_dinov2_salad_images_fov90.faiss`, and
+`floor0_1_dinov2_salad_images_fov90.metadata.json`. The first DINOv2-SALAD run
 uses Torch Hub to load the official `serizba/salad` model and may need network
 access.
 
@@ -122,9 +120,9 @@ with the **Export Video** button.
 
 ```bash
 python3 tools/data/eval_memory_localization.py \
-  --index-path artifacts/memory_localization/floor0_siglip2_images.npz \
-  --metadata-path artifacts/memory_localization/floor0_siglip2_images.metadata.json \
-  --faiss-path artifacts/memory_localization/floor0_siglip2_images.faiss
+  --index-path artifacts/memory_localization/floor0_1_siglip2_images_fov90.npz \
+  --metadata-path artifacts/memory_localization/floor0_1_siglip2_images_fov90.metadata.json \
+  --faiss-path artifacts/memory_localization/floor0_1_siglip2_images_fov90.faiss
 ```
 
 For the DINOv2-SALAD experiment with rerendered query images, 1/2/3/4 sampled
@@ -132,9 +130,9 @@ views, repeated random seeds, and same-pano retrieval enabled:
 
 ```bash
 python3 tools/data/eval_memory_localization.py \
-  --index-path artifacts/memory_localization/floor0_dinov2_salad_images_fov90.npz \
-  --metadata-path artifacts/memory_localization/floor0_dinov2_salad_images_fov90.metadata.json \
-  --faiss-path artifacts/memory_localization/floor0_dinov2_salad_images_fov90.faiss \
+  --index-path artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.npz \
+  --metadata-path artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.metadata.json \
+  --faiss-path artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.faiss \
   --embedding-model dinov2-salad \
   --device cpu \
   --batch-size 1 \
@@ -156,9 +154,13 @@ cross-pano generalization.
 ## Tests
 
 ```bash
-python3 -m unittest tests/test_memory_navigation.py
+python3 -m unittest discover -s tests
 ```
 
 ## Artifact Note
 
-The `.npz` and `.faiss` files are large binary memory indexes. `.gitattributes` marks them for Git LFS; if you publish this repository, initialize Git LFS before committing those files.
+The `.npz` and `.faiss` files are large binary memory indexes tracked through
+Git LFS. Run `git lfs pull` after a clone or pull to materialize them locally.
+DINOv2-SALAD indexes are intentionally excluded because they can be rebuilt with
+the command above; tests that require them skip when those optional artifacts
+are unavailable.

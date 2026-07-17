@@ -29,7 +29,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--embedding-index",
-        default="artifacts/memory_localization/floor0_dinov2_salad_images_fov90.npz",
+        default="artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.npz",
         help="Image embedding npz used when --clustering-model=index.",
     )
     parser.add_argument(
@@ -43,7 +43,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--siglip-index",
-        default="artifacts/memory_localization/floor0_siglip2_images_fov90.npz",
+        default="artifacts/memory_localization/floor0_1_siglip2_images_fov90.npz",
         help="SigLIP2 image embedding index used by --clustering-model=hybrid.",
     )
     parser.add_argument(

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "site": "british_museum",
+  "created_at": "2026-07-03",
+  "description": "Manual removal of an invalid edge between Room 9 and a null boundary/transition pano.",
+  "pair": {
+    "source_pano_id": "5-1UhKyyAL6MTwc9-USHyQ",
+    "source_room": "Room 9",
+    "target_pano_id": "GcSAJHLVrALssSDWRKz07w",
+    "target_room": "null"
+  },
+  "removed_edges": [
+    {
+      "source_pano_id": "5-1UhKyyAL6MTwc9-USHyQ",
+      "source_room": "Room 9",
+      "target_pano_id": "GcSAJHLVrALssSDWRKz07w",
+      "target_room": "null",
+      "geocentric_heading_deg": 340.7664,
+      "description": null
+    },
+    {
+      "source_pano_id": "GcSAJHLVrALssSDWRKz07w",
+      "source_room": "null",
+      "target_pano_id": "5-1UhKyyAL6MTwc9-USHyQ",
+      "target_room": "Room 9",
+      "geocentric_heading_deg": 160.7664,
+      "description": null
+    }
+  ],
+  "before_edge_count": 12092,
+  "after_edge_count": 12090,
+  "notes": [
+    "Room grounding was not changed."
+  ]
+}

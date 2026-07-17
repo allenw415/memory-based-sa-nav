@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "site": "british_museum",
+  "created_at": "2026-07-03",
+  "description": "Manual boundary/transition pano grounding correction: mark selected Room 6 and Room 7 panos as null.",
+  "pano_ids": [
+    "e6APvDpNzBQ2-xaXn5-c0g",
+    "PBVpC6FolUW1H4zzHe4F1g"
+  ],
+  "before_grounding": {
+    "e6APvDpNzBQ2-xaXn5-c0g": {
+      "room": "Room 7",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51874802780046,
+      "lng": -0.12719976226825022
+    },
+    "PBVpC6FolUW1H4zzHe4F1g": {
+      "room": "Room 6",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.518736409399196,
+      "lng": -0.12718840183225447
+    }
+  },
+  "after_grounding": {
+    "e6APvDpNzBQ2-xaXn5-c0g": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "PBVpC6FolUW1H4zzHe4F1g": {
+      "room": "null",
+      "source": "manual:accepted"
+    }
+  },
+  "room_counts_before": {
+    "Room 7": 1,
+    "Room 6": 1
+  },
+  "room_counts_after": {
+    "null": 2
+  },
+  "notes": [
+    "These panos are boundary/transition panos, so they should not be grounded to Room 6 or Room 7.",
+    "Pano graph connectivity was not changed."
+  ]
+}

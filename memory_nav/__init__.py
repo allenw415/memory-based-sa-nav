@@ -12,9 +12,11 @@ from .common import (
 from .perception import PanoramaRenderer
 from .data import (
     DEFAULT_DINOV2_SALAD_MODEL,
+    DEFAULT_DREAMSIM_MODEL,
     DEFAULT_EMBEDDING_MODEL,
     DEFAULT_SIGLIP2_MODEL,
     DINOv2SALADEmbedder,
+    DreamSimImageEmbedder,
     SigLIP2Embedder,
     create_image_embedder,
     resolve_embedding_model_name,
@@ -39,9 +41,11 @@ __all__ = [
     "PanoramaRenderer",
     "PassageAlignmentAdvisor",
     "DEFAULT_DINOV2_SALAD_MODEL",
+    "DEFAULT_DREAMSIM_MODEL",
     "DEFAULT_EMBEDDING_MODEL",
     "DEFAULT_SIGLIP2_MODEL",
     "DINOv2SALADEmbedder",
+    "DreamSimImageEmbedder",
     "SigLIP2Embedder",
     "create_image_embedder",
     "extract_output_text",

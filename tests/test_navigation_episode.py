@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 
 from memory_nav.memory.retrieval import MemoryLocalizationResult, MemoryRoomLocalizer
+from memory_nav.navigation.episode import _resolve_chosen_passage_goal
 from memory_nav.navigation import (
     DynamicPassageRetriever,
     IndexedPanoramaViewStore,
@@ -91,6 +92,45 @@ class DynamicPassageRetrieverTests(unittest.TestCase):
             ],
         )
         self.assertEqual(retriever.retrieve("Room 99"), [])
+
+
+class DetectedPassageGoalResolutionTests(unittest.TestCase):
+    def test_detected_label_uses_source_image_for_direction_target(self) -> None:
+        current_candidates = [
+            {
+                "label": "R8P7",
+                "room_id": "Room 8",
+                "pano_id": "source-pano",
+                "capture_index": 3,
+                "image_path": "/tmp/source.png",
+            }
+        ]
+        choice = {
+            "chosen_label": "R8P7D2",
+            "navigation_confidence": 1.0,
+            "direction_target": {
+                "label": "R8P7D2",
+                "source_label": "R8P7",
+                "image_path": "/tmp/source.png",
+                "pano_id": "source-pano",
+                "capture_index": 3,
+                "source_passage": current_candidates[0],
+                "detected_candidate": {
+                    "crop_image_path": "/tmp/crop.png",
+                    "masked_image_path": "/tmp/masked.png",
+                },
+            },
+        }
+
+        goal = _resolve_chosen_passage_goal(current_candidates, choice)
+
+        self.assertIsNotNone(goal)
+        assert goal is not None
+        self.assertEqual(goal["label"], "R8P7D2")
+        self.assertEqual(goal["source_label"], "R8P7")
+        self.assertEqual(goal["image_path"], "/tmp/source.png")
+        self.assertNotEqual(goal["image_path"], "/tmp/crop.png")
+        self.assertEqual(goal["target_source"], "source_passage_image")
 
 
 class LocalizationExclusionTests(unittest.TestCase):
@@ -303,6 +343,45 @@ class NavigationEpisodeWaypointTests(unittest.TestCase):
         )
         self.assertAlmostEqual(metrics["pano_path_distance_m"], 11.12, places=2)
         self.assertEqual(metrics["distance_missing_segment_count"], 0)
+
+    def test_target_room_transition_can_finish_without_target_view_index(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            runner = NavigationEpisodeRunner(
+                room_graph={
+                    "Room 1": {"neighbors": [{"target_room_id": "Room 2"}]},
+                    "Room 2": {"neighbors": [{"target_room_id": "Room 1"}]},
+                },
+                pano_graph={
+                    "A": {
+                        "neighbors": [
+                            {"target_pano_id": "B", "geocentric_heading_deg": 0.0}
+                        ]
+                    },
+                    "B": {
+                        "neighbors": [
+                            {"target_pano_id": "A", "geocentric_heading_deg": 180.0}
+                        ]
+                    },
+                },
+                pano_room_mappings={"A": "Room 1", "B": "Room 2"},
+                view_store=FakeViewStore(root, {"A": 0.0}),
+                localizer=MappingLocalizer({"A": "Room 1"}),
+                passage_retriever=FakePassageRetriever(),
+                passage_selector=FirstCandidateSelector(),
+            )
+            result = runner.run(
+                start_pano_id="A",
+                target_room_id="Room 2",
+                max_total_steps=2,
+                max_local_steps=2,
+            )
+
+        self.assertTrue(result.success)
+        self.assertEqual(result.reason, "target_room_relocalized")
+        self.assertEqual(result.pano_path, ["A", "B"])
+        self.assertEqual(result.rounds[1]["localization_source"], "simulator_room_transition")
+        self.assertEqual(result.rounds[1]["localization_observation"]["pano_id"], "B")
 
     def test_low_confidence_passage_choice_stops_before_moving(self) -> None:
         class LowConfidenceSelector:
@@ -526,6 +605,106 @@ class NavigationEpisodeWaypointTests(unittest.TestCase):
         self.assertEqual(result.rounds[1]["active_target_room_id"], "Room 2")
 
 
+    def test_equivalent_semantic_target_room_finishes_successfully(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            runner = NavigationEpisodeRunner(
+                room_graph={
+                    "Room 1": {"neighbors": [{"target_room_id": "Room 3"}]},
+                    "Room 2": {"neighbors": [{"target_room_id": "Room 3"}]},
+                    "Room 3": {
+                        "neighbors": [
+                            {"target_room_id": "Room 1"},
+                            {"target_room_id": "Room 2"},
+                        ]
+                    },
+                },
+                pano_graph={
+                    "A": {
+                        "neighbors": [
+                            {"target_pano_id": "B", "geocentric_heading_deg": 0.0}
+                        ]
+                    },
+                    "B": {
+                        "neighbors": [
+                            {"target_pano_id": "A", "geocentric_heading_deg": 180.0},
+                            {"target_pano_id": "C", "geocentric_heading_deg": 0.0},
+                        ]
+                    },
+                    "C": {
+                        "neighbors": [
+                            {"target_pano_id": "B", "geocentric_heading_deg": 180.0}
+                        ]
+                    },
+                },
+                pano_room_mappings={"A": "Room 1", "B": "Room 3", "C": "Room 2"},
+                view_store=FakeViewStore(root, {"A": 0.0, "B": 0.0, "C": 180.0}),
+                localizer=MappingLocalizer(
+                    {"A": "Room 1", "B": "Room 3", "C": "Room 2"}
+                ),
+                passage_retriever=FakePassageRetriever(),
+                passage_selector=FirstCandidateSelector(),
+            )
+            result = runner.run(
+                start_pano_id="A",
+                target_room_id="Room 2",
+                acceptable_target_room_ids=["Room 2", "Room 3"],
+                max_total_steps=4,
+                max_local_steps=2,
+            )
+
+        self.assertTrue(result.success)
+        self.assertEqual(result.pano_path, ["A", "B"])
+        self.assertEqual(
+            result.rounds[-1]["reached_acceptable_target_room_id"],
+            "Room 3",
+        )
+
+    def test_parsed_target_outside_semantic_group_is_not_success(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            runner = NavigationEpisodeRunner(
+                room_graph={
+                    "Room 1": {"neighbors": [{"target_room_id": "Room 2"}]},
+                    "Room 2": {
+                        "neighbors": [
+                            {"target_room_id": "Room 1"},
+                            {"target_room_id": "Room 3"},
+                        ]
+                    },
+                    "Room 3": {"neighbors": [{"target_room_id": "Room 2"}]},
+                },
+                pano_graph={
+                    "A": {
+                        "neighbors": [
+                            {"target_pano_id": "B", "geocentric_heading_deg": 0.0}
+                        ]
+                    },
+                    "B": {
+                        "neighbors": [
+                            {"target_pano_id": "A", "geocentric_heading_deg": 180.0}
+                        ]
+                    },
+                },
+                pano_room_mappings={"A": "Room 1", "B": "Room 2"},
+                view_store=FakeViewStore(root, {"A": 0.0, "B": 180.0}),
+                localizer=MappingLocalizer({"A": "Room 1", "B": "Room 2"}),
+                passage_retriever=FakePassageRetriever(),
+                passage_selector=FirstCandidateSelector(),
+            )
+            result = runner.run(
+                start_pano_id="A",
+                target_room_id="Room 2",
+                acceptable_target_room_ids=["Room 3"],
+                max_total_steps=3,
+                max_local_steps=2,
+            )
+
+        self.assertFalse(result.success)
+        self.assertEqual(result.reason, "unacceptable_target_room_relocalized")
+        self.assertEqual(result.final_pano_id, "B")
+
+
 def confident_localization(room_id: str) -> MemoryLocalizationResult:
     return MemoryLocalizationResult(
         predicted_room_id=room_id,
@@ -564,8 +743,8 @@ class ExistingRepresentativeRetriever:
 class BritishMuseumEpisodeIntegrationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.index_path = PROJECT_ROOT / "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.npz"
-        cls.metadata_path = PROJECT_ROOT / "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.metadata.json"
+        cls.index_path = PROJECT_ROOT / "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.npz"
+        cls.metadata_path = PROJECT_ROOT / "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.metadata.json"
         cls.manifest_root = PROJECT_ROOT / "renders/room_grounding_fov90"
         cls.room8_reps_path = PROJECT_ROOT / "outputs/passage_clustering/room8/salad_cluster8/representatives.json"
         cls.room23_reps_path = PROJECT_ROOT / "outputs/passage_clustering/room23/salad_cluster8/representatives.json"

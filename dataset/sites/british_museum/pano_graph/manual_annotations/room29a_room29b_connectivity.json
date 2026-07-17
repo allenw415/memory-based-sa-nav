@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "site": "british_museum",
+  "created_at": "2026-07-03",
+  "description": "Manual connectivity correction between Room 29b and Room 29a.",
+  "pair": {
+    "source_pano_id": "uMyeXdyLH83QE4CKeA-62w",
+    "source_room": "Room 29b",
+    "target_pano_id": "tqzMIA0YRxhlKMs9Qy40Lg",
+    "target_room": "Room 29a"
+  },
+  "added_edges": [
+    {
+      "source_pano_id": "uMyeXdyLH83QE4CKeA-62w",
+      "target_pano_id": "tqzMIA0YRxhlKMs9Qy40Lg",
+      "geocentric_heading_deg": 234.79706,
+      "description": "manual:room29a_room29b_connectivity"
+    },
+    {
+      "source_pano_id": "tqzMIA0YRxhlKMs9Qy40Lg",
+      "target_pano_id": "uMyeXdyLH83QE4CKeA-62w",
+      "geocentric_heading_deg": 54.79704,
+      "description": "manual:room29a_room29b_connectivity"
+    }
+  ],
+  "before_edge_count": 12090,
+  "after_edge_count": 12092,
+  "notes": [
+    "Room grounding was not changed."
+  ]
+}

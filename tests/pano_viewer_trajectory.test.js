@@ -6,6 +6,7 @@ const path = require("node:path");
 const {
   createManualSyncGate,
   parseTrajectory,
+  resolveEpisodePayload,
 } = require("../memory_nav/web/static/pano_viewer/trajectory.js");
 
 function graphFixture() {
@@ -97,6 +98,54 @@ test("parseTrajectory expands movements, rounds, headings, and boundaries", () =
   assert.equal(trajectory.frames[1].subgoalRoomId, "Room 3");
 });
 
+test("parseTrajectory accepts a Pilot evaluator wrapper and preserves test metadata", () => {
+  const episode = episodeFixture();
+  const wrapper = {
+    test_case: {
+      test_id: "TEST001",
+      query: "Take me to the Greece 1050–520 BC gallery.",
+      difficulty: "easy",
+      ratio_stratum: "1.0-1.5",
+      passage_profile: "reliable",
+      target_group_theme: "Greece 1050–520 BC",
+    },
+    parsed_query: { target_room_id: "Room 3" },
+    episode,
+    episode_error: null,
+    evaluation: {
+      test_id: "TEST001",
+      success: true,
+      reason: "target_room_relocalized",
+    },
+  };
+
+  const trajectory = parseTrajectory(wrapper, graphFixture());
+
+  assert.equal(trajectory.sourceSchema, "evaluation_wrapper");
+  assert.equal(trajectory.raw, episode);
+  assert.equal(trajectory.rawEnvelope, wrapper);
+  assert.deepEqual(trajectory.panoPath, ["A", "B", "C"]);
+  assert.deepEqual(trajectory.evaluationMetadata, {
+    testId: "TEST001",
+    query: "Take me to the Greece 1050–520 BC gallery.",
+    difficulty: "easy",
+    ratioStratum: "1.0-1.5",
+    passageProfile: "reliable",
+    targetGroupTheme: "Greece 1050–520 BC",
+  });
+});
+
+test("resolveEpisodePayload reports evaluator records without a completed episode", () => {
+  assert.throws(
+    () =>
+      resolveEpisodePayload({
+        episode: null,
+        episode_error: "RuntimeError: navigation failed",
+      }),
+    /does not contain a completed episode: RuntimeError: navigation failed/,
+  );
+});
+
 test("parseTrajectory rejects unknown panos and illegal graph edges", () => {
   const unknown = episodeFixture();
   unknown.pano_path[2] = "missing";
@@ -141,14 +190,13 @@ for (const [fileName, expectedMoves, expectedFinalPano] of [
   ["full_episode_erp_to_room23.json", 7, "Li54te8XaSyXgj2x_c2msA"],
   ["full_episode_nc6_to_room23.json", 4, "Li54te8XaSyXgj2x_c2msA"],
 ]) {
-  test(`real episode ${fileName} parses against the exported panorama graph`, () => {
-    const projectRoot = path.resolve(__dirname, "..");
-    const graph = JSON.parse(
-      fs.readFileSync(path.join(projectRoot, "artifacts/pano_viewer/british_museum/viewer_data.json"), "utf8"),
-    );
-    const payload = JSON.parse(
-      fs.readFileSync(path.join(projectRoot, "outputs/navigation", fileName), "utf8"),
-    );
+  const projectRoot = path.resolve(__dirname, "..");
+  const graphPath = path.join(projectRoot, "artifacts/pano_viewer/british_museum/viewer_data.json");
+  const episodePath = path.join(projectRoot, "outputs/navigation", fileName);
+  const missingFixture = !fs.existsSync(graphPath) || !fs.existsSync(episodePath);
+  test(`real episode ${fileName} parses against the exported panorama graph`, { skip: missingFixture }, () => {
+    const graph = JSON.parse(fs.readFileSync(graphPath, "utf8"));
+    const payload = JSON.parse(fs.readFileSync(episodePath, "utf8"));
 
     const trajectory = parseTrajectory(payload, graph);
     assert.equal(trajectory.success, true);

@@ -1,0 +1,25 @@
+{
+  "floor": "0",
+  "excluded_target_room_ids": [
+    "Room 18a",
+    "Room 18b"
+  ],
+  "equivalent_groups": [
+    {
+      "target_group_id": "assyria_nimrud",
+      "target_group_theme": "Assyria: Nimrud",
+      "acceptable_target_room_ids": [
+        "Room 7",
+        "Room 8"
+      ]
+    },
+    {
+      "target_group_id": "india",
+      "target_group_theme": "India",
+      "acceptable_target_room_ids": [
+        "Room 29a",
+        "Room 29b"
+      ]
+    }
+  ]
+}

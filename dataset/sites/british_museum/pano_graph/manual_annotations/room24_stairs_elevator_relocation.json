@@ -1,0 +1,867 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "site": "british_museum",
+  "created_at": "2026-07-02",
+  "description": "Relocate Google Street View API panos for the Room 24 stairs/elevator to Room 30.",
+  "pano_ids": [
+    "jvajOkPn1zwseyJwfG1foA",
+    "H8A2tiw4lNzoM8AdMkxuBg",
+    "JVokeJ_hp3iYinNNVxL9Jg",
+    "tlqgGSF0Wrw4O8-k7I6_fQ",
+    "AWx2MeydUowr3t9xi77W3w",
+    "96nfHw7-9bGleNajD3DzuA",
+    "zGoaQh6iNmLQ2Q6jqTKFUg",
+    "PEIWFCctjke9MXssyl5UBg",
+    "8s9wCUj76Vqs7rn688XD2w",
+    "xIMHp7snhGwKQ4o6Sza6hA",
+    "KMGVuDeu4S1UrynDPRgr8A",
+    "ACoy9eGsOt9qFjXu0iUgDA",
+    "-MRpgP4LttqREjtt7AuTGg",
+    "Cm5Y4S1IlUa-Kqtgf0y_NA",
+    "7TrvzNgyrtNk3_L5T6wUww",
+    "IijVnQdwgTr6gdwxhczLFw",
+    "8SpTVoaGybOhT93-m90sTw"
+  ],
+  "grounding": {
+    "jvajOkPn1zwseyJwfG1foA": "null",
+    "H8A2tiw4lNzoM8AdMkxuBg": "null",
+    "JVokeJ_hp3iYinNNVxL9Jg": "null",
+    "tlqgGSF0Wrw4O8-k7I6_fQ": "null",
+    "AWx2MeydUowr3t9xi77W3w": "null",
+    "96nfHw7-9bGleNajD3DzuA": "null",
+    "zGoaQh6iNmLQ2Q6jqTKFUg": "null",
+    "PEIWFCctjke9MXssyl5UBg": "null",
+    "8s9wCUj76Vqs7rn688XD2w": "null",
+    "xIMHp7snhGwKQ4o6Sza6hA": "null",
+    "KMGVuDeu4S1UrynDPRgr8A": "null",
+    "ACoy9eGsOt9qFjXu0iUgDA": "null",
+    "-MRpgP4LttqREjtt7AuTGg": "null",
+    "Cm5Y4S1IlUa-Kqtgf0y_NA": "null",
+    "7TrvzNgyrtNk3_L5T6wUww": "null",
+    "IijVnQdwgTr6gdwxhczLFw": "null",
+    "8SpTVoaGybOhT93-m90sTw": "null"
+  },
+  "transform": {
+    "type": "rotate_translate_local_meters",
+    "source_anchor_pano_id": "tlqgGSF0Wrw4O8-k7I6_fQ",
+    "target_anchor_pano_id": "RKUmP5jTlBLlPHOnkNNg-g",
+    "rotation_direction": "clockwise",
+    "rotation_degrees": 90,
+    "math_rotation_degrees_ccw": -90,
+    "target_anchor_offset_m": {
+      "east": -2.0615540734069517,
+      "north": 3.5707134640580307
+    },
+    "target_source_anchor_coordinates": {
+      "lat": 51.52002140701365,
+      "lng": -0.1276586949321536
+    },
+    "target_anchor_bearing_deg": 330.0
+  },
+  "room24_anchor_coordinates": {
+    "lat": 51.51998933089558,
+    "lng": -0.12762893290446237
+  },
+  "original_coordinates": {
+    "jvajOkPn1zwseyJwfG1foA": {
+      "lat": 51.519693080788876,
+      "lng": -0.12779845448248928
+    },
+    "H8A2tiw4lNzoM8AdMkxuBg": {
+      "lat": 51.51968090391313,
+      "lng": -0.1277842188433614
+    },
+    "JVokeJ_hp3iYinNNVxL9Jg": {
+      "lat": 51.519667989820455,
+      "lng": -0.12778406996921074
+    },
+    "tlqgGSF0Wrw4O8-k7I6_fQ": {
+      "lat": 51.519668501023034,
+      "lng": -0.1277565202883395
+    },
+    "AWx2MeydUowr3t9xi77W3w": {
+      "lat": 51.51965268700609,
+      "lng": -0.1277676661399197
+    },
+    "96nfHw7-9bGleNajD3DzuA": {
+      "lat": 51.51963779275969,
+      "lng": -0.12774435377324017
+    },
+    "zGoaQh6iNmLQ2Q6jqTKFUg": {
+      "lat": 51.5196207362881,
+      "lng": -0.1277178007005966
+    },
+    "PEIWFCctjke9MXssyl5UBg": {
+      "lat": 51.51961317177397,
+      "lng": -0.1277403820114199
+    },
+    "8s9wCUj76Vqs7rn688XD2w": {
+      "lat": 51.519607036064556,
+      "lng": -0.12770292996697993
+    },
+    "xIMHp7snhGwKQ4o6Sza6hA": {
+      "lat": 51.5195735156218,
+      "lng": -0.12769514821627792
+    },
+    "KMGVuDeu4S1UrynDPRgr8A": {
+      "lat": 51.51957930804974,
+      "lng": -0.12767937950069785
+    },
+    "ACoy9eGsOt9qFjXu0iUgDA": {
+      "lat": 51.51957892230578,
+      "lng": -0.12773914830380032
+    },
+    "-MRpgP4LttqREjtt7AuTGg": {
+      "lat": 51.51956125368328,
+      "lng": -0.12775926019866732
+    },
+    "Cm5Y4S1IlUa-Kqtgf0y_NA": {
+      "lat": 51.519566942317724,
+      "lng": -0.12776520945279307
+    },
+    "7TrvzNgyrtNk3_L5T6wUww": {
+      "lat": 51.51955172139328,
+      "lng": -0.12774728039920608
+    },
+    "IijVnQdwgTr6gdwxhczLFw": {
+      "lat": 51.519562577818725,
+      "lng": -0.12772175259805435
+    },
+    "8SpTVoaGybOhT93-m90sTw": {
+      "lat": 51.51959034275327,
+      "lng": -0.12771128967330095
+    }
+  },
+  "updated_coordinates": {
+    "-MRpgP4LttqREjtt7AuTGg": {
+      "lat": 51.52002311191175,
+      "lng": -0.1278310514048447
+    },
+    "7TrvzNgyrtNk3_L5T6wUww": {
+      "lat": 51.520015657530095,
+      "lng": -0.12784637068348567
+    },
+    "8SpTVoaGybOhT93-m90sTw": {
+      "lat": 51.5199932624468,
+      "lng": -0.12778430255765852
+    },
+    "8s9wCUj76Vqs7rn688XD2w": {
+      "lat": 51.51998806065343,
+      "lng": -0.12775747485025168
+    },
+    "96nfHw7-9bGleNajD3DzuA": {
+      "lat": 51.52001383644895,
+      "lng": -0.1277080459740047
+    },
+    "ACoy9eGsOt9qFjXu0iUgDA": {
+      "lat": 51.52001059736669,
+      "lng": -0.12780265628139317
+    },
+    "AWx2MeydUowr3t9xi77W3w": {
+      "lat": 51.52002834247461,
+      "lng": -0.12768410953158663
+    },
+    "Cm5Y4S1IlUa-Kqtgf0y_NA": {
+      "lat": 51.52002681381101,
+      "lng": -0.12782190923899095
+    },
+    "H8A2tiw4lNzoM8AdMkxuBg": {
+      "lat": 51.52003864232723,
+      "lng": -0.1276387623315648
+    },
+    "IijVnQdwgTr6gdwxhczLFw": {
+      "lat": 51.519999772959316,
+      "lng": -0.12782892339574473
+    },
+    "JVokeJ_hp3iYinNNVxL9Jg": {
+      "lat": 51.52003854969089,
+      "lng": -0.12765951648235274
+    },
+    "KMGVuDeu4S1UrynDPRgr8A": {
+      "lat": 51.51997340647126,
+      "lng": -0.1278020363548909
+    },
+    "PEIWFCctjke9MXssyl5UBg": {
+      "lat": 51.52001136503626,
+      "lng": -0.1277476141932488
+    },
+    "jvajOkPn1zwseyJwfG1foA": {
+      "lat": 51.52004750039597,
+      "lng": -0.12761919295709487
+    },
+    "tlqgGSF0Wrw4O8-k7I6_fQ": {
+      "lat": 51.52002140701365,
+      "lng": -0.1276586949321536
+    },
+    "xIMHp7snhGwKQ4o6Sza6hA": {
+      "lat": 51.5199832184906,
+      "lng": -0.12781134532656918
+    },
+    "zGoaQh6iNmLQ2Q6jqTKFUg": {
+      "lat": 51.51999731390714,
+      "lng": -0.1277354573138736
+    }
+  },
+  "removed_external_edges": [
+    {
+      "source_pano_id": "-MRpgP4LttqREjtt7AuTGg",
+      "target_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "geocentric_heading_deg": 100.656525,
+      "description": null
+    },
+    {
+      "source_pano_id": "-MRpgP4LttqREjtt7AuTGg",
+      "target_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+      "geocentric_heading_deg": 237.8208,
+      "description": null
+    },
+    {
+      "source_pano_id": "-MRpgP4LttqREjtt7AuTGg",
+      "target_pano_id": "uylwS83DFFy9kWxBBl-nlg",
+      "geocentric_heading_deg": 200.20078,
+      "description": null
+    },
+    {
+      "source_pano_id": "391cH1U-9Ra1ihy77AAoJw",
+      "target_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+      "geocentric_heading_deg": 290.0915,
+      "description": null
+    },
+    {
+      "source_pano_id": "391cH1U-9Ra1ihy77AAoJw",
+      "target_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+      "geocentric_heading_deg": 207.06078,
+      "description": null
+    },
+    {
+      "source_pano_id": "7TrvzNgyrtNk3_L5T6wUww",
+      "target_pano_id": "uylwS83DFFy9kWxBBl-nlg",
+      "geocentric_heading_deg": 233.8584,
+      "description": null
+    },
+    {
+      "source_pano_id": "7TrvzNgyrtNk3_L5T6wUww",
+      "target_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+      "geocentric_heading_deg": 123.51623,
+      "description": null
+    },
+    {
+      "source_pano_id": "7TrvzNgyrtNk3_L5T6wUww",
+      "target_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "geocentric_heading_deg": 354.10168,
+      "description": null
+    },
+    {
+      "source_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+      "target_pano_id": "391cH1U-9Ra1ihy77AAoJw",
+      "geocentric_heading_deg": 27.060768,
+      "description": null
+    },
+    {
+      "source_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+      "target_pano_id": "JBjOk5ejB3TBQwGq6rxEMQ",
+      "geocentric_heading_deg": 102.0222,
+      "description": null
+    },
+    {
+      "source_pano_id": "96nfHw7-9bGleNajD3DzuA",
+      "target_pano_id": "kh88XdF2fy6mU6axqlroig",
+      "geocentric_heading_deg": 55.317703,
+      "description": null
+    },
+    {
+      "source_pano_id": "96nfHw7-9bGleNajD3DzuA",
+      "target_pano_id": "uMyeXdyLH83QE4CKeA-62w",
+      "geocentric_heading_deg": 149.38521,
+      "description": null
+    },
+    {
+      "source_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+      "target_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "geocentric_heading_deg": 140.19052,
+      "description": null
+    },
+    {
+      "source_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+      "target_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "geocentric_heading_deg": 197.46089,
+      "description": null
+    },
+    {
+      "source_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "target_pano_id": "7TrvzNgyrtNk3_L5T6wUww",
+      "geocentric_heading_deg": 174.10168,
+      "description": null
+    },
+    {
+      "source_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "target_pano_id": "-MRpgP4LttqREjtt7AuTGg",
+      "geocentric_heading_deg": 280.65652,
+      "description": null
+    },
+    {
+      "source_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "target_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+      "geocentric_heading_deg": 17.460897,
+      "description": null
+    },
+    {
+      "source_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+      "target_pano_id": "-MRpgP4LttqREjtt7AuTGg",
+      "geocentric_heading_deg": 57.820805,
+      "description": null
+    },
+    {
+      "source_pano_id": "JBjOk5ejB3TBQwGq6rxEMQ",
+      "target_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+      "geocentric_heading_deg": 282.02222,
+      "description": null
+    },
+    {
+      "source_pano_id": "JVokeJ_hp3iYinNNVxL9Jg",
+      "target_pano_id": "iouyTajSY9fHoYEg_LUOgw",
+      "geocentric_heading_deg": 183.32915,
+      "description": null
+    },
+    {
+      "source_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+      "target_pano_id": "7TrvzNgyrtNk3_L5T6wUww",
+      "geocentric_heading_deg": 303.51624,
+      "description": null
+    },
+    {
+      "source_pano_id": "PEIWFCctjke9MXssyl5UBg",
+      "target_pano_id": "uMyeXdyLH83QE4CKeA-62w",
+      "geocentric_heading_deg": 41.035763,
+      "description": null
+    },
+    {
+      "source_pano_id": "PEIWFCctjke9MXssyl5UBg",
+      "target_pano_id": "tqzMIA0YRxhlKMs9Qy40Lg",
+      "geocentric_heading_deg": 253.32732,
+      "description": null
+    },
+    {
+      "source_pano_id": "YIEi-1B3WXhnZg_LRoH-cQ",
+      "target_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+      "geocentric_heading_deg": 205.32635,
+      "description": null
+    },
+    {
+      "source_pano_id": "iouyTajSY9fHoYEg_LUOgw",
+      "target_pano_id": "JVokeJ_hp3iYinNNVxL9Jg",
+      "geocentric_heading_deg": 3.3291519,
+      "description": null
+    },
+    {
+      "source_pano_id": "kh88XdF2fy6mU6axqlroig",
+      "target_pano_id": "96nfHw7-9bGleNajD3DzuA",
+      "geocentric_heading_deg": 235.3177,
+      "description": null
+    },
+    {
+      "source_pano_id": "tqzMIA0YRxhlKMs9Qy40Lg",
+      "target_pano_id": "PEIWFCctjke9MXssyl5UBg",
+      "geocentric_heading_deg": 73.32732,
+      "description": null
+    },
+    {
+      "source_pano_id": "uMyeXdyLH83QE4CKeA-62w",
+      "target_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+      "geocentric_heading_deg": 96.01803,
+      "description": null
+    },
+    {
+      "source_pano_id": "uMyeXdyLH83QE4CKeA-62w",
+      "target_pano_id": "96nfHw7-9bGleNajD3DzuA",
+      "geocentric_heading_deg": 329.38522,
+      "description": null
+    },
+    {
+      "source_pano_id": "uMyeXdyLH83QE4CKeA-62w",
+      "target_pano_id": "PEIWFCctjke9MXssyl5UBg",
+      "geocentric_heading_deg": 221.03577,
+      "description": null
+    },
+    {
+      "source_pano_id": "uylwS83DFFy9kWxBBl-nlg",
+      "target_pano_id": "7TrvzNgyrtNk3_L5T6wUww",
+      "geocentric_heading_deg": 53.858395,
+      "description": null
+    },
+    {
+      "source_pano_id": "uylwS83DFFy9kWxBBl-nlg",
+      "target_pano_id": "-MRpgP4LttqREjtt7AuTGg",
+      "geocentric_heading_deg": 20.20077,
+      "description": null
+    },
+    {
+      "source_pano_id": "xIMHp7snhGwKQ4o6Sza6hA",
+      "target_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "geocentric_heading_deg": 245.34674,
+      "description": null
+    },
+    {
+      "source_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "target_pano_id": "xIMHp7snhGwKQ4o6Sza6hA",
+      "geocentric_heading_deg": 65.34674,
+      "description": null
+    },
+    {
+      "source_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "target_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+      "geocentric_heading_deg": 320.19052,
+      "description": null
+    },
+    {
+      "source_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+      "target_pano_id": "uMyeXdyLH83QE4CKeA-62w",
+      "geocentric_heading_deg": 276.01804,
+      "description": null
+    },
+    {
+      "source_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+      "target_pano_id": "YIEi-1B3WXhnZg_LRoH-cQ",
+      "geocentric_heading_deg": 25.326357,
+      "description": null
+    },
+    {
+      "source_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+      "target_pano_id": "391cH1U-9Ra1ihy77AAoJw",
+      "geocentric_heading_deg": 110.09148,
+      "description": null
+    },
+    {
+      "source_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "geocentric_heading_deg": 81.418945,
+      "description": null
+    },
+    {
+      "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "target_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "geocentric_heading_deg": 261.41895,
+      "description": null
+    },
+    {
+      "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "target_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+      "geocentric_heading_deg": 174.8409,
+      "description": null
+    },
+    {
+      "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "target_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "geocentric_heading_deg": 0.14270574,
+      "description": null
+    },
+    {
+      "source_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+      "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "geocentric_heading_deg": 354.84088,
+      "description": null
+    },
+    {
+      "source_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "geocentric_heading_deg": 180.1427,
+      "description": null
+    }
+  ],
+  "added_edges": [
+    {
+      "source_pano_id": "tlqgGSF0Wrw4O8-k7I6_fQ",
+      "target_pano_id": "RKUmP5jTlBLlPHOnkNNg-g",
+      "geocentric_heading_deg": 104.03622,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "RKUmP5jTlBLlPHOnkNNg-g",
+      "target_pano_id": "tlqgGSF0Wrw4O8-k7I6_fQ",
+      "geocentric_heading_deg": 284.03627,
+      "description": "manual:room24_stairs_elevator"
+    }
+  ],
+  "notes": [
+    "These panos are kept with null room grounding because they represent stairs/elevator transition space.",
+    "Old external edges to the Room 29a/29b area were removed; internal cluster edges were preserved.",
+    "Headings touching the relocated cluster were recomputed from the updated coordinates.",
+    "Follow-up update added IijVnQdwgTr6gdwxhczLFw and 8SpTVoaGybOhT93-m90sTw to the relocated cluster.",
+    "Follow-up update translated the cluster to make RKUmP5jTlBLlPHOnkNNg-g -> tlqgGSF0Wrw4O8-k7I6_fQ approximately 330 degrees and added four requested internal connections."
+  ],
+  "restored_internal_edges": [
+    {
+      "source_pano_id": "8SpTVoaGybOhT93-m90sTw",
+      "target_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+      "geocentric_heading_deg": 326.62264,
+      "description": null
+    },
+    {
+      "source_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+      "target_pano_id": "8SpTVoaGybOhT93-m90sTw",
+      "geocentric_heading_deg": 146.62262,
+      "description": null
+    },
+    {
+      "source_pano_id": "8SpTVoaGybOhT93-m90sTw",
+      "target_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+      "geocentric_heading_deg": 107.30751,
+      "description": null
+    },
+    {
+      "source_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+      "target_pano_id": "8SpTVoaGybOhT93-m90sTw",
+      "geocentric_heading_deg": 287.30753,
+      "description": null
+    }
+  ],
+  "added_internal_edges": [
+    {
+      "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "target_pano_id": "7TrvzNgyrtNk3_L5T6wUww",
+      "geocentric_heading_deg": 325.64906,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "7TrvzNgyrtNk3_L5T6wUww",
+      "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "geocentric_heading_deg": 145.64905,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "target_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+      "geocentric_heading_deg": 56.48482,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+      "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "geocentric_heading_deg": 236.48484,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "96nfHw7-9bGleNajD3DzuA",
+      "target_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+      "geocentric_heading_deg": 225.91097,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+      "target_pano_id": "96nfHw7-9bGleNajD3DzuA",
+      "geocentric_heading_deg": 45.91095,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+      "target_pano_id": "PEIWFCctjke9MXssyl5UBg",
+      "geocentric_heading_deg": 331.70393,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "PEIWFCctjke9MXssyl5UBg",
+      "target_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+      "geocentric_heading_deg": 151.70392,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+      "target_pano_id": "KMGVuDeu4S1UrynDPRgr8A",
+      "geocentric_heading_deg": 242.14369,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "KMGVuDeu4S1UrynDPRgr8A",
+      "target_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+      "geocentric_heading_deg": 62.14366,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "xIMHp7snhGwKQ4o6Sza6hA",
+      "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "geocentric_heading_deg": 326.54662,
+      "description": "manual:room24_stairs_elevator"
+    },
+    {
+      "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+      "target_pano_id": "xIMHp7snhGwKQ4o6Sza6hA",
+      "geocentric_heading_deg": 146.54661,
+      "description": "manual:room24_stairs_elevator"
+    }
+  ],
+  "follow_up_updates": [
+    {
+      "description": "Added two missed Room 24 stairs/elevator panos after pano viewer inspection.",
+      "pano_ids": [
+        "IijVnQdwgTr6gdwxhczLFw",
+        "8SpTVoaGybOhT93-m90sTw"
+      ],
+      "removed_external_edges": [
+        {
+          "source_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+          "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "geocentric_heading_deg": 81.418945,
+          "description": null
+        },
+        {
+          "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "target_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+          "geocentric_heading_deg": 261.41895,
+          "description": null
+        },
+        {
+          "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "target_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+          "geocentric_heading_deg": 174.8409,
+          "description": null
+        },
+        {
+          "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "target_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+          "geocentric_heading_deg": 0.14270574,
+          "description": null
+        },
+        {
+          "source_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+          "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "geocentric_heading_deg": 354.84088,
+          "description": null
+        },
+        {
+          "source_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+          "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "geocentric_heading_deg": 180.1427,
+          "description": null
+        }
+      ],
+      "restored_previous_removed_edges": [
+        {
+          "source_pano_id": "8SpTVoaGybOhT93-m90sTw",
+          "target_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+          "geocentric_heading_deg": 236.61818,
+          "description": null
+        },
+        {
+          "source_pano_id": "8SpTVoaGybOhT93-m90sTw",
+          "target_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+          "geocentric_heading_deg": 17.324091,
+          "description": null
+        },
+        {
+          "source_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+          "target_pano_id": "8SpTVoaGybOhT93-m90sTw",
+          "geocentric_heading_deg": 197.3241,
+          "description": null
+        },
+        {
+          "source_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+          "target_pano_id": "8SpTVoaGybOhT93-m90sTw",
+          "geocentric_heading_deg": 56.618187,
+          "description": null
+        }
+      ],
+      "restored_internal_edges": [
+        {
+          "source_pano_id": "8SpTVoaGybOhT93-m90sTw",
+          "target_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+          "geocentric_heading_deg": 326.62264,
+          "description": null
+        },
+        {
+          "source_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+          "target_pano_id": "8SpTVoaGybOhT93-m90sTw",
+          "geocentric_heading_deg": 146.62262,
+          "description": null
+        },
+        {
+          "source_pano_id": "8SpTVoaGybOhT93-m90sTw",
+          "target_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+          "geocentric_heading_deg": 107.30751,
+          "description": null
+        },
+        {
+          "source_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+          "target_pano_id": "8SpTVoaGybOhT93-m90sTw",
+          "geocentric_heading_deg": 287.30753,
+          "description": null
+        }
+      ],
+      "added_internal_edges": [
+        {
+          "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "target_pano_id": "7TrvzNgyrtNk3_L5T6wUww",
+          "geocentric_heading_deg": 325.64906,
+          "description": "manual:room24_stairs_elevator"
+        },
+        {
+          "source_pano_id": "7TrvzNgyrtNk3_L5T6wUww",
+          "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "geocentric_heading_deg": 145.64905,
+          "description": "manual:room24_stairs_elevator"
+        },
+        {
+          "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "target_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+          "geocentric_heading_deg": 56.48482,
+          "description": "manual:room24_stairs_elevator"
+        },
+        {
+          "source_pano_id": "ACoy9eGsOt9qFjXu0iUgDA",
+          "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "geocentric_heading_deg": 236.48484,
+          "description": "manual:room24_stairs_elevator"
+        }
+      ]
+    },
+    {
+      "description": "Translated the relocated Room 24 stairs/elevator cluster so RKUmP5jTlBLlPHOnkNNg-g to tlqgGSF0Wrw4O8-k7I6_fQ has geocentric heading 330 degrees, then added four requested internal links.",
+      "translation_delta": {
+        "lat": 2.309300632674649e-05,
+        "lng": 2.7984752905302335e-05
+      },
+      "before": {
+        "room24_to_source_heading": 284.03627,
+        "source_to_room24_heading": 104.03622,
+        "distance_m": 4.118472736501101,
+        "source_anchor_coordinates": {
+          "lat": 51.519998314007324,
+          "lng": -0.1276866796850589
+        }
+      },
+      "after": {
+        "room24_to_source_heading": 330.0,
+        "source_to_room24_heading": 149.99998,
+        "distance_m": 4.118472736502047,
+        "source_anchor_coordinates": {
+          "lat": 51.52002140701365,
+          "lng": -0.1276586949321536
+        },
+        "target_anchor_offset_m": {
+          "east": -2.0615540734069517,
+          "north": 3.5707134640580307
+        }
+      },
+      "previous_updated_coordinates": {
+        "-MRpgP4LttqREjtt7AuTGg": {
+          "lat": 51.52000001890542,
+          "lng": -0.12785903615775
+        },
+        "7TrvzNgyrtNk3_L5T6wUww": {
+          "lat": 51.51999256452377,
+          "lng": -0.12787435543639097
+        },
+        "8SpTVoaGybOhT93-m90sTw": {
+          "lat": 51.51997016944048,
+          "lng": -0.12781228731056382
+        },
+        "8s9wCUj76Vqs7rn688XD2w": {
+          "lat": 51.519964967647105,
+          "lng": -0.127785459603157
+        },
+        "96nfHw7-9bGleNajD3DzuA": {
+          "lat": 51.51999074344263,
+          "lng": -0.12773603072691
+        },
+        "ACoy9eGsOt9qFjXu0iUgDA": {
+          "lat": 51.519987504360365,
+          "lng": -0.12783064103429848
+        },
+        "AWx2MeydUowr3t9xi77W3w": {
+          "lat": 51.520005249468284,
+          "lng": -0.12771209428449193
+        },
+        "Cm5Y4S1IlUa-Kqtgf0y_NA": {
+          "lat": 51.52000372080468,
+          "lng": -0.12784989399189625
+        },
+        "H8A2tiw4lNzoM8AdMkxuBg": {
+          "lat": 51.5200155493209,
+          "lng": -0.1276667470844701
+        },
+        "IijVnQdwgTr6gdwxhczLFw": {
+          "lat": 51.51997667995299,
+          "lng": -0.12785690814865003
+        },
+        "JVokeJ_hp3iYinNNVxL9Jg": {
+          "lat": 51.52001545668456,
+          "lng": -0.12768750123525804
+        },
+        "KMGVuDeu4S1UrynDPRgr8A": {
+          "lat": 51.51995031346493,
+          "lng": -0.1278300211077962
+        },
+        "PEIWFCctjke9MXssyl5UBg": {
+          "lat": 51.519988272029934,
+          "lng": -0.1277755989461541
+        },
+        "jvajOkPn1zwseyJwfG1foA": {
+          "lat": 51.52002440738964,
+          "lng": -0.12764717771000017
+        },
+        "tlqgGSF0Wrw4O8-k7I6_fQ": {
+          "lat": 51.519998314007324,
+          "lng": -0.1276866796850589
+        },
+        "xIMHp7snhGwKQ4o6Sza6hA": {
+          "lat": 51.519960125484275,
+          "lng": -0.12783933007947448
+        },
+        "zGoaQh6iNmLQ2Q6jqTKFUg": {
+          "lat": 51.519974220900814,
+          "lng": -0.1277634420667789
+        }
+      },
+      "added_connection_edges": [
+        {
+          "source_pano_id": "96nfHw7-9bGleNajD3DzuA",
+          "target_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+          "geocentric_heading_deg": 225.91097,
+          "description": "manual:room24_stairs_elevator"
+        },
+        {
+          "source_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+          "target_pano_id": "96nfHw7-9bGleNajD3DzuA",
+          "geocentric_heading_deg": 45.91095,
+          "description": "manual:room24_stairs_elevator"
+        },
+        {
+          "source_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+          "target_pano_id": "PEIWFCctjke9MXssyl5UBg",
+          "geocentric_heading_deg": 331.70393,
+          "description": "manual:room24_stairs_elevator"
+        },
+        {
+          "source_pano_id": "PEIWFCctjke9MXssyl5UBg",
+          "target_pano_id": "zGoaQh6iNmLQ2Q6jqTKFUg",
+          "geocentric_heading_deg": 151.70392,
+          "description": "manual:room24_stairs_elevator"
+        },
+        {
+          "source_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+          "target_pano_id": "KMGVuDeu4S1UrynDPRgr8A",
+          "geocentric_heading_deg": 242.14369,
+          "description": "manual:room24_stairs_elevator"
+        },
+        {
+          "source_pano_id": "KMGVuDeu4S1UrynDPRgr8A",
+          "target_pano_id": "8s9wCUj76Vqs7rn688XD2w",
+          "geocentric_heading_deg": 62.14366,
+          "description": "manual:room24_stairs_elevator"
+        },
+        {
+          "source_pano_id": "xIMHp7snhGwKQ4o6Sza6hA",
+          "target_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "geocentric_heading_deg": 326.54662,
+          "description": "manual:room24_stairs_elevator"
+        },
+        {
+          "source_pano_id": "IijVnQdwgTr6gdwxhczLFw",
+          "target_pano_id": "xIMHp7snhGwKQ4o6Sza6hA",
+          "geocentric_heading_deg": 146.54661,
+          "description": "manual:room24_stairs_elevator"
+        }
+      ]
+    }
+  ]
+}

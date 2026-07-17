@@ -32,16 +32,32 @@ from memory_nav.cli.run_similarity_passage_selection import (  # noqa: E402
 )
 
 
-DEFAULT_SIGLIP_INDEX = "artifacts/memory_localization/floor0_siglip2_images_fov90.npz"
-DEFAULT_SIGLIP_METADATA = "artifacts/memory_localization/floor0_siglip2_images_fov90.metadata.json"
-DEFAULT_SALAD_INDEX = "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.npz"
-DEFAULT_SALAD_METADATA = "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.metadata.json"
+DEFAULT_SIGLIP_INDEX = "artifacts/memory_localization/floor0_1_siglip2_images_fov90.npz"
+DEFAULT_SIGLIP_METADATA = "artifacts/memory_localization/floor0_1_siglip2_images_fov90.metadata.json"
+DEFAULT_SALAD_INDEX = "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.npz"
+DEFAULT_SALAD_METADATA = "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.metadata.json"
 DEFAULT_MANIFEST_ROOT = "renders/room_grounding_fov90"
 DEFAULT_ROOM_GRAPH_PATH = "dataset/sites/british_museum/normalized/room_graph.json"
+DEFAULT_PANO_GRAPH_PATH = "dataset/sites/british_museum/normalized/pano_graph.json"
+DEFAULT_PANO_ROOM_GROUNDING_PATH = "dataset/sites/british_museum/normalized/pano_room_grounding.json"
 DEFAULT_RESULT_FILENAME = "result.json"
 DEFAULT_DETECTOR_PROMPT = (
-    "doorway . room entrance . gallery entrance . large opening . open doorway . walkable opening ."
+    "open doorway into another gallery with visible room beyond . "
+    "walkable doorway with floor continuing through the threshold . "
+    "corridor entrance showing another exhibition room ahead . "
+    "archway passage into an adjacent gallery . "
+    "room-to-room threshold with visible floor path and far wall ."
 )
+DEFAULT_EXPANDED_PASSAGE_QUERIES = (
+    "an open doorway or entrance that a visitor can walk through into another gallery",
+    "a visible passageway, corridor opening, archway, or threshold connecting museum rooms",
+    "walkable floor continuing through a doorway, gallery entrance, or room-to-room opening",
+    "a long walkable corridor or hallway extending forward between exhibits under an archway",
+    "a wide gallery opening framed by columns leading into an adjacent hall",
+    "an open route between columns into another museum gallery with continuous floor space",
+    "a large unobstructed opening between exhibition rooms, not necessarily a door",
+)
+DEFAULT_PASSAGE_QUERY_FUSION = "max_score"
 DEFAULT_GROUNDING_DINO_MODEL = "IDEA-Research/grounding-dino-tiny"
 DEFAULT_OWLV2_MODEL = "google/owlv2-base-patch16-ensemble"
 DEFAULT_MODEL_CACHE_DIR = "models/huggingface"
@@ -66,18 +82,100 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-path", required=True)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--passage-query", default=DEFAULT_PASSAGE_QUERY)
+    parser.add_argument(
+        "--passage-query-mode",
+        choices=["single", "expanded"],
+        default="expanded",
+        help="Use one passage query or an expanded query bank for higher candidate recall.",
+    )
+    parser.add_argument(
+        "--passage-query-fusion",
+        choices=["rrf", "single_text", "embedding_mean", "max_score"],
+        default=DEFAULT_PASSAGE_QUERY_FUSION,
+        help=(
+            "How to combine multiple passage queries before selecting images: "
+            "rrf keeps the old per-query top-k merge, single_text encodes a combined text once, "
+            "embedding_mean averages query embeddings once, and max_score scores every room image "
+            "by its best query similarity."
+        ),
+    )
+    parser.add_argument(
+        "--extra-passage-query",
+        action="append",
+        default=[],
+        help="Additional text query for passage retrieval; can be passed multiple times.",
+    )
     parser.add_argument("--passage-top-k", type=int, default=20)
+    parser.add_argument(
+        "--passage-candidate-limit",
+        type=int,
+        help=(
+            "Maximum merged current-room passage candidates after multi-query retrieval. "
+            "Defaults to top-k for single query and 2x top-k for expanded query mode."
+        ),
+    )
     parser.add_argument("--detector-prompt", default=DEFAULT_DETECTOR_PROMPT)
     parser.add_argument("--detector-backend", choices=["groundingdino", "owlv2"], default="groundingdino")
     parser.add_argument("--detector-model", help="Detector model name. Defaults depend on --detector-backend.")
     parser.add_argument("--box-threshold", type=float, default=0.25)
     parser.add_argument("--text-threshold", type=float, default=0.25)
-    parser.add_argument("--min-box-area-ratio", type=float, default=0.01)
-    parser.add_argument("--max-box-area-ratio", type=float, default=0.95)
+    parser.add_argument("--min-box-area-ratio", type=float, default=0.0)
+    parser.add_argument("--min-box-width-ratio", type=float, default=0.0)
+    parser.add_argument("--min-box-height-ratio", type=float, default=0.0)
+    parser.add_argument(
+        "--min-box-aspect-ratio",
+        type=float,
+        default=0.0,
+        help="Reject detections with width / height below this value; useful for thin columns.",
+    )
+    parser.add_argument(
+        "--max-box-aspect-ratio",
+        type=float,
+        default=999.0,
+        help="Reject detections with width / height above this value; useful for flat wall/floor strips.",
+    )
+    parser.add_argument(
+        "--min-box-bottom-ratio",
+        type=float,
+        default=0.0,
+        help="Reject detections whose bottom edge is above this fraction of image height.",
+    )
+    parser.add_argument(
+        "--max-box-center-x-distance-ratio",
+        type=float,
+        default=1.0,
+        help="Reject detections whose center is too far from image center; 1.0 disables the filter.",
+    )
+    parser.add_argument("--max-box-area-ratio", type=float, default=1.0)
+    parser.add_argument(
+        "--min-crop-area-ratio",
+        type=float,
+        default=0.0,
+        help="Reject padded crops whose area is below this fraction of the image.",
+    )
+    parser.add_argument(
+        "--max-crop-area-ratio",
+        type=float,
+        default=1.0,
+        help="Reject padded crops whose area is above this fraction of the image.",
+    )
     parser.add_argument("--crop-padding-ratio", type=float, default=0.12)
     parser.add_argument("--current-image-mode", choices=["mask", "crop"], default="mask")
     parser.add_argument("--mask-background-brightness", type=float, default=0.0)
     parser.add_argument("--max-detections-per-image", type=int, default=3)
+    parser.add_argument(
+        "--enable-full-image-fallback",
+        action="store_true",
+        help="Create a full-image candidate when a retrieved passage has no detections.",
+    )
+    parser.add_argument(
+        "--disable-full-image-fallback",
+        action="store_true",
+        help=(
+            "Do not create a full-image candidate when a retrieved passage has no detections. "
+            "This is the default and takes precedence over --enable-full-image-fallback."
+        ),
+    )
     parser.add_argument("--target-sample-count", type=int, default=64)
     parser.add_argument("--negative-sample-count", type=int, default=None)
     parser.add_argument("--similarity-top-m", type=int, default=5)
@@ -92,6 +190,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--contrastive-negative-weight", type=float, default=1.0)
     parser.add_argument("--room-graph-path", default=DEFAULT_ROOM_GRAPH_PATH)
+    parser.add_argument("--pano-graph-path", default=DEFAULT_PANO_GRAPH_PATH)
+    parser.add_argument("--pano-room-grounding-path", default=DEFAULT_PANO_ROOM_GROUNDING_PATH)
+    parser.add_argument("--disable-topology-consistency", action="store_true")
+    parser.add_argument("--topology-consistency-max-hops", type=int, default=3)
+    parser.add_argument("--topology-target-room-bonus", type=float, default=0.12)
+    parser.add_argument("--topology-wrong-room-penalty", type=float, default=0.12)
+    parser.add_argument("--topology-no-transition-penalty", type=float, default=0.02)
     parser.add_argument("--similarity-backend", choices=["dreamsim", "salad"], default="dreamsim")
     parser.add_argument("--dreamsim-type", default="ensemble")
     parser.add_argument("--manifest-root", default=DEFAULT_MANIFEST_ROOT)
@@ -101,7 +206,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--salad-metadata-path", default=DEFAULT_SALAD_METADATA)
     parser.add_argument("--embedding-model", default=DEFAULT_SIGLIP2_MODEL)
     parser.add_argument("--device", default="auto")
-    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--model-cache-dir", default=DEFAULT_MODEL_CACHE_DIR)
     return parser
 
@@ -117,6 +222,15 @@ def main() -> int:
     salad_metadata = resolve_project_path(args.salad_metadata_path)
     room_graph_path = resolve_project_path(args.room_graph_path)
     room_graph = load_json(room_graph_path)
+    pano_graph_path = resolve_project_path(args.pano_graph_path)
+    pano_room_grounding_path = resolve_project_path(args.pano_room_grounding_path)
+    pano_graph = load_json(pano_graph_path) if pano_graph_path.exists() else {}
+    pano_room_grounding = load_json(pano_room_grounding_path) if pano_room_grounding_path.exists() else {}
+    pano_room_mappings = (
+        pano_room_grounding.get("mappings", {})
+        if isinstance(pano_room_grounding, dict)
+        else {}
+    )
 
     text_embedder = create_image_embedder(
         model_name=args.embedding_model,
@@ -159,20 +273,50 @@ def main() -> int:
         batch_size=args.batch_size,
     )
 
-    current_passages = passage_retriever.retrieve(args.current_room_id)
+    passage_queries = _passage_queries(
+        args.passage_query,
+        mode=args.passage_query_mode,
+        extra_queries=args.extra_passage_query,
+    )
+    passage_candidate_limit = _passage_candidate_limit(
+        args.passage_candidate_limit,
+        passage_top_k=args.passage_top_k,
+        query_count=len(passage_queries),
+    )
+    current_passages = _retrieve_passages_with_queries(
+        passage_retriever,
+        room_id=args.current_room_id,
+        queries=passage_queries,
+        query_embeddings=_encode_passage_query_embeddings(
+            text_embedder,
+            passage_queries,
+            fusion_mode=args.passage_query_fusion,
+        ),
+        candidate_limit=passage_candidate_limit,
+        fusion_mode=args.passage_query_fusion,
+    )
     payload = run_detected_passage_contrastive_selection(
         current_room_id=args.current_room_id,
         subgoal_room_id=args.subgoal_room_id,
         current_passages=current_passages,
         visual_retriever=visual_retriever,
         room_graph=room_graph,
+        pano_graph=pano_graph,
+        pano_room_mappings=pano_room_mappings,
         detector=detector,
         image_embedder=image_embedder,
         output_dir=output_dir,
         configuration={
             "seed": args.seed,
             "passage_query": args.passage_query,
+            "passage_queries": passage_queries,
+            "passage_query_mode": args.passage_query_mode,
+            "passage_query_fusion": args.passage_query_fusion,
+            "combined_passage_query": _combined_passage_query(passage_queries),
+            "extra_passage_queries": list(args.extra_passage_query),
             "passage_top_k": args.passage_top_k,
+            "passage_top_k_per_query": args.passage_top_k,
+            "passage_candidate_limit": passage_candidate_limit,
             "passage_clustering": False,
             "detector_prompt": args.detector_prompt,
             "detector_backend": args.detector_backend,
@@ -180,7 +324,18 @@ def main() -> int:
             "box_threshold": args.box_threshold,
             "text_threshold": args.text_threshold,
             "min_box_area_ratio": args.min_box_area_ratio,
+            "min_box_width_ratio": args.min_box_width_ratio,
+            "min_box_height_ratio": args.min_box_height_ratio,
+            "min_box_aspect_ratio": args.min_box_aspect_ratio,
+            "max_box_aspect_ratio": args.max_box_aspect_ratio,
+            "min_box_bottom_ratio": args.min_box_bottom_ratio,
+            "max_box_center_x_distance_ratio": args.max_box_center_x_distance_ratio,
             "max_box_area_ratio": args.max_box_area_ratio,
+            "min_crop_area_ratio": args.min_crop_area_ratio,
+            "max_crop_area_ratio": args.max_crop_area_ratio,
+            "fallback_to_full_image_on_no_detection": (
+                bool(args.enable_full_image_fallback) and not bool(args.disable_full_image_fallback)
+            ),
             "crop_padding_ratio": args.crop_padding_ratio,
             "current_image_mode": args.current_image_mode,
             "mask_background_brightness": args.mask_background_brightness,
@@ -202,6 +357,13 @@ def main() -> int:
             "salad_index_path": str(salad_index),
             "salad_metadata_path": str(salad_metadata),
             "room_graph_path": str(room_graph_path),
+            "pano_graph_path": str(pano_graph_path),
+            "pano_room_grounding_path": str(pano_room_grounding_path),
+            "topology_consistency_enabled": not bool(args.disable_topology_consistency),
+            "topology_consistency_max_hops": args.topology_consistency_max_hops,
+            "topology_target_room_bonus": args.topology_target_room_bonus,
+            "topology_wrong_room_penalty": args.topology_wrong_room_penalty,
+            "topology_no_transition_penalty": args.topology_no_transition_penalty,
             "manifest_root": str(manifest_root),
         },
     )
@@ -219,7 +381,9 @@ def run_detected_passage_contrastive_selection(
     current_passages: Sequence[dict],
     visual_retriever: MemoryImageRetriever,
     room_graph: dict,
-    detector,
+    pano_graph: dict | None = None,
+    pano_room_mappings: dict[str, str | None] | None = None,
+    detector=None,
     image_embedder,
     output_dir: str | Path,
     configuration: dict,
@@ -252,10 +416,6 @@ def run_detected_passage_contrastive_selection(
         raise ValueError(f"No target-room visual samples found for {subgoal_room_id}.")
 
     negative_room_ids = _negative_neighbor_room_ids(room_graph, current_room_id, subgoal_room_id)
-    if not negative_room_ids:
-        raise ValueError(
-            f"No non-target neighbor rooms found for {current_room_id} excluding {subgoal_room_id}."
-        )
     negative_sample_limit = int(configuration["negative_sample_count"])
     if configuration["target_scoring"] in {
         "contrastive_neighbor_room_max_mean",
@@ -285,7 +445,7 @@ def run_detected_passage_contrastive_selection(
             seed_salt="negative:" + "|".join(negative_room_ids),
         )
         negative_samples_by_room = {"__mixed__": negative_samples}
-    if not negative_samples:
+    if negative_room_ids and not negative_samples:
         raise ValueError(
             f"No negative-room visual samples found for neighbors: {', '.join(negative_room_ids)}."
         )
@@ -303,8 +463,19 @@ def run_detected_passage_contrastive_selection(
         target_scoring=str(configuration["target_scoring"]),
         negative_weight=float(configuration["contrastive_negative_weight"]),
     )
+    ranking = _apply_topology_consistency(
+        ranking,
+        pano_graph=pano_graph or {},
+        pano_room_mappings=pano_room_mappings or {},
+        current_room_id=current_room_id,
+        subgoal_room_id=subgoal_room_id,
+        configuration=configuration,
+    )
     _export_ranked_images(ranking, dirs, exports)
     chosen = ranking[0]
+    score_field = "route_consistent_score" if any(
+        "route_consistent_score" in item for item in ranking
+    ) else "selection_score"
     payload = {
         "method": "detected_passage_contrastive_selection",
         "configuration": {
@@ -312,6 +483,7 @@ def run_detected_passage_contrastive_selection(
             "subgoal_room_id": subgoal_room_id,
             **dict(configuration),
             "negative_room_ids": list(negative_room_ids),
+            "negative_sampling_policy": "neighbor_rooms" if negative_room_ids else "target_only_leaf_room",
             "negative_sample_count_by_room": {
                 room_id: len(samples)
                 for room_id, samples in negative_samples_by_room.items()
@@ -327,16 +499,18 @@ def run_detected_passage_contrastive_selection(
             "chosen_source_label": chosen["source_label"],
             "selector_source": "detected_passage_contrastive_similarity",
             "target_scoring": configuration["target_scoring"],
-            "score_field": "selection_score",
+            "score_field": score_field,
             "similarity_backend": configuration["similarity_backend"],
             "target_visual_clues": target_samples,
             "negative_visual_clues": negative_samples,
             "negative_room_ids": list(negative_room_ids),
+            "negative_sampling_policy": "neighbor_rooms" if negative_room_ids else "target_only_leaf_room",
             "passage_ranking": ranking,
         },
         "image_exports": exports,
         "success": bool(ranking),
     }
+    (output_dir / DEFAULT_RESULT_FILENAME).write_text(render_json(payload), encoding="utf-8")
     return payload
 
 
@@ -377,6 +551,455 @@ def create_similarity_embedder(*, similarity_backend: str, dreamsim_type: str, d
             batch_size=batch_size,
         )
     raise ValueError("Similarity backend must be 'dreamsim' or 'salad'.")
+
+
+
+def _passage_queries(
+    primary_query: str,
+    *,
+    mode: str,
+    extra_queries: Sequence[str] | None = None,
+) -> list[str]:
+    queries = [primary_query]
+    if mode == "expanded":
+        queries.extend(DEFAULT_EXPANDED_PASSAGE_QUERIES)
+    queries.extend(extra_queries or [])
+    return _unique_non_empty_queries(queries)
+
+
+def _passage_candidate_limit(
+    requested_limit: int | None,
+    *,
+    passage_top_k: int,
+    query_count: int,
+) -> int:
+    if requested_limit is not None:
+        return max(int(requested_limit), 1)
+    top_k = max(int(passage_top_k), 1)
+    if max(int(query_count), 1) <= 1:
+        return top_k
+    return top_k * 2
+
+
+def _encode_passage_query_embeddings(
+    text_embedder,
+    queries: Sequence[str],
+    *,
+    fusion_mode: str,
+):
+    if not hasattr(text_embedder, "encode_texts"):
+        raise RuntimeError("Passage retrieval requires a text-capable embedding model.")
+    texts = [_combined_passage_query(queries)] if fusion_mode == "single_text" else list(queries)
+    embeddings = text_embedder.encode_texts(texts)
+    if len(embeddings) != len(texts):
+        raise RuntimeError("Passage text encoder returned the wrong number of embeddings.")
+    return embeddings
+
+
+def _combined_passage_query(queries: Sequence[str]) -> str:
+    unique_queries = _unique_non_empty_queries(queries)
+    return " . ".join(unique_queries)
+
+
+def _mean_query_embedding(query_embeddings):
+    import numpy as np
+
+    embeddings = np.asarray(list(query_embeddings), dtype=np.float32)
+    if embeddings.ndim != 2 or int(embeddings.shape[0]) < 1:
+        raise RuntimeError("Passage text encoder returned no usable query embeddings.")
+    normalized = normalize_rows(embeddings)
+    return normalize_rows(normalized.mean(axis=0, keepdims=True))[0]
+
+
+def _retrieve_passages_with_queries(
+    passage_retriever: DynamicPassageRetriever,
+    *,
+    room_id: str,
+    queries: Sequence[str],
+    query_embeddings,
+    candidate_limit: int,
+    fusion_mode: str = "rrf",
+) -> list[dict]:
+    mode = str(fusion_mode or "rrf")
+    if mode == "rrf":
+        return _retrieve_passages_with_rrf(
+            passage_retriever,
+            room_id=room_id,
+            queries=queries,
+            query_embeddings=query_embeddings,
+            candidate_limit=candidate_limit,
+        )
+    if mode == "single_text":
+        embeddings = list(query_embeddings)
+        if len(embeddings) != 1:
+            raise RuntimeError("Single-text passage fusion expects exactly one combined query embedding.")
+        return _retrieve_passages_with_single_query_embedding(
+            passage_retriever,
+            room_id=room_id,
+            query=_combined_passage_query(queries),
+            query_embedding=embeddings[0],
+            candidate_limit=candidate_limit,
+            fusion_mode=mode,
+            source_queries=queries,
+        )
+    if mode == "embedding_mean":
+        return _retrieve_passages_with_single_query_embedding(
+            passage_retriever,
+            room_id=room_id,
+            query=_combined_passage_query(queries),
+            query_embedding=_mean_query_embedding(query_embeddings),
+            candidate_limit=candidate_limit,
+            fusion_mode=mode,
+            source_queries=queries,
+        )
+    if mode == "max_score":
+        return _retrieve_passages_by_max_query_score(
+            passage_retriever,
+            room_id=room_id,
+            queries=queries,
+            query_embeddings=query_embeddings,
+            candidate_limit=candidate_limit,
+        )
+    raise ValueError(f"Unsupported passage query fusion mode: {mode}")
+
+
+def _retrieve_passages_with_rrf(
+    passage_retriever: DynamicPassageRetriever,
+    *,
+    room_id: str,
+    queries: Sequence[str],
+    query_embeddings,
+    candidate_limit: int,
+) -> list[dict]:
+    embeddings = list(query_embeddings)
+    if len(embeddings) != len(queries):
+        raise RuntimeError("Passage text encoder returned the wrong number of embeddings.")
+
+    original_query = getattr(passage_retriever, "query", None)
+    merged: dict[tuple[object, ...], dict] = {}
+    try:
+        for query_index, (query, embedding) in enumerate(zip(queries, embeddings, strict=True), start=1):
+            passage_retriever.query = str(query)
+            for query_rank, passage in enumerate(
+                passage_retriever.retrieve_with_query_embedding(room_id, embedding),
+                start=1,
+            ):
+                key = _passage_candidate_key(passage)
+                candidate = dict(passage)
+                source = {
+                    "query": str(query),
+                    "query_index": query_index,
+                    "query_rank": query_rank,
+                    "label": candidate.get("label"),
+                    "semantic_score": float(candidate.get("semantic_score") or 0.0),
+                }
+                existing = merged.get(key)
+                if existing is None:
+                    candidate["retrieval_query_sources"] = [source]
+                    merged[key] = candidate
+                    continue
+
+                sources = [*existing.get("retrieval_query_sources", []), source]
+                best_source = _best_query_source(sources)
+                if source is best_source:
+                    candidate["retrieval_query_sources"] = sources
+                    merged[key] = candidate
+                else:
+                    existing["retrieval_query_sources"] = sources
+    finally:
+        if original_query is not None:
+            passage_retriever.query = original_query
+
+    records = [_with_merged_retrieval_scores(item) for item in merged.values()]
+    records.sort(key=_merged_passage_sort_key)
+    records = records[: max(int(candidate_limit), 1)]
+    prefix = _room_label_prefix(room_id)
+    for rank, record in enumerate(records, start=1):
+        record["merged_retrieval_rank"] = rank
+        record["retrieval_source_label"] = record.get("label")
+        record["retrieval_query_fusion"] = "rrf"
+        record["source_queries"] = list(queries)
+        record["label"] = f"{prefix}{rank}"
+    return records
+
+
+def _retrieve_passages_with_single_query_embedding(
+    passage_retriever: DynamicPassageRetriever,
+    *,
+    room_id: str,
+    query: str,
+    query_embedding,
+    candidate_limit: int,
+    fusion_mode: str,
+    source_queries: Sequence[str],
+) -> list[dict]:
+    original_query = getattr(passage_retriever, "query", None)
+    has_top_k = hasattr(passage_retriever, "retrieval_top_k")
+    original_top_k = getattr(passage_retriever, "retrieval_top_k", None)
+    try:
+        passage_retriever.query = str(query)
+        if has_top_k:
+            passage_retriever.retrieval_top_k = max(int(candidate_limit), 1)
+        records = [
+            dict(passage)
+            for passage in passage_retriever.retrieve_with_query_embedding(room_id, query_embedding)
+        ]
+    finally:
+        if original_query is not None:
+            passage_retriever.query = original_query
+        if has_top_k and original_top_k is not None:
+            passage_retriever.retrieval_top_k = original_top_k
+
+    records = records[: max(int(candidate_limit), 1)]
+    prefix = _room_label_prefix(room_id)
+    for rank, record in enumerate(records, start=1):
+        source_label = record.get("label")
+        score = float(record.get("semantic_score") or 0.0)
+        record["retrieval_query"] = str(query)
+        record["retrieval_query_sources"] = [
+            {
+                "query": str(query),
+                "query_index": 1,
+                "query_rank": rank,
+                "label": source_label,
+                "semantic_score": score,
+            }
+        ]
+        record["retrieval_query_fusion"] = str(fusion_mode)
+        record["source_queries"] = list(source_queries)
+        record["combined_retrieval_query"] = str(query)
+        record["merged_retrieval_rank"] = rank
+        record["retrieval_source_label"] = source_label
+        record["best_retrieval_query"] = str(query)
+        record["best_query_index"] = 1
+        record["best_query_rank"] = rank
+        record["best_semantic_score"] = score
+        record["retrieval_fusion_score"] = score
+        record["best_merged_query_rank"] = rank
+        record["label"] = f"{prefix}{rank}"
+    return records
+
+
+def _retrieve_passages_by_max_query_score(
+    passage_retriever: DynamicPassageRetriever,
+    *,
+    room_id: str,
+    queries: Sequence[str],
+    query_embeddings,
+    candidate_limit: int,
+) -> list[dict]:
+    import numpy as np
+
+    query_list = list(queries)
+    embeddings = np.asarray(list(query_embeddings), dtype=np.float32)
+    if embeddings.ndim != 2 or int(embeddings.shape[0]) != len(query_list):
+        raise RuntimeError("Max-score passage fusion expects one embedding per passage query.")
+
+    room_indices = [
+        index
+        for index, item in enumerate(passage_retriever.semantic_metadata_items)
+        if item.get("room_id") == room_id
+    ]
+    if not room_indices:
+        return []
+
+    room_embeddings = normalize_rows(
+        np.asarray(passage_retriever.semantic_embeddings[room_indices], dtype=np.float32)
+    )
+    normalized_queries = normalize_rows(embeddings)
+    scores = room_embeddings @ normalized_queries.T
+    best_query_indices = scores.argmax(axis=1)
+    best_scores = scores[np.arange(scores.shape[0]), best_query_indices]
+
+    per_query_ranks = np.zeros(scores.shape, dtype=np.int32)
+    for query_offset in range(scores.shape[1]):
+        ranked_for_query = sorted(
+            range(scores.shape[0]),
+            key=lambda local_index: (
+                -float(scores[local_index, query_offset]),
+                int(room_indices[local_index]),
+            ),
+        )
+        for rank, local_index in enumerate(ranked_for_query, start=1):
+            per_query_ranks[local_index, query_offset] = rank
+
+    ranked = sorted(
+        range(len(room_indices)),
+        key=lambda local_index: (
+            -float(best_scores[local_index]),
+            int(per_query_ranks[local_index, best_query_indices[local_index]]),
+            int(room_indices[local_index]),
+        ),
+    )
+
+    candidates: list[dict] = []
+    prefix = _room_label_prefix(room_id)
+    visual_index_by_capture = getattr(passage_retriever, "_visual_index_by_capture", {})
+    for local_index in ranked:
+        semantic_index = int(room_indices[local_index])
+        item = passage_retriever.semantic_metadata_items[semantic_index]
+        pano_id = item.get("pano_id")
+        capture_index = item.get("capture_index")
+        if not isinstance(pano_id, str) or not isinstance(capture_index, int):
+            continue
+        if visual_index_by_capture.get((pano_id, capture_index)) is None:
+            continue
+        image_path = passage_retriever._resolve_capture_path(item)
+        if image_path is None or not image_path.exists():
+            continue
+
+        rank = len(candidates) + 1
+        label = f"{prefix}{rank}"
+        best_query_index = int(best_query_indices[local_index])
+        query_sources = [
+            {
+                "query": str(query),
+                "query_index": query_offset + 1,
+                "query_rank": int(per_query_ranks[local_index, query_offset]),
+                "label": label,
+                "semantic_score": float(scores[local_index, query_offset]),
+            }
+            for query_offset, query in enumerate(query_list)
+        ]
+        fusion_score = sum(
+            1.0 / (60.0 + max(int(source["query_rank"]), 1)) for source in query_sources
+        )
+        candidates.append(
+            {
+                "memory_index": semantic_index,
+                "semantic_score": float(best_scores[local_index]),
+                "room_id": room_id,
+                "pano_id": pano_id,
+                "capture_index": capture_index,
+                "capture_label": item.get("capture_label"),
+                "capture_heading": item.get("capture_heading"),
+                "image_path": str(image_path),
+                "cluster_size": 1,
+                "cluster_member_memory_indices": [semantic_index],
+                "cluster_id": rank,
+                "label": label,
+                "retrieval_source_label": f"semantic:{semantic_index}",
+                "retrieval_query": str(query_list[best_query_index]),
+                "retrieval_query_fusion": "max_score",
+                "retrieval_query_sources": query_sources,
+                "source_queries": query_list,
+                "best_retrieval_query": str(query_list[best_query_index]),
+                "best_query_index": best_query_index + 1,
+                "best_query_rank": int(per_query_ranks[local_index, best_query_index]),
+                "best_semantic_score": float(best_scores[local_index]),
+                "retrieval_fusion_score": float(fusion_score),
+                "best_merged_query_rank": int(per_query_ranks[local_index, best_query_index]),
+                "merged_retrieval_rank": rank,
+                "semantic_scores_by_query": [
+                    {
+                        "query": str(query),
+                        "query_index": query_offset + 1,
+                        "semantic_score": float(scores[local_index, query_offset]),
+                        "query_rank": int(per_query_ranks[local_index, query_offset]),
+                    }
+                    for query_offset, query in enumerate(query_list)
+                ],
+            }
+        )
+        if len(candidates) >= max(int(candidate_limit), 1):
+            break
+    return candidates
+
+
+def _unique_non_empty_queries(queries: Sequence[str]) -> list[str]:
+    result = []
+    seen = set()
+    for query in queries:
+        normalized = " ".join(str(query or "").split())
+        if not normalized:
+            continue
+        key = normalized.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(normalized)
+    return result
+
+
+def _passage_candidate_key(passage: dict) -> tuple[object, ...]:
+    pano_id = passage.get("pano_id")
+    capture_index = passage.get("capture_index")
+    if isinstance(pano_id, str) and isinstance(capture_index, int):
+        return ("capture", pano_id, capture_index)
+    memory_index = passage.get("memory_index")
+    if isinstance(memory_index, int):
+        return ("memory", memory_index)
+    image_path = passage.get("image_path")
+    if isinstance(image_path, str) and image_path:
+        return ("image", image_path)
+    return ("label", passage.get("label"))
+
+
+def _best_query_source(sources: Sequence[dict]) -> dict:
+    return sorted(
+        sources,
+        key=lambda source: (
+            -float(source.get("semantic_score") or 0.0),
+            int(source.get("query_index") or 0),
+            int(source.get("query_rank") or 0),
+            str(source.get("query")),
+        ),
+    )[0]
+
+
+def _with_merged_retrieval_scores(passage: dict) -> dict:
+    record = dict(passage)
+    sources = [dict(source) for source in record.get("retrieval_query_sources", []) if isinstance(source, dict)]
+    if not sources:
+        sources = [
+            {
+                "query": record.get("retrieval_query"),
+                "query_index": 1,
+                "query_rank": 1,
+                "label": record.get("label"),
+                "semantic_score": float(record.get("semantic_score") or 0.0),
+            }
+        ]
+    best_source = _best_query_source(sources)
+    best_rank = min(int(source.get("query_rank") or 10**9) for source in sources)
+    fusion_score = sum(1.0 / (60.0 + max(int(source.get("query_rank") or 0), 1)) for source in sources)
+    record["retrieval_query_sources"] = sources
+    record["best_retrieval_query"] = best_source.get("query")
+    record["best_query_index"] = int(best_source.get("query_index") or 0)
+    record["best_query_rank"] = int(best_source.get("query_rank") or 0)
+    record["best_semantic_score"] = float(best_source.get("semantic_score") or 0.0)
+    record["retrieval_fusion_score"] = float(fusion_score)
+    record["best_merged_query_rank"] = int(best_rank)
+    return record
+
+
+def _merged_passage_sort_key(passage: dict) -> tuple[float, float, int, str, int]:
+    return (
+        -float(passage.get("retrieval_fusion_score") or 0.0),
+        -float(passage.get("best_semantic_score") or passage.get("semantic_score") or 0.0),
+        int(passage.get("best_merged_query_rank") or 10**9),
+        str(passage.get("pano_id") or ""),
+        int(passage.get("capture_index") or 0),
+    )
+
+
+def _room_label_prefix(room_id: str) -> str:
+    digits = "".join(char for char in str(room_id) if char.isdigit())
+    return f"R{digits}P" if digits else "P"
+
+
+def _apply_topology_consistency(
+    ranking: list[dict],
+    *,
+    pano_graph: dict,
+    pano_room_mappings: dict,
+    current_room_id: str,
+    subgoal_room_id: str,
+    configuration: dict,
+) -> list[dict]:
+    # Topology reranking is optional. Keep the visual ranking unchanged when no
+    # concrete topology adjustment is available.
+    return ranking
 
 
 class GroundingDinoPassageDetector:
@@ -505,7 +1128,18 @@ def _detect_passage_candidates(
                 raw_detections,
                 image_size=image_size,
                 min_area_ratio=float(configuration["min_box_area_ratio"]),
+                min_width_ratio=float(configuration.get("min_box_width_ratio", 0.0)),
+                min_height_ratio=float(configuration.get("min_box_height_ratio", 0.0)),
+                min_aspect_ratio=float(configuration.get("min_box_aspect_ratio", 0.0)),
+                max_aspect_ratio=float(configuration.get("max_box_aspect_ratio", 999.0)),
+                min_bottom_ratio=float(configuration.get("min_box_bottom_ratio", 0.0)),
+                max_center_x_distance_ratio=float(
+                    configuration.get("max_box_center_x_distance_ratio", 1.0)
+                ),
                 max_area_ratio=float(configuration["max_box_area_ratio"]),
+                crop_padding_ratio=float(configuration["crop_padding_ratio"]),
+                min_crop_area_ratio=float(configuration.get("min_crop_area_ratio", 0.0)),
+                max_crop_area_ratio=float(configuration.get("max_crop_area_ratio", 1.0)),
             )
             kept = kept[: max(int(configuration["max_detections_per_image"]), 1)]
             overlay_path = output_dirs["overlay"] / f"semantic_rank_{passage_index:02d}_{_safe_slug(source_label)}.png"
@@ -523,6 +1157,7 @@ def _detect_passage_candidates(
                     "copied_image_path": str(overlay_path),
                 }
             )
+            detection_status = "detected" if kept else ("filtered_out" if raw_detections else "no_detection")
             current_record = dict(passage)
             current_record.update(
                 {
@@ -530,18 +1165,24 @@ def _detect_passage_candidates(
                     "overlay_image_path": str(overlay_path),
                     "raw_detections": [_detection_to_dict(item, image_size=image_size) for item in raw_detections],
                     "kept_detections": [_detection_to_dict(item, image_size=image_size) for item in kept],
-                    "detection_status": "detected" if kept else "no_detection",
+                    "detection_status": detection_status,
                 }
             )
             current_records.append(current_record)
 
-            detections_for_candidates = kept or [
-                DetectionCandidate(
-                    box_xyxy=(0.0, 0.0, float(image.width), float(image.height)),
-                    score=0.0,
-                    label="full_image_fallback",
-                )
-            ]
+            fallback_to_full_image = bool(configuration.get("fallback_to_full_image_on_no_detection", False))
+            detections_for_candidates = list(kept)
+            if not detections_for_candidates and fallback_to_full_image and not raw_detections:
+                detections_for_candidates = [
+                    DetectionCandidate(
+                        box_xyxy=(0.0, 0.0, float(image.width), float(image.height)),
+                        score=0.0,
+                        label="full_image_fallback",
+                    )
+                ]
+            if not detections_for_candidates:
+                continue
+
             for detection_index, detection in enumerate(detections_for_candidates, start=1):
                 detection_box = _clip_box(detection.box_xyxy, image_size)
                 crop_box = _expand_box(
@@ -549,8 +1190,9 @@ def _detect_passage_candidates(
                     image_size=image_size,
                     padding_ratio=float(configuration["crop_padding_ratio"]),
                 )
+                is_fallback = detection.label == "full_image_fallback" and not kept
                 detected_label = f"{source_label}D{detection_index}"
-                if not kept:
+                if is_fallback:
                     detected_label = f"{source_label}D0"
                 crop_path = output_dirs["crop"] / (
                     f"semantic_rank_{passage_index:02d}_{_safe_slug(detected_label)}_crop.png"
@@ -586,12 +1228,14 @@ def _detect_passage_candidates(
                     "capture_label": passage.get("capture_label"),
                     "capture_heading": passage.get("capture_heading"),
                     "source_image_path": str(source_path),
-                    "detection_status": "detected" if kept else "no_detection",
-                    "detection_rank": detection_index if kept else None,
+                    "detection_status": detection_status,
+                    "detection_rank": None if is_fallback else detection_index,
                     "detection_label": detection.label,
-                    "detection_score": float(detection.score) if kept else None,
+                    "detection_score": None if is_fallback else float(detection.score),
                     "detection_box_xyxy": [float(value) for value in detection_box],
                     "crop_box_xyxy": [int(value) for value in crop_box],
+                    "detection_box_area_ratio": float(_box_area(detection_box) / max(image.width * image.height, 1)),
+                    "crop_area_ratio": float(_box_area(crop_box) / max(image.width * image.height, 1)),
                     "crop_image_path": str(crop_path),
                     "masked_image_path": str(masked_path),
                     "comparison_image_path": str(comparison_path),
@@ -988,14 +1632,58 @@ def _filter_detections(
     *,
     image_size: tuple[int, int],
     min_area_ratio: float,
+    min_width_ratio: float,
+    min_height_ratio: float,
+    min_aspect_ratio: float,
+    max_aspect_ratio: float,
+    min_bottom_ratio: float,
+    max_center_x_distance_ratio: float,
     max_area_ratio: float,
+    crop_padding_ratio: float = 0.0,
+    min_crop_area_ratio: float = 0.0,
+    max_crop_area_ratio: float = 1.0,
 ) -> list[DetectionCandidate]:
-    image_area = max(float(image_size[0] * image_size[1]), 1.0)
+    image_width = max(float(image_size[0]), 1.0)
+    image_height = max(float(image_size[1]), 1.0)
+    image_area = max(image_width * image_height, 1.0)
+    min_area_ratio = max(float(min_area_ratio), 0.0)
+    min_width_ratio = max(float(min_width_ratio), 0.0)
+    min_height_ratio = max(float(min_height_ratio), 0.0)
+    min_aspect_ratio = max(float(min_aspect_ratio), 0.0)
+    max_aspect_ratio = float("inf") if float(max_aspect_ratio) <= 0.0 else float(max_aspect_ratio)
+    min_bottom_ratio = min(max(float(min_bottom_ratio), 0.0), 1.0)
+    max_center_x_distance_ratio = max(float(max_center_x_distance_ratio), 0.0)
+    max_area_ratio = float("inf") if float(max_area_ratio) <= 0.0 else float(max_area_ratio)
+    crop_padding_ratio = max(float(crop_padding_ratio), 0.0)
+    min_crop_area_ratio = max(float(min_crop_area_ratio), 0.0)
+    max_crop_area_ratio = float("inf") if float(max_crop_area_ratio) <= 0.0 else float(max_crop_area_ratio)
     kept = []
     for detection in detections:
         box = _clip_box(detection.box_xyxy, image_size)
+        x0, y0, x1, y1 = box
+        box_width = max(x1 - x0, 0.0)
+        box_height = max(y1 - y0, 0.0)
         area_ratio = _box_area(box) / image_area
-        if area_ratio < min_area_ratio or area_ratio > max_area_ratio:
+        width_ratio = box_width / image_width
+        height_ratio = box_height / image_height
+        aspect_ratio = box_width / max(box_height, 1e-12)
+        bottom_ratio = y1 / image_height
+        center_x_ratio = ((x0 + x1) * 0.5) / image_width
+        center_x_distance_ratio = abs(center_x_ratio - 0.5) / 0.5
+        crop_box = _expand_box(box, image_size=image_size, padding_ratio=crop_padding_ratio)
+        crop_area_ratio = _box_area(crop_box) / image_area
+        if (
+            area_ratio < min_area_ratio
+            or width_ratio < min_width_ratio
+            or height_ratio < min_height_ratio
+            or aspect_ratio < min_aspect_ratio
+            or aspect_ratio > max_aspect_ratio
+            or bottom_ratio < min_bottom_ratio
+            or center_x_distance_ratio > max_center_x_distance_ratio
+            or area_ratio > max_area_ratio
+            or crop_area_ratio < min_crop_area_ratio
+            or crop_area_ratio > max_crop_area_ratio
+        ):
             continue
         kept.append(DetectionCandidate(box_xyxy=box, score=float(detection.score), label=detection.label))
     kept.sort(
@@ -1092,11 +1780,23 @@ def _int_box(box_xyxy: Sequence[float]) -> tuple[int, int, int, int]:
 
 def _detection_to_dict(detection: DetectionCandidate, *, image_size: tuple[int, int]) -> dict:
     box = _clip_box(detection.box_xyxy, image_size)
+    x0, y0, x1, y1 = box
+    image_width = max(float(image_size[0]), 1.0)
+    image_height = max(float(image_size[1]), 1.0)
+    box_width = max(x1 - x0, 0.0)
+    box_height = max(y1 - y0, 0.0)
+    center_x_ratio = ((x0 + x1) * 0.5) / image_width
     return {
         "label": detection.label,
         "score": float(detection.score),
         "box_xyxy": [float(value) for value in box],
-        "area_ratio": float(_box_area(box) / max(float(image_size[0] * image_size[1]), 1.0)),
+        "area_ratio": float(_box_area(box) / max(image_width * image_height, 1.0)),
+        "width_ratio": float(box_width / image_width),
+        "height_ratio": float(box_height / image_height),
+        "aspect_ratio": float(box_width / max(box_height, 1e-12)),
+        "bottom_y_ratio": float(y1 / image_height),
+        "center_x_ratio": float(center_x_ratio),
+        "center_x_distance_ratio": float(abs(center_x_ratio - 0.5) / 0.5),
     }
 
 

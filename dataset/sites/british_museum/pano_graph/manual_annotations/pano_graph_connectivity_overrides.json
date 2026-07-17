@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "description": "Manual pano graph connectivity overrides for known missing room transitions.",
+  "edge_overrides": [
+    {
+      "source_pano_id": "LL8s2vujPv6dkHOgjRBSgw",
+      "target_pano_id": "sOhbsmyS43XKAX209Ha3oA",
+      "bidirectional": true,
+      "source_heading_deg": 238.30014,
+      "target_heading_deg": 58.30009,
+      "description": "manual:physical_connectivity",
+      "reason": "Room 18 and Room 17 are physically connected; sOh is a boundary pano and should not be grounded to Room 18."
+    },
+    {
+      "source_pano_id": "SPJ00eZH8Q9dOhheS-VAYA",
+      "target_pano_id": "KbfPHaP5rBYD6dwHVrc4WQ",
+      "bidirectional": true,
+      "source_heading_deg": 147.79495,
+      "target_heading_deg": 327.79498,
+      "description": "manual:physical_connectivity",
+      "reason": "Room 21 and Room 22 are physically connected."
+    },
+    {
+      "source_pano_id": "47XoEc7PSvM1NYbLNP-cxg",
+      "target_pano_id": "RqtWi4OKrVGy9ECnL9UGCw",
+      "bidirectional": true,
+      "source_heading_deg": 238.06983,
+      "target_heading_deg": 58.06981,
+      "description": "manual:physical_connectivity",
+      "reason": "Room 7 and Room 10 are physically connected."
+    }
+  ],
+  "grounding_overrides": [
+    {
+      "pano_id": "sOhbsmyS43XKAX209Ha3oA",
+      "previous_room_id": "Room 18",
+      "room_id": "null",
+      "source": "manual:accepted",
+      "reason": "Boundary pano between Room 17 and Room 18; should not be grounded as Room 18."
+    }
+  ]
+}

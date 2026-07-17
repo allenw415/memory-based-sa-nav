@@ -21,8 +21,8 @@ from memory_nav.navigation import (  # noqa: E402
 )
 
 
-DEFAULT_INDEX_PATH = "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.npz"
-DEFAULT_METADATA_PATH = "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.metadata.json"
+DEFAULT_INDEX_PATH = "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.npz"
+DEFAULT_METADATA_PATH = "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.metadata.json"
 DEFAULT_MANIFEST_ROOT = "renders/room_grounding_fov90"
 DEFAULT_REPRESENTATIVES_PATH = "outputs/passage_clustering/room8/salad_cluster8/representatives.json"
 

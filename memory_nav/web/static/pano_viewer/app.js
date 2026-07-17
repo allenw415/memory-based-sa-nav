@@ -235,7 +235,10 @@ function setTrajectory(trajectory, fileName) {
   controls.forEach((control) => { control.disabled = false; });
   els.timelineInput.max = String(Math.max(0, trajectory.frames.length - 1));
   els.trajectoryStatus.classList.remove("error");
-  els.trajectoryStatus.textContent = `${fileName}: ${trajectory.movements.length} moves, ${trajectory.boundaries.length} room boundaries, success=${trajectory.success}.`;
+  const testLabel = trajectory.evaluationMetadata?.testId
+    ? `${trajectory.evaluationMetadata.testId}, `
+    : "";
+  els.trajectoryStatus.textContent = `${fileName}: ${testLabel}${trajectory.movements.length} moves, ${trajectory.boundaries.length} room boundaries, success=${trajectory.success}.`;
   showTrajectoryFrame();
   fitToNodeIds(trajectory.panoPath);
   draw();
@@ -634,6 +637,19 @@ function updateTrajectoryDetails() {
     ["Image goal", frame.imageGoalLabel || "-"],
     ["Episode", state.trajectory.success ? "success" : state.trajectory.reason || "not successful"],
   ];
+  const metadata = state.trajectory.evaluationMetadata;
+  if (metadata) {
+    rows.splice(
+      1,
+      0,
+      ["Test ID", metadata.testId || "-"],
+      ["Query", metadata.query || "-"],
+      ["Difficulty", metadata.difficulty || "-"],
+      ["Ratio", metadata.ratioStratum || "-"],
+      ["Passage profile", metadata.passageProfile || "-"],
+      ["Target theme", metadata.targetGroupTheme || "-"],
+    );
+  }
   if (frame.boundary) {
     rows.push(["Boundary", `${frame.boundary.fromRoomId || "-"} -> ${frame.boundary.toRoomId || "-"}`]);
   }

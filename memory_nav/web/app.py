@@ -10,11 +10,6 @@ from urllib.parse import quote
 
 from memory_nav import load_dotenv
 from memory_nav.cli._common import PROJECT_ROOT
-from memory_nav.web.memory_guidance import (
-    MEMORY_GUIDANCE_STATIC_ROOT,
-    MemoryGuidanceConfig,
-    MemoryGuidanceWebApp,
-)
 from memory_nav.web.pano_export import PanoExportConfig, export_pano_viewer, project_path
 
 try:
@@ -32,7 +27,6 @@ class WebConfig:
     host: str = "127.0.0.1"
     port: int = 8765
     pano_export: str = "auto"
-    memory_guidance: MemoryGuidanceConfig = field(default_factory=MemoryGuidanceConfig)
     pano_viewer: PanoExportConfig = field(default_factory=PanoExportConfig)
 
 
@@ -42,12 +36,10 @@ IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
 def create_app(config: WebConfig | None = None) -> FastAPI:
     load_dotenv(PROJECT_ROOT / ".env")
     resolved_config = config or WebConfig()
-    memory_app = MemoryGuidanceWebApp(resolved_config.memory_guidance)
     pano_status = prepare_pano_viewer(resolved_config)
 
     app = FastAPI(title="Memory Navigation Web Tools")
     app.state.web_config = resolved_config
-    app.state.memory_guidance = memory_app
     app.state.pano_status = pano_status
 
     @app.get("/", response_class=HTMLResponse, include_in_schema=False)
@@ -62,10 +54,6 @@ def create_app(config: WebConfig | None = None) -> FastAPI:
             "server": {"host": resolved_config.host, "port": resolved_config.port},
             "pano_export": app.state.pano_status,
             "tools": {
-                "memory_guidance": {
-                    "available": MEMORY_GUIDANCE_STATIC_ROOT.exists(),
-                    "path": "/memory-guidance/",
-                },
                 "pano_viewer": {
                     "available": (pano_output_dir / "index.html").exists()
                     and (pano_output_dir / "viewer_data.json").exists(),
@@ -74,32 +62,6 @@ def create_app(config: WebConfig | None = None) -> FastAPI:
                 },
             },
         }
-
-    @app.post("/memory-guidance/api/guide")
-    async def memory_guidance(payload_request: Request) -> JSONResponse:
-        try:
-            body = await payload_request.body()
-            payload = json.loads(body.decode("utf-8")) if body else {}
-            if not isinstance(payload, dict):
-                raise ValueError("Expected JSON object.")
-            return JSONResponse(memory_app.guide(payload))
-        except Exception as exc:
-            return JSONResponse(
-                {
-                    "action_request": "error",
-                    "message_zh": "伺服器處理請求時發生錯誤。",
-                    "error": f"{type(exc).__name__}: {exc}",
-                },
-                status_code=500,
-            )
-
-    @app.get("/memory-guidance/", include_in_schema=False)
-    def memory_guidance_index() -> Response:
-        return serve_file(MEMORY_GUIDANCE_STATIC_ROOT, "index.html")
-
-    @app.get("/memory-guidance/{path:path}", include_in_schema=False)
-    def memory_guidance_static(path: str) -> Response:
-        return serve_file(MEMORY_GUIDANCE_STATIC_ROOT, path)
 
     @app.get("/pano-viewer/", include_in_schema=False)
     def pano_viewer_index() -> Response:
@@ -461,7 +423,6 @@ def _index_html(config: WebConfig) -> str:
       <h1>Memory Navigation Web Tools</h1>
       <p>Unified FastAPI server running on <code>{config.host}:{config.port}</code>.</p>
       <nav>
-        <a href="/memory-guidance/">Memory Guidance<span>Upload localization and passage images for navigation guidance.</span></a>
         <a href="/pano-viewer/">Pano Viewer<span>Explore the exported panorama graph and Street View links.</span></a>
       </nav>
     </main>

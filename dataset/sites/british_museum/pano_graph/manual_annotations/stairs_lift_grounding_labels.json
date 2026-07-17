@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "site": "british_museum",
+  "created_at": "2026-07-03",
+  "description": "Manual grounding labels for stairs and lift panos. West/North stairs corrected after visual validation.",
+  "labels": {
+    "North stairs": [
+      "tlqgGSF0Wrw4O8-k7I6_fQ",
+      "JVokeJ_hp3iYinNNVxL9Jg",
+      "AWx2MeydUowr3t9xi77W3w"
+    ],
+    "West stairs": [
+      "2OCk2zPFb47Y1Sk3-3jmXg",
+      "NmtQ8ufY7Cz8E-KIqnrDqQ",
+      "yyYKD2teJXw4e6NFLedPHw",
+      "W_7TOmSgZxtzx5vvVhZjXQ",
+      "GcSAJHLVrALssSDWRKz07w",
+      "m2VM6RntxJpsuFN-aNWQlg",
+      "VetkjILUxv4EEVsMcajZJA"
+    ],
+    "West lift": [
+      "jvajOkPn1zwseyJwfG1foA"
+    ]
+  },
+  "before": {
+    "2OCk2zPFb47Y1Sk3-3jmXg": {
+      "room": "null",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51955638306446,
+      "lng": -0.1278863178651555
+    },
+    "NmtQ8ufY7Cz8E-KIqnrDqQ": {
+      "room": "null",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51951949882178,
+      "lng": -0.1278738536889871
+    },
+    "yyYKD2teJXw4e6NFLedPHw": {
+      "room": "null",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.519526762221105,
+      "lng": -0.12790691341061775
+    },
+    "W_7TOmSgZxtzx5vvVhZjXQ": {
+      "room": "null",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51955071023766,
+      "lng": -0.12793960092720996
+    },
+    "GcSAJHLVrALssSDWRKz07w": {
+      "room": "null",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51953663375751,
+      "lng": -0.12797570400605246
+    },
+    "m2VM6RntxJpsuFN-aNWQlg": {
+      "room": "null",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51953213015712,
+      "lng": -0.12798645286947802
+    },
+    "tlqgGSF0Wrw4O8-k7I6_fQ": {
+      "room": "null",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.52002140701365,
+      "lng": -0.1276586949321536
+    },
+    "JVokeJ_hp3iYinNNVxL9Jg": {
+      "room": "null",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.52003854969089,
+      "lng": -0.12765951648235274
+    },
+    "AWx2MeydUowr3t9xi77W3w": {
+      "room": "null",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.52002834247461,
+      "lng": -0.12768410953158663
+    },
+    "jvajOkPn1zwseyJwfG1foA": {
+      "room": "null",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.52004750039597,
+      "lng": -0.12761919295709487
+    },
+    "VetkjILUxv4EEVsMcajZJA": {
+      "room": "null",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51954930516603,
+      "lng": -0.12790396536471665
+    }
+  },
+  "after": {
+    "2OCk2zPFb47Y1Sk3-3jmXg": {
+      "room": "West stairs",
+      "source": "manual:accepted"
+    },
+    "NmtQ8ufY7Cz8E-KIqnrDqQ": {
+      "room": "West stairs",
+      "source": "manual:accepted"
+    },
+    "yyYKD2teJXw4e6NFLedPHw": {
+      "room": "West stairs",
+      "source": "manual:accepted"
+    },
+    "W_7TOmSgZxtzx5vvVhZjXQ": {
+      "room": "West stairs",
+      "source": "manual:accepted"
+    },
+    "GcSAJHLVrALssSDWRKz07w": {
+      "room": "West stairs",
+      "source": "manual:accepted"
+    },
+    "m2VM6RntxJpsuFN-aNWQlg": {
+      "room": "West stairs",
+      "source": "manual:accepted"
+    },
+    "tlqgGSF0Wrw4O8-k7I6_fQ": {
+      "room": "North stairs",
+      "source": "manual:accepted"
+    },
+    "JVokeJ_hp3iYinNNVxL9Jg": {
+      "room": "North stairs",
+      "source": "manual:accepted"
+    },
+    "AWx2MeydUowr3t9xi77W3w": {
+      "room": "North stairs",
+      "source": "manual:accepted"
+    },
+    "jvajOkPn1zwseyJwfG1foA": {
+      "room": "West lift",
+      "source": "manual:accepted"
+    },
+    "VetkjILUxv4EEVsMcajZJA": {
+      "room": "West stairs",
+      "source": "manual:accepted"
+    }
+  },
+  "label_counts_after": {
+    "North stairs": 3,
+    "West stairs": 7,
+    "West lift": 1
+  },
+  "notes": [
+    "These panos were previously null transition panos and are now assigned explicit stairs/lift labels.",
+    "Pano graph connectivity was not changed.",
+    "The labels are not room_graph nodes; the pano viewer still displays them as non-null grounding labels.",
+    "Follow-up update added VetkjILUxv4EEVsMcajZJA as West stairs after West/North correction.",
+    "Corrected swapped West/North stairs pano labels: Room 24/33 stair panos are North stairs; Room 4/29a stair panos are West stairs."
+  ],
+  "follow_up_updates": [
+    {
+      "created_at": "2026-07-03",
+      "description": "Added one additional West stairs pano after West/North correction.",
+      "pano_ids": [
+        "VetkjILUxv4EEVsMcajZJA"
+      ],
+      "before": {
+        "VetkjILUxv4EEVsMcajZJA": {
+          "room": "null",
+          "source": "manual:accepted",
+          "floor": "0",
+          "lat": 51.51954930516603,
+          "lng": -0.12790396536471665
+        }
+      },
+      "after": {
+        "VetkjILUxv4EEVsMcajZJA": {
+          "room": "West stairs",
+          "source": "manual:accepted"
+        }
+      }
+    }
+  ]
+}

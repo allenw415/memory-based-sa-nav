@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import sys
+import types
 import unittest
 from unittest import mock
 
@@ -9,6 +11,7 @@ except ModuleNotFoundError:
     np = None
 
 from memory_nav.data import memory_localization as ml
+from tools.data import build_memory_localization_index as build_tool
 from tools.data import eval_memory_localization as eval_tool
 
 
@@ -23,6 +26,16 @@ class EmbeddingBackendTests(unittest.TestCase):
             ml.DEFAULT_DINOV2_SALAD_MODEL,
         )
 
+    def test_embedding_model_resolver_accepts_dreamsim_alias(self) -> None:
+        self.assertEqual(
+            ml.resolve_embedding_model_name("dreamsim"),
+            ml.DEFAULT_DREAMSIM_MODEL,
+        )
+        self.assertEqual(
+            ml.resolve_embedding_model_name("dreamsim:ensemble"),
+            ml.DEFAULT_DREAMSIM_MODEL,
+        )
+
     def test_create_image_embedder_uses_backend_factory(self) -> None:
         class FakeSALAD:
             def __init__(self, **kwargs):
@@ -32,21 +45,84 @@ class EmbeddingBackendTests(unittest.TestCase):
             def __init__(self, **kwargs):
                 self.kwargs = kwargs
 
+        class FakeDreamSim:
+            def __init__(self, **kwargs):
+                self.kwargs = kwargs
+
         with (
             mock.patch.object(ml, "DINOv2SALADEmbedder", FakeSALAD),
             mock.patch.object(ml, "SigLIP2Embedder", FakeSigLIP),
+            mock.patch.object(ml, "DreamSimImageEmbedder", FakeDreamSim),
         ):
             salad = ml.create_image_embedder(model_name="dinov2-salad", device="cpu", batch_size=2)
             siglip = ml.create_image_embedder(model_name="siglip2", device="cpu", batch_size=2)
+            dreamsim = ml.create_image_embedder(model_name="dreamsim", device="cpu", batch_size=2)
 
         self.assertIsInstance(salad, FakeSALAD)
         self.assertEqual(salad.kwargs["model_name"], ml.DEFAULT_DINOV2_SALAD_MODEL)
         self.assertIsInstance(siglip, FakeSigLIP)
         self.assertEqual(siglip.kwargs["model_name"], ml.DEFAULT_SIGLIP2_MODEL)
+        self.assertIsInstance(dreamsim, FakeDreamSim)
+        self.assertEqual(dreamsim.kwargs["model_name"], ml.DEFAULT_DREAMSIM_MODEL)
 
     def test_siglip_keeps_text_embedding_interface_but_salad_is_image_only(self) -> None:
         self.assertTrue(hasattr(ml.SigLIP2Embedder, "encode_texts"))
         self.assertFalse(hasattr(ml.DINOv2SALADEmbedder, "encode_texts"))
+
+    def test_torch_hub_top_level_import_cleanup_removes_hub_modules_only(self) -> None:
+        previous_utils = sys.modules.get("utils")
+        previous_models = sys.modules.get("models")
+        had_utils = "utils" in sys.modules
+        had_models = "models" in sys.modules
+        hub_utils = types.ModuleType("utils")
+        hub_utils.__file__ = "/tmp/torch/hub/serizba_salad_main/utils/__init__.py"
+        local_models = types.ModuleType("models")
+        local_models.__file__ = "/tmp/project/models.py"
+        try:
+            sys.modules["utils"] = hub_utils
+            sys.modules["models"] = local_models
+
+            ml._clear_torch_hub_top_level_modules()
+
+            self.assertNotIn("utils", sys.modules)
+            self.assertIs(sys.modules["models"], local_models)
+        finally:
+            if had_utils:
+                sys.modules["utils"] = previous_utils
+            else:
+                sys.modules.pop("utils", None)
+            if had_models:
+                sys.modules["models"] = previous_models
+            else:
+                sys.modules.pop("models", None)
+
+    def test_combined_floor_output_prefixes_are_stable(self) -> None:
+        floors = build_tool.parse_floors_argument("0,1", fallback_floor="0")
+        self.assertEqual(floors, ["0", "1"])
+        self.assertEqual(
+            build_tool.default_output_prefix(
+                floors=floors,
+                embedding_model=ml.DEFAULT_SIGLIP2_MODEL,
+                fov=90,
+            ),
+            "floor0_1_siglip2_images_fov90",
+        )
+        self.assertEqual(
+            build_tool.default_output_prefix(
+                floors=floors,
+                embedding_model=ml.DEFAULT_DINOV2_SALAD_MODEL,
+                fov=90,
+            ),
+            "floor0_1_dinov2_salad_images_fov90",
+        )
+        self.assertEqual(
+            build_tool.default_output_prefix(
+                floors=floors,
+                embedding_model=ml.DEFAULT_DREAMSIM_MODEL,
+                fov=90,
+            ),
+            "floor0_1_dreamsim_ensemble_images_fov90",
+        )
 
 
 @unittest.skipIf(np is None, "numpy is required for eval aggregation tests")

@@ -6,6 +6,57 @@ from dataclasses import dataclass, field
 from ..common.types import TaskSpec
 
 
+def floor_pano_graph(
+    pano_graph: dict[str, dict],
+    *,
+    floor: str,
+) -> dict[str, dict]:
+    """Return a single-floor pano graph with cross-floor edges removed."""
+    selected_ids = {
+        pano_id
+        for pano_id, record in pano_graph.items()
+        if isinstance(record, dict) and str(record.get("floor")) == floor
+    }
+    selected: dict[str, dict] = {}
+    for pano_id in sorted(selected_ids):
+        record = dict(pano_graph[pano_id])
+        record["neighbors"] = [
+            dict(edge)
+            for edge in record.get("neighbors", [])
+            if isinstance(edge, dict) and edge.get("target_pano_id") in selected_ids
+        ]
+        selected[pano_id] = record
+    return selected
+
+
+def floor_room_graph(
+    room_graph: dict[str, dict],
+    *,
+    pano_graph: dict[str, dict],
+    pano_room_mappings: dict[str, str | None],
+) -> dict[str, dict]:
+    """Match the room graph exposed by the navigation evaluator on one floor."""
+    room_ids = {
+        room_id
+        for pano_id in pano_graph
+        if isinstance((room_id := pano_room_mappings.get(pano_id)), str)
+        and room_id.strip()
+    }
+    selected: dict[str, dict] = {}
+    for room_id in sorted(room_ids):
+        source = room_graph.get(room_id)
+        if not isinstance(source, dict):
+            continue
+        record = dict(source)
+        record["neighbors"] = [
+            dict(edge)
+            for edge in record.get("neighbors", [])
+            if isinstance(edge, dict) and edge.get("target_room_id") in room_ids
+        ]
+        selected[room_id] = record
+    return selected
+
+
 @dataclass
 class ParsedRoutePlan:
     instruction: str

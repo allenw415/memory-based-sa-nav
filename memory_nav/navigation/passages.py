@@ -22,6 +22,83 @@ from memory_nav.data.memory_localization import (
 DEFAULT_PASSAGE_QUERY = (
     "a walkable doorway, entrance, or opening connecting two museum galleries"
 )
+STRICT_DETECTED_PASSAGE_QUERY = (
+    "a human-walkable museum gallery doorway or entrance: a full-height architectural "
+    "opening with a clear doorframe, side walls or columns, and an open path into an "
+    "adjacent gallery"
+)
+STRICT_DETECTED_PASSAGE_EXTRA_QUERIES = (
+    "a framed doorway or portal between museum galleries that a visitor can walk through",
+    "a gallery entrance with visible adjacent room beyond, bounded by walls, columns, arch, or doorframe",
+    "an archway or large architectural portal leading into another exhibition room",
+    "a recessed side entrance or opening around a wall corner into an adjacent gallery",
+    "a passage between columns or statues with a clear walk-through opening",
+    "a doorway beside a museum room sign or exit sign leading into a neighboring gallery",
+)
+STRICT_DETECTED_PASSAGE_DETECTOR_PROMPT = (
+    "full-height walk-through doorway in a gallery wall . "
+    "framed gallery entrance with side jambs and lintel . "
+    "architectural portal or archway into another exhibition room . "
+    "recessed side opening around a wall corner into an adjacent gallery . "
+    "passage between columns or statues leading to a visible room beyond . "
+    "doorway beside a museum room sign or exit sign ."
+)
+STRICT_DETECTED_PASSAGE_COMBINED_QUERY = " . ".join(
+    (STRICT_DETECTED_PASSAGE_QUERY, *STRICT_DETECTED_PASSAGE_EXTRA_QUERIES)
+)
+
+
+def strict_detected_passage_configuration(*, seed: int = 0) -> dict:
+    return {
+        "seed": int(seed),
+        "passage_query": STRICT_DETECTED_PASSAGE_QUERY,
+        "passage_queries": [
+            STRICT_DETECTED_PASSAGE_QUERY,
+            *STRICT_DETECTED_PASSAGE_EXTRA_QUERIES,
+        ],
+        "passage_query_mode": "single",
+        "passage_query_fusion": "single_text",
+        "combined_passage_query": STRICT_DETECTED_PASSAGE_COMBINED_QUERY,
+        "extra_passage_queries": list(STRICT_DETECTED_PASSAGE_EXTRA_QUERIES),
+        "passage_top_k": 20,
+        "passage_top_k_per_query": 20,
+        "passage_candidate_limit": 64,
+        "passage_clustering": False,
+        "detector_prompt": STRICT_DETECTED_PASSAGE_DETECTOR_PROMPT,
+        "detector_backend": "groundingdino",
+        "detector_model": "IDEA-Research/grounding-dino-base",
+        "box_threshold": 0.25,
+        "text_threshold": 0.25,
+        "min_box_area_ratio": 0.06,
+        "min_box_width_ratio": 0.16,
+        "min_box_height_ratio": 0.18,
+        "min_box_aspect_ratio": 0.3,
+        "max_box_aspect_ratio": 3.2,
+        "min_box_bottom_ratio": 0.6,
+        "max_box_center_x_distance_ratio": 1.0,
+        "max_box_area_ratio": 0.8,
+        "min_crop_area_ratio": 0.0,
+        "max_crop_area_ratio": 0.9,
+        "fallback_to_full_image_on_no_detection": False,
+        "crop_padding_ratio": 0.06,
+        "current_image_mode": "mask",
+        "mask_background_brightness": 0.0,
+        "max_detections_per_image": 5,
+        "target_sample_count": 64,
+        "negative_sample_count": 64,
+        "similarity_top_m": 5,
+        "target_scoring": "contrastive_neighbor_mean",
+        "contrastive_negative_weight": 0.5,
+        "similarity_backend": "salad",
+        "dreamsim_type": None,
+        "semantic_embedding_model": DEFAULT_SIGLIP2_MODEL,
+        "visual_similarity_model": "dinov2-salad",
+        "topology_consistency_enabled": True,
+        "topology_consistency_max_hops": 3,
+        "topology_target_room_bonus": 0.12,
+        "topology_wrong_room_penalty": 0.12,
+        "topology_no_transition_penalty": 0.02,
+    }
 
 
 class PassageSelector(Protocol):
@@ -33,6 +110,93 @@ class PassageSelector(Protocol):
         current_candidates: Sequence[dict],
         subgoal_candidates: Sequence[dict],
     ) -> dict: ...
+
+
+class DetectedContrastivePassageSelector:
+    """Choose detected openings with the latest strict SALAD contrastive setup."""
+
+    requires_subgoal_passages = False
+
+    def __init__(
+        self,
+        *,
+        visual_retriever,
+        room_graph: dict,
+        detector,
+        image_embedder,
+        output_root: str | Path,
+        pano_graph: dict | None = None,
+        pano_room_mappings: dict[str, str | None] | None = None,
+        seed: int = 0,
+        configuration: dict | None = None,
+    ):
+        self.visual_retriever = visual_retriever
+        self.room_graph = room_graph
+        self.detector = detector
+        self.image_embedder = image_embedder
+        self.output_root = Path(output_root).resolve()
+        self.pano_graph = pano_graph or {}
+        self.pano_room_mappings = pano_room_mappings or {}
+        self.configuration = strict_detected_passage_configuration(seed=seed)
+        if configuration:
+            self.configuration.update(dict(configuration))
+        self.call_index = 0
+
+    def choose(
+        self,
+        *,
+        current_room_id: str,
+        subgoal_room_id: str,
+        current_candidates: Sequence[dict],
+        subgoal_candidates: Sequence[dict],
+    ) -> dict:
+        del subgoal_candidates
+        from memory_nav.cli.run_detected_passage_contrastive_selection import (
+            run_detected_passage_contrastive_selection,
+        )
+
+        output_dir = self.output_root / (
+            f"round_{self.call_index:03d}_"
+            f"{_safe_path_token(current_room_id)}_to_{_safe_path_token(subgoal_room_id)}"
+        )
+        self.call_index += 1
+        payload = run_detected_passage_contrastive_selection(
+            current_room_id=current_room_id,
+            subgoal_room_id=subgoal_room_id,
+            current_passages=current_candidates,
+            visual_retriever=self.visual_retriever,
+            room_graph=self.room_graph,
+            pano_graph=self.pano_graph,
+            pano_room_mappings=self.pano_room_mappings,
+            detector=self.detector,
+            image_embedder=self.image_embedder,
+            output_dir=output_dir,
+            configuration=self.configuration,
+        )
+        choice = dict(payload["passage_choice"])
+        ranking = choice.get("passage_ranking") if isinstance(choice.get("passage_ranking"), list) else []
+        chosen = next(
+            (item for item in ranking if isinstance(item, dict) and item.get("selected")),
+            ranking[0] if ranking else {},
+        )
+        choice.update(
+            {
+                "navigation_confidence": 1.0,
+                "output_directory": payload.get("output_directory"),
+                "result_json_path": payload.get("result_json_path"),
+                "current_room_passage_records": payload.get("current_room_passages", []),
+                "detected_passage_candidates": payload.get("detected_passage_candidates", []),
+                "image_exports": payload.get("image_exports", []),
+                "direction_target": _direction_target_from_detected_candidate(chosen),
+                "request_summary": {
+                    "current_room_id": current_room_id,
+                    "subgoal_room_id": subgoal_room_id,
+                    "current_labels": [str(item.get("label")) for item in current_candidates],
+                    "requires_subgoal_passages": False,
+                },
+            }
+        )
+        return choice
 
 
 class SimilarityPassageSelector:
@@ -1118,6 +1282,43 @@ def _stable_seed(seed: int, value: str) -> int:
 def _room_label_prefix(room_id: str) -> str:
     digits = "".join(char for char in str(room_id) if char.isdigit())
     return f"R{digits}P" if digits else "P"
+
+
+def _safe_path_token(value: object) -> str:
+    return "".join(
+        char if char.isalnum() or char in {"-", "_"} else "_"
+        for char in str(value)
+    ).strip("_") or "value"
+
+
+def _direction_target_from_detected_candidate(candidate: dict) -> dict:
+    source_passage = candidate.get("source_passage") if isinstance(candidate, dict) else None
+    source_passage = dict(source_passage) if isinstance(source_passage, dict) else {}
+    image_path = source_passage.get("image_path") or candidate.get("source_image_path")
+    return {
+        "label": candidate.get("label"),
+        "source_label": candidate.get("source_label") or source_passage.get("label"),
+        "image_path": image_path,
+        "pano_id": source_passage.get("pano_id") or candidate.get("pano_id"),
+        "capture_index": source_passage.get("capture_index") or candidate.get("capture_index"),
+        "source_passage": source_passage,
+        "detected_candidate": {
+            key: candidate.get(key)
+            for key in [
+                "label",
+                "source_label",
+                "crop_image_path",
+                "masked_image_path",
+                "comparison_image_path",
+                "detection_box_xyxy",
+                "crop_box_xyxy",
+                "selection_score",
+                "target_mean_similarity",
+                "negative_mean_similarity",
+            ]
+            if key in candidate
+        },
+    }
 
 
 def _image_to_data_url(path: Path) -> str:

@@ -1,0 +1,28 @@
+{
+  "site_id": "british_museum",
+  "floor": "0",
+  "definition": "Directed room transitions where prior passage-selection tests failed. Reverse transitions are separate edges.",
+  "source": "User-provided manual annotation from prior passage-selection tests",
+  "directed_fail_edges": [
+    {"from_room_id": "North stairs", "to_room_id": "Room 33"},
+    {"from_room_id": "Room 6", "to_room_id": "Room 4"},
+    {"from_room_id": "Room 6", "to_room_id": "Room 7"},
+    {"from_room_id": "Room 8", "to_room_id": "Room 7"},
+    {"from_room_id": "Room 11", "to_room_id": "Room 12"},
+    {"from_room_id": "Room 13", "to_room_id": "Room 14"},
+    {"from_room_id": "Room 14", "to_room_id": "Room 15"},
+    {"from_room_id": "Room 15", "to_room_id": "Room 16"},
+    {"from_room_id": "Room 17", "to_room_id": "Room 16"},
+    {"from_room_id": "Room 18", "to_room_id": "Room 17"},
+    {"from_room_id": "Room 19", "to_room_id": "Room 17"},
+    {"from_room_id": "Room 21", "to_room_id": "Room 22"},
+    {"from_room_id": "Room 24", "to_room_id": "North stairs"},
+    {"from_room_id": "Room 24", "to_room_id": "Room 26"},
+    {"from_room_id": "Room 24", "to_room_id": "Room 29b"},
+    {"from_room_id": "Room 26", "to_room_id": "Room 24"},
+    {"from_room_id": "Room 27", "to_room_id": "Room 26"},
+    {"from_room_id": "Room 29a", "to_room_id": "Room 29b"},
+    {"from_room_id": "Room 29b", "to_room_id": "Room 29a"},
+    {"from_room_id": "Room 33", "to_room_id": "North stairs"}
+  ]
+}

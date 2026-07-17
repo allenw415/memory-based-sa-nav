@@ -10,10 +10,128 @@ from memory_nav.cli._common import render_json
 from memory_nav.cli.run_navigation_episode import (
     build_parser,
     _build_role_model_client,
+    _direction_scoring_label,
+    _method_id,
     _navigation_output_dir,
     _prepare_navigation_output_bundle,
+    _resolve_navigation_goal,
     _write_navigation_output_bundle,
 )
+
+
+class NavigationEpisodeDefaultPolicyTests(unittest.TestCase):
+    def test_parser_defaults_to_detected_contrastive_memory_tree(self) -> None:
+        args = build_parser().parse_args(
+            [
+                "--start-pano-id",
+                "start",
+                "--target-room-id",
+                "Room 17",
+            ]
+        )
+
+        self.assertEqual(args.passage_policy, "detected_contrastive")
+        self.assertEqual(args.direction_policy, "memory_tree")
+        self.assertEqual(args.memory_tree_branching_factor, 3)
+        self.assertEqual(args.memory_tree_max_depth, 5)
+        self.assertEqual(args.memory_tree_similarity_backend, "dinov2_patch_topk")
+        self.assertEqual(args.memory_tree_dinov2_patch_top_k, 5)
+        self.assertEqual(args.memory_tree_dinov2_patch_max_patches, 64)
+        self.assertFalse(args.memory_tree_allow_same_bridge_item)
+        self.assertEqual(args.memory_tree_bridge_similarity_tie_margin, 0.01)
+        self.assertEqual(args.batch_size, 32)
+        self.assertEqual(
+            _method_id(args, args.passage_policy),
+            "retrieval_localize_plan_detected_contrastive_memory_tree_direction",
+        )
+        self.assertEqual(_direction_scoring_label(args), "dinov2_patch_topk_passage_memory_tree")
+
+        salad_args = build_parser().parse_args(
+            [
+                "--start-pano-id",
+                "start",
+                "--target-room-id",
+                "Room 17",
+                "--memory-tree-similarity-backend",
+                "salad",
+            ]
+        )
+        self.assertEqual(_direction_scoring_label(salad_args), "salad_passage_memory_tree")
+
+
+        dinov2_args = build_parser().parse_args(
+            [
+                "--start-pano-id",
+                "start",
+                "--target-room-id",
+                "Room 17",
+                "--memory-tree-similarity-backend",
+                "dinov2_patch_topk",
+                "--memory-tree-bridge-selection-mode",
+                "bridge_then_continuity",
+                "--memory-tree-near-duplicate-threshold",
+                "1.1",
+            ]
+        )
+        self.assertEqual(dinov2_args.memory_tree_similarity_backend, "dinov2_patch_topk")
+        self.assertEqual(dinov2_args.memory_tree_dinov2_patch_model, "facebook/dinov2-base")
+        self.assertEqual(dinov2_args.memory_tree_dinov2_patch_top_k, 5)
+        self.assertEqual(dinov2_args.memory_tree_dinov2_patch_max_patches, 64)
+        self.assertEqual(dinov2_args.memory_tree_bridge_selection_mode, "bridge_then_continuity")
+        self.assertEqual(dinov2_args.memory_tree_near_duplicate_threshold, 1.1)
+        self.assertFalse(dinov2_args.memory_tree_allow_same_bridge_item)
+        self.assertEqual(dinov2_args.memory_tree_bridge_similarity_tie_margin, 0.01)
+        self.assertEqual(_direction_scoring_label(dinov2_args), "dinov2_patch_topk_passage_memory_tree")
+
+    def test_query_mode_does_not_require_manual_target_room(self) -> None:
+        args = build_parser().parse_args(
+            [
+                "--start-pano-id",
+                "start",
+                "--query",
+                "go to Room 23",
+            ]
+        )
+
+        self.assertEqual(args.query, "go to Room 23")
+        self.assertIsNone(args.target_room_id)
+        self.assertEqual(args.waypoint_room_id, [])
+
+    def test_manual_target_mode_still_resolves_without_query_parser(self) -> None:
+        args = build_parser().parse_args(
+            [
+                "--start-pano-id",
+                "start",
+                "--target-room-id",
+                "Room 17",
+                "--waypoint-room-id",
+                "Room 23",
+            ]
+        )
+
+        target_room_id, waypoint_room_ids, parsed_query = _resolve_navigation_goal(
+            args,
+            room_graph={"Room 17": {}, "Room 23": {}},
+        )
+
+        self.assertEqual(target_room_id, "Room 17")
+        self.assertEqual(waypoint_room_ids, ["Room 23"])
+        self.assertIsNone(parsed_query)
+
+    def test_query_mode_rejects_manual_room_ids(self) -> None:
+        args = build_parser().parse_args(
+            [
+                "--start-pano-id",
+                "start",
+                "--query",
+                "go to Room 23",
+                "--target-room-id",
+                "Room 17",
+            ]
+        )
+
+        with self.assertRaisesRegex(RuntimeError, "cannot be combined"):
+            _resolve_navigation_goal(args, room_graph={"Room 17": {}, "Room 23": {}})
 
 
 class RoleModelClientConfigurationTests(unittest.TestCase):

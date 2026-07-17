@@ -3,11 +3,13 @@ from __future__ import annotations
 import json
 import math
 import random
+import sys
 from pathlib import Path
 from typing import Sequence
 
 DEFAULT_SIGLIP2_MODEL = "google/siglip2-base-patch16-224"
 DEFAULT_DINOV2_SALAD_MODEL = "dinov2-salad"
+DEFAULT_DREAMSIM_MODEL = "dreamsim-ensemble"
 DEFAULT_EMBEDDING_MODEL = DEFAULT_SIGLIP2_MODEL
 SIGLIP2_MODEL_ALIASES = {
     "siglip2": DEFAULT_SIGLIP2_MODEL,
@@ -20,10 +22,38 @@ DINOV2_SALAD_MODEL_ALIASES = {
     "salad",
     "dinov2_salad",
 }
+DREAMSIM_MODEL_ALIASES = {
+    "dreamsim": DEFAULT_DREAMSIM_MODEL,
+    "dreamsim-ensemble": DEFAULT_DREAMSIM_MODEL,
+    "dreamsim:ensemble": DEFAULT_DREAMSIM_MODEL,
+    "dreamsim_ensemble": DEFAULT_DREAMSIM_MODEL,
+}
 
 
 class MissingDependencyError(RuntimeError):
     pass
+
+
+_TORCH_HUB_TOP_LEVEL_MODULES = ("utils", "vision_transformer", "vpr_model", "models")
+_TORCH_HUB_PATH_MARKERS = (
+    "/torch/hub/",
+    "/serizba_salad_",
+    "/facebookresearch_dino_",
+    "/facebookresearch_dinov2_",
+)
+
+
+def _clear_torch_hub_top_level_modules() -> None:
+    """Drop un-namespaced Torch Hub imports that can collide across repos."""
+
+    for module_name in _TORCH_HUB_TOP_LEVEL_MODULES:
+        module = sys.modules.get(module_name)
+        module_file = getattr(module, "__file__", None)
+        if not module_file:
+            continue
+        normalized = str(Path(module_file).resolve()).replace("\\", "/")
+        if any(marker in normalized for marker in _TORCH_HUB_PATH_MARKERS):
+            sys.modules.pop(module_name, None)
 
 
 def load_json(path: str | Path) -> dict:
@@ -49,9 +79,37 @@ def is_dinov2_salad_model_name(model_name: str | None) -> bool:
     return normalized in DINOV2_SALAD_MODEL_ALIASES
 
 
+def is_dreamsim_model_name(model_name: str | None) -> bool:
+    normalized = (model_name or "").strip().lower()
+    return (
+        normalized in DREAMSIM_MODEL_ALIASES
+        or normalized.startswith("dreamsim:")
+        or normalized.startswith("dreamsim-")
+        or normalized.startswith("dreamsim_")
+    )
+
+
+def resolve_dreamsim_model_name(model_name: str | None) -> str:
+    normalized = (model_name or "dreamsim").strip().lower()
+    if normalized in DREAMSIM_MODEL_ALIASES:
+        return DREAMSIM_MODEL_ALIASES[normalized]
+    for prefix in ("dreamsim:", "dreamsim-", "dreamsim_"):
+        if normalized.startswith(prefix):
+            dreamsim_type = normalized[len(prefix) :].strip().replace("_", "-")
+            return f"dreamsim-{dreamsim_type or 'ensemble'}"
+    return DEFAULT_DREAMSIM_MODEL
+
+
+def dreamsim_type_from_model_name(model_name: str | None) -> str:
+    resolved = resolve_dreamsim_model_name(model_name)
+    return resolved.removeprefix("dreamsim-").replace("-", "_") or "ensemble"
+
+
 def resolve_embedding_model_name(model_name: str | None) -> str:
     if is_dinov2_salad_model_name(model_name):
         return DEFAULT_DINOV2_SALAD_MODEL
+    if is_dreamsim_model_name(model_name):
+        return resolve_dreamsim_model_name(model_name)
     return resolve_siglip2_model_name(model_name)
 
 
@@ -540,6 +598,7 @@ class DINOv2SALADEmbedder:
         return "cpu"
 
     def _load_model(self):
+        _clear_torch_hub_top_level_modules()
         try:
             try:
                 return self.torch.hub.load(
@@ -556,6 +615,8 @@ class DINOv2SALADEmbedder:
                 f"({missing_name}). Install the optional SALAD runtime dependencies, "
                 "including torchvision, pytorch-lightning, and pytorch-metric-learning."
             ) from exc
+        finally:
+            _clear_torch_hub_top_level_modules()
 
     def encode_image_paths(self, image_paths: Sequence[str | Path]):
         batches = []
@@ -589,6 +650,73 @@ class DINOv2SALADEmbedder:
         return (tensor - mean) / std
 
 
+class DreamSimImageEmbedder:
+    def __init__(
+        self,
+        *,
+        model_name: str = DEFAULT_DREAMSIM_MODEL,
+        device: str = "auto",
+        batch_size: int = 8,
+    ):
+        self.np = _require_numpy()
+        self.torch = _require_torch()
+        self.Image = _require_pil_image()
+        self.model_name = resolve_dreamsim_model_name(model_name)
+        self.dreamsim_type = dreamsim_type_from_model_name(self.model_name)
+        self.batch_size = max(int(batch_size), 1)
+        self.device = self._resolve_device(device)
+        try:
+            from dreamsim import dreamsim
+        except ModuleNotFoundError as exc:
+            raise MissingDependencyError("Missing dreamsim. Install dreamsim to build DreamSim indexes.") from exc
+
+        _clear_torch_hub_top_level_modules()
+        try:
+            self.model, self.preprocess = dreamsim(
+                pretrained=True,
+                device=self.device,
+                dreamsim_type=self.dreamsim_type,
+            )
+        finally:
+            _clear_torch_hub_top_level_modules()
+        self.model = self.model.eval()
+
+    def _resolve_device(self, requested_device: str) -> str:
+        normalized = (requested_device or "auto").strip().lower()
+        if normalized != "auto":
+            return normalized
+        if self.torch.cuda.is_available():
+            return "cuda"
+        mps_backend = getattr(self.torch.backends, "mps", None)
+        if mps_backend is not None and mps_backend.is_available():
+            return "mps"
+        return "cpu"
+
+    def encode_image_paths(self, image_paths: Sequence[str | Path]):
+        batches = []
+        for start in range(0, len(image_paths), self.batch_size):
+            batch_paths = image_paths[start : start + self.batch_size]
+            images = [self.Image.open(Path(path)).convert("RGB") for path in batch_paths]
+            try:
+                tensors = [self.preprocess(image) for image in images]
+                inputs = self.torch.cat(
+                    [tensor if int(tensor.ndim) == 4 else tensor.unsqueeze(0) for tensor in tensors],
+                    dim=0,
+                ).to(self.device)
+                with self.torch.inference_mode():
+                    embeddings = self.model.embed(inputs)
+                if int(embeddings.ndim) > 2:
+                    embeddings = embeddings.flatten(start_dim=1)
+                embeddings = embeddings / embeddings.norm(p=2, dim=-1, keepdim=True).clamp(min=1e-12)
+                batches.append(embeddings.detach().cpu().to(self.torch.float32).numpy())
+            finally:
+                for image in images:
+                    image.close()
+        if not batches:
+            return self.np.zeros((0, 0), dtype=self.np.float32)
+        return self.np.concatenate(batches, axis=0).astype(self.np.float32)
+
+
 def create_image_embedder(
     *,
     model_name: str | None = DEFAULT_EMBEDDING_MODEL,
@@ -598,6 +726,12 @@ def create_image_embedder(
     resolved_model_name = resolve_embedding_model_name(model_name)
     if resolved_model_name == DEFAULT_DINOV2_SALAD_MODEL:
         return DINOv2SALADEmbedder(
+            model_name=resolved_model_name,
+            device=device,
+            batch_size=batch_size,
+        )
+    if is_dreamsim_model_name(resolved_model_name):
+        return DreamSimImageEmbedder(
             model_name=resolved_model_name,
             device=device,
             batch_size=batch_size,

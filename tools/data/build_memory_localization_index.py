@@ -15,6 +15,8 @@ from memory_nav import PanoramaRenderer, get_env_value, load_dotenv
 from memory_nav.data.memory_localization import (
     DEFAULT_EMBEDDING_MODEL,
     DEFAULT_DINOV2_SALAD_MODEL,
+    dreamsim_type_from_model_name,
+    is_dreamsim_model_name,
     MissingDependencyError,
     build_faiss_index,
     create_image_embedder,
@@ -40,6 +42,7 @@ def build_parser() -> argparse.ArgumentParser:
         default="dataset/sites/british_museum/normalized/pano_room_grounding.json",
     )
     parser.add_argument("--floor", default="0")
+    parser.add_argument("--floors", help="Comma-separated floors to combine, e.g. 0,1. Overrides --floor.")
     parser.add_argument("--include-sources", default="manual:accepted")
     parser.add_argument("--limit", type=int)
     parser.add_argument("--embedding-model", default=DEFAULT_EMBEDDING_MODEL)
@@ -79,12 +82,82 @@ def format_duration(seconds: float) -> str:
     return f"{secs}s"
 
 
-def default_output_prefix(*, floor: str, embedding_model: str, fov: int) -> str:
+def parse_floors_argument(value: str | None, *, fallback_floor: str | None) -> list[str]:
+    raw_values = parse_csv_argument(value) if value else parse_csv_argument(fallback_floor)
+    floors: list[str] = []
+    seen: set[str] = set()
+    for raw_value in raw_values:
+        floor = str(raw_value).strip()
+        if floor and floor not in seen:
+            floors.append(floor)
+            seen.add(floor)
+    return floors or ["0"]
+
+
+def format_floor_summary(floors: list[str]) -> str:
+    return ",".join(str(floor) for floor in floors)
+
+
+def format_floor_token(floors: list[str]) -> str:
+    return "floor" + "_".join(str(floor).replace("-", "m") for floor in floors)
+
+
+def safe_model_token(value: str) -> str:
+    token = "".join(char if char.isalnum() else "_" for char in str(value).strip().lower())
+    return "_".join(part for part in token.split("_") if part) or "model"
+
+
+def default_output_prefix(*, floors: list[str], embedding_model: str, fov: int) -> str:
+    floor_token = format_floor_token(floors)
     if embedding_model == DEFAULT_DINOV2_SALAD_MODEL:
-        return f"floor{floor}_dinov2_salad_images_fov{int(fov)}"
+        return f"{floor_token}_dinov2_salad_images_fov{int(fov)}"
+    if is_dreamsim_model_name(embedding_model):
+        dreamsim_type = safe_model_token(dreamsim_type_from_model_name(embedding_model))
+        return f"{floor_token}_dreamsim_{dreamsim_type}_images_fov{int(fov)}"
     if int(fov) == 45:
-        return f"floor{floor}_siglip2_images"
-    return f"floor{floor}_siglip2_images_fov{int(fov)}"
+        return f"{floor_token}_siglip2_images"
+    return f"{floor_token}_siglip2_images_fov{int(fov)}"
+
+
+def repair_cached_manifest_tree(*, render_output_dir: Path, graph_path: Path) -> dict:
+    summary = {"checked": 0, "updated": 0, "invalid": 0}
+    if not render_output_dir.exists():
+        return summary
+
+    graph_path_string = str(graph_path)
+    for manifest_path in sorted(render_output_dir.glob("*/*_manifest.json")):
+        summary["checked"] += 1
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            summary["invalid"] += 1
+            continue
+        if not isinstance(manifest, dict):
+            summary["invalid"] += 1
+            continue
+
+        changed = False
+        if manifest.get("graph_path") != graph_path_string:
+            manifest["graph_path"] = graph_path_string
+            changed = True
+
+        captures = manifest.get("captures")
+        if isinstance(captures, list):
+            for capture in captures:
+                if not isinstance(capture, dict):
+                    continue
+                raw_path = capture.get("path")
+                if not isinstance(raw_path, str) or not raw_path:
+                    continue
+                local_path = manifest_path.parent / Path(raw_path).name
+                if capture.get("path") != str(local_path):
+                    capture["path"] = str(local_path)
+                    changed = True
+
+        if changed:
+            write_json(manifest_path, manifest)
+            summary["updated"] += 1
+    return summary
 
 
 def ensure_manifest(
@@ -127,13 +200,20 @@ def main() -> int:
     pano_graph = load_json(artifacts_dir / "pano_graph.json")
     grounding_payload = load_json(grounding_path)
     include_sources = parse_csv_argument(args.include_sources)
-    panos = select_memory_items(
-        grounding_payload=grounding_payload,
-        pano_graph=pano_graph,
-        floor=args.floor,
-        include_sources=include_sources,
-        limit=args.limit,
-    )
+    floors = parse_floors_argument(args.floors, fallback_floor=args.floor)
+    panos = []
+    for floor in floors:
+        panos.extend(
+            select_memory_items(
+                grounding_payload=grounding_payload,
+                pano_graph=pano_graph,
+                floor=floor,
+                include_sources=include_sources,
+                limit=None,
+            )
+        )
+    if args.limit is not None:
+        panos = panos[: max(int(args.limit), 0)]
     if not panos:
         raise RuntimeError("No labeled panos selected for the image memory index.")
 
@@ -155,13 +235,24 @@ def main() -> int:
 
     np = embedder.np
     render_output_dir = (PROJECT_ROOT / args.render_output_dir).resolve()
+    manifest_repair = repair_cached_manifest_tree(
+        render_output_dir=render_output_dir,
+        graph_path=artifacts_dir / "pano_graph.json",
+    )
     metadata_items: list[dict] = []
     all_image_embeddings: list[object] = []
     started_at = time.time()
     total = len(panos)
+    floor_summary = format_floor_summary(floors)
 
+    if manifest_repair["updated"] or manifest_repair["invalid"]:
+        emit_progress(
+            "[image-memory-index] repaired cached manifests "
+            f"checked={manifest_repair['checked']} updated={manifest_repair['updated']} "
+            f"invalid={manifest_repair['invalid']}"
+        )
     emit_progress(
-        f"[image-memory-index] floor={args.floor} panos={total} model={embedder.model_name} "
+        f"[image-memory-index] floors={floor_summary} panos={total} model={embedder.model_name} "
         f"device={embedder.device} heading={args.heading_mode} captures={args.max_captures}"
     )
 
@@ -211,7 +302,7 @@ def main() -> int:
     faiss_index = build_faiss_index(image_embeddings)
 
     output_prefix = args.output_prefix or default_output_prefix(
-        floor=str(args.floor),
+        floors=floors,
         embedding_model=resolved_embedding_model,
         fov=args.fov,
     )
@@ -228,7 +319,8 @@ def main() -> int:
         metadata_path,
         {
             "summary": {
-                "floor": str(args.floor),
+                "floor": floor_summary,
+                "floors": floors,
                 "pano_count": len(panos),
                 "image_count": len(metadata_items),
                 "embedding_model": embedder.model_name,
@@ -237,6 +329,7 @@ def main() -> int:
                 "heading_mode": args.heading_mode,
                 "max_captures": int(args.max_captures),
                 "include_sources": include_sources,
+                "manifest_repair": manifest_repair,
                 "build_elapsed": format_duration(time.time() - started_at),
             },
             "items": metadata_items,

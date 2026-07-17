@@ -12,34 +12,49 @@ from .image_goal import (
 )
 from .passages import (
     DEFAULT_PASSAGE_QUERY,
+    DetectedContrastivePassageSelector,
     DynamicPassageRetriever,
     PassageSelector,
     PassageVLMSelector,
     RecordedPassageSelector,
     SimilarityPassageSelector,
+    strict_detected_passage_configuration,
+)
+from .query_parser import (
+    NavigationQueryParser,
+    ParsedNavigationQuery,
+    ParsedNavigationQueryEntity,
 )
 from .vlm_direction import (
     DirectionBurstResult,
+    DirectionCommitmentState,
     DirectionSelector,
     EightViewVLMDirectionSelector,
+    MemoryTreeDirectionSelector,
     RecordedDirectionSelector,
     SparseVLMDirectionSimulator,
 )
 
 __all__ = [
     "DEFAULT_PASSAGE_QUERY",
+    "DetectedContrastivePassageSelector",
     "DynamicPassageRetriever",
     "DirectionBurstResult",
+    "DirectionCommitmentState",
     "DirectionSelector",
     "EightViewVLMDirectionSelector",
+    "MemoryTreeDirectionSelector",
     "ImageGoalNavigationResult",
     "ImageGoalStepResult",
     "IndexedPanoramaViewStore",
     "NavigationEpisodeResult",
     "NavigationEpisodeRunner",
+    "NavigationQueryParser",
     "PanoramaGraphImageGoalSimulator",
     "PassageSelector",
     "PassageVLMSelector",
+    "ParsedNavigationQuery",
+    "ParsedNavigationQueryEntity",
     "PureVisualDirectionPolicy",
     "RecordedPassageSelector",
     "RecordedDirectionSelector",
@@ -49,4 +64,5 @@ __all__ = [
     "VisualView",
     "angular_distance_deg",
     "resolve_goal_label",
+    "strict_detected_passage_configuration",
 ]

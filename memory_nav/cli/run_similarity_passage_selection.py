@@ -17,6 +17,7 @@ ensure_project_root_on_path()
 from memory_nav.data.memory_localization import (  # noqa: E402
     DEFAULT_DINOV2_SALAD_MODEL,
     DEFAULT_SIGLIP2_MODEL,
+    _clear_torch_hub_top_level_modules,
     create_image_embedder,
 )
 from memory_nav.memory.retrieval import MemoryImageRetriever  # noqa: E402
@@ -27,10 +28,10 @@ from memory_nav.navigation import (  # noqa: E402
 )
 
 
-DEFAULT_SIGLIP_INDEX = "artifacts/memory_localization/floor0_siglip2_images_fov90.npz"
-DEFAULT_SIGLIP_METADATA = "artifacts/memory_localization/floor0_siglip2_images_fov90.metadata.json"
-DEFAULT_SALAD_INDEX = "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.npz"
-DEFAULT_SALAD_METADATA = "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.metadata.json"
+DEFAULT_SIGLIP_INDEX = "artifacts/memory_localization/floor0_1_siglip2_images_fov90.npz"
+DEFAULT_SIGLIP_METADATA = "artifacts/memory_localization/floor0_1_siglip2_images_fov90.metadata.json"
+DEFAULT_SALAD_INDEX = "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.npz"
+DEFAULT_SALAD_METADATA = "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.metadata.json"
 DEFAULT_MANIFEST_ROOT = "renders/room_grounding_fov90"
 DEFAULT_ROOM_GRAPH_PATH = "dataset/sites/british_museum/normalized/room_graph.json"
 DEFAULT_RESULT_FILENAME = "result.json"
@@ -73,7 +74,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--salad-metadata-path", default=DEFAULT_SALAD_METADATA)
     parser.add_argument("--embedding-model", default=DEFAULT_SIGLIP2_MODEL)
     parser.add_argument("--device", default="auto")
-    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument(
         "--output-path",
         help="Experiment output directory. Writes result.json and image subfolders inside it.",
@@ -223,11 +224,15 @@ class DreamSimImageEmbedder:
         self.batch_size = max(int(batch_size), 1)
         from dreamsim import dreamsim
 
-        self.model, self.preprocess = dreamsim(
-            pretrained=True,
-            device=self.device,
-            dreamsim_type=dreamsim_type,
-        )
+        _clear_torch_hub_top_level_modules()
+        try:
+            self.model, self.preprocess = dreamsim(
+                pretrained=True,
+                device=self.device,
+                dreamsim_type=dreamsim_type,
+            )
+        finally:
+            _clear_torch_hub_top_level_modules()
         self.model = self.model.eval()
 
     def encode_image_paths(self, image_paths):

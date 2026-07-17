@@ -196,11 +196,11 @@ class BritishMuseumImageGoalIntegrationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.index_path = (
-            PROJECT_ROOT / "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.npz"
+            PROJECT_ROOT / "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.npz"
         )
         cls.metadata_path = (
             PROJECT_ROOT
-            / "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.metadata.json"
+            / "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.metadata.json"
         )
         cls.manifest_root = PROJECT_ROOT / "renders/room_grounding_fov90"
         cls.representatives_path = (

@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "site": "british_museum",
+  "created_at": "2026-07-03",
+  "description": "Manual room graph update adding stairs/lift circulation nodes and Room 33 connectivity.",
+  "new_or_extended_nodes": {
+    "East stairs": {
+      "floor": "0",
+      "category": "Circulation",
+      "title": "East stairs",
+      "aliases": [
+        "East stairs"
+      ],
+      "synthetic": true
+    },
+    "West stairs": {
+      "floor": "0",
+      "category": "Circulation",
+      "title": "West stairs",
+      "aliases": [
+        "West stairs"
+      ],
+      "synthetic": true
+    },
+    "North stairs": {
+      "floor": "0/1",
+      "category": "Circulation",
+      "title": "North stairs",
+      "aliases": [
+        "North stairs"
+      ],
+      "synthetic": true
+    },
+    "North lift": {
+      "floor": "0/1",
+      "category": "Circulation",
+      "title": "North lift",
+      "aliases": [
+        "North lift",
+        "North elevator"
+      ],
+      "synthetic": true
+    },
+    "Room 33": {
+      "floor": "1",
+      "category": "Asia",
+      "title": "China and South Asia; The Sir Joseph Hotung Gallery",
+      "aliases": [
+        "China and South Asia",
+        "Room 33",
+        "The Sir Joseph Hotung Gallery"
+      ],
+      "synthetic": false
+    },
+    "Room 33a": {
+      "floor": "1",
+      "category": "Asia",
+      "title": "India: Amaravati; The Asahi Shimbun Gallery",
+      "aliases": [
+        "India: Amaravati",
+        "Room 33a",
+        "The Asahi Shimbun Gallery"
+      ],
+      "synthetic": false
+    }
+  },
+  "spatial_relations": [
+    {
+      "node": "East stairs",
+      "north_of": "Room 1",
+      "south_of": "Room 27"
+    },
+    {
+      "node": "West stairs",
+      "north_of": "Room 4",
+      "west_of": "Room 29a"
+    },
+    {
+      "node": "North stairs",
+      "north_of": "Room 24",
+      "south_of": "Room 33"
+    },
+    {
+      "node": "North lift",
+      "east_of": "North stairs"
+    },
+    {
+      "node": "Room 33a",
+      "west_of": "Room 33"
+    }
+  ],
+  "edge_policy": "All listed spatial relations were written as bidirectional room graph edges with cardinal allocentric headings.",
+  "changes": {
+    "room_graph.json": {
+      "before_node_count": 5,
+      "new_nodes": [
+        "East stairs",
+        "West stairs",
+        "North stairs",
+        "North lift",
+        "Room 33"
+      ],
+      "before_nodes": {
+        "East stairs": null,
+        "West stairs": null,
+        "North stairs": null,
+        "North lift": null,
+        "Room 33": null
+      },
+      "added_edges": [
+        {
+          "source_room_id": "Room 1",
+          "target_room_id": "East stairs",
+          "target_display_name": "East stairs",
+          "allocentric_direction": "north",
+          "allocentric_heading_deg": 360.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "East stairs",
+          "target_room_id": "Room 1",
+          "target_display_name": "Room 1",
+          "allocentric_direction": "south",
+          "allocentric_heading_deg": 180.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "East stairs",
+          "target_room_id": "Room 27",
+          "target_display_name": "Room 27",
+          "allocentric_direction": "north",
+          "allocentric_heading_deg": 360.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "Room 27",
+          "target_room_id": "East stairs",
+          "target_display_name": "East stairs",
+          "allocentric_direction": "south",
+          "allocentric_heading_deg": 180.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "Room 4",
+          "target_room_id": "West stairs",
+          "target_display_name": "West stairs",
+          "allocentric_direction": "north",
+          "allocentric_heading_deg": 360.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "West stairs",
+          "target_room_id": "Room 4",
+          "target_display_name": "Room 4",
+          "allocentric_direction": "south",
+          "allocentric_heading_deg": 180.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "West stairs",
+          "target_room_id": "Room 29a",
+          "target_display_name": "Room 29a",
+          "allocentric_direction": "east",
+          "allocentric_heading_deg": 90.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "Room 29a",
+          "target_room_id": "West stairs",
+          "target_display_name": "West stairs",
+          "allocentric_direction": "west",
+          "allocentric_heading_deg": 270.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "Room 24",
+          "target_room_id": "North stairs",
+          "target_display_name": "North stairs",
+          "allocentric_direction": "north",
+          "allocentric_heading_deg": 360.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "North stairs",
+          "target_room_id": "Room 24",
+          "target_display_name": "Room 24",
+          "allocentric_direction": "south",
+          "allocentric_heading_deg": 180.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "North stairs",
+          "target_room_id": "Room 33",
+          "target_display_name": "Room 33",
+          "allocentric_direction": "north",
+          "allocentric_heading_deg": 360.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "Room 33",
+          "target_room_id": "North stairs",
+          "target_display_name": "North stairs",
+          "allocentric_direction": "south",
+          "allocentric_heading_deg": 180.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "North stairs",
+          "target_room_id": "North lift",
+          "target_display_name": "North lift",
+          "allocentric_direction": "east",
+          "allocentric_heading_deg": 90.0,
+          "transition_type": "lift"
+        },
+        {
+          "source_room_id": "North lift",
+          "target_room_id": "North stairs",
+          "target_display_name": "North stairs",
+          "allocentric_direction": "west",
+          "allocentric_heading_deg": 270.0,
+          "transition_type": "lift"
+        }
+      ],
+      "updated_edges": [],
+      "before_edge_count": 64,
+      "after_edge_count": 78,
+      "node_count_after": 33
+    },
+    "room_graph_with_visual_profiles.json": {
+      "before_node_count": 5,
+      "new_nodes": [
+        "East stairs",
+        "West stairs",
+        "North stairs",
+        "North lift",
+        "Room 33"
+      ],
+      "before_nodes": {
+        "East stairs": null,
+        "West stairs": null,
+        "North stairs": null,
+        "North lift": null,
+        "Room 33": null
+      },
+      "added_edges": [
+        {
+          "source_room_id": "Room 1",
+          "target_room_id": "East stairs",
+          "target_display_name": "East stairs",
+          "allocentric_direction": "north",
+          "allocentric_heading_deg": 360.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "East stairs",
+          "target_room_id": "Room 1",
+          "target_display_name": "Room 1",
+          "allocentric_direction": "south",
+          "allocentric_heading_deg": 180.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "East stairs",
+          "target_room_id": "Room 27",
+          "target_display_name": "Room 27",
+          "allocentric_direction": "north",
+          "allocentric_heading_deg": 360.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "Room 27",
+          "target_room_id": "East stairs",
+          "target_display_name": "East stairs",
+          "allocentric_direction": "south",
+          "allocentric_heading_deg": 180.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "Room 4",
+          "target_room_id": "West stairs",
+          "target_display_name": "West stairs",
+          "allocentric_direction": "north",
+          "allocentric_heading_deg": 360.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "West stairs",
+          "target_room_id": "Room 4",
+          "target_display_name": "Room 4",
+          "allocentric_direction": "south",
+          "allocentric_heading_deg": 180.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "West stairs",
+          "target_room_id": "Room 29a",
+          "target_display_name": "Room 29a",
+          "allocentric_direction": "east",
+          "allocentric_heading_deg": 90.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "Room 29a",
+          "target_room_id": "West stairs",
+          "target_display_name": "West stairs",
+          "allocentric_direction": "west",
+          "allocentric_heading_deg": 270.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "Room 24",
+          "target_room_id": "North stairs",
+          "target_display_name": "North stairs",
+          "allocentric_direction": "north",
+          "allocentric_heading_deg": 360.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "North stairs",
+          "target_room_id": "Room 24",
+          "target_display_name": "Room 24",
+          "allocentric_direction": "south",
+          "allocentric_heading_deg": 180.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "North stairs",
+          "target_room_id": "Room 33",
+          "target_display_name": "Room 33",
+          "allocentric_direction": "north",
+          "allocentric_heading_deg": 360.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "Room 33",
+          "target_room_id": "North stairs",
+          "target_display_name": "North stairs",
+          "allocentric_direction": "south",
+          "allocentric_heading_deg": 180.0,
+          "transition_type": "stairs"
+        },
+        {
+          "source_room_id": "North stairs",
+          "target_room_id": "North lift",
+          "target_display_name": "North lift",
+          "allocentric_direction": "east",
+          "allocentric_heading_deg": 90.0,
+          "transition_type": "lift"
+        },
+        {
+          "source_room_id": "North lift",
+          "target_room_id": "North stairs",
+          "target_display_name": "North stairs",
+          "allocentric_direction": "west",
+          "allocentric_heading_deg": 270.0,
+          "transition_type": "lift"
+        }
+      ],
+      "updated_edges": [],
+      "before_edge_count": 64,
+      "after_edge_count": 78,
+      "node_count_after": 33
+    }
+  },
+  "notes": [
+    "Room 33 was added because North stairs needs to connect to Room 33 and Room 33 was not present in the previous normalized experiment room graph.",
+    "North lift was only connected to North stairs because no direct room adjacency was specified yet.",
+    "Both room_graph.json and room_graph_with_visual_profiles.json were updated.",
+    "Follow-up update added Room 33a west of Room 33."
+  ],
+  "follow_up_updates": [
+    {
+      "created_at": "2026-07-03",
+      "description": "Added Room 33a as west of Room 33 in the room graph.",
+      "spatial_relation": {
+        "node": "Room 33a",
+        "west_of": "Room 33"
+      },
+      "changes": {
+        "room_graph.json": {
+          "before_room33a_node": null,
+          "after_room33a_node": {
+            "room_id": "Room 33a",
+            "display_name": "Room 33a",
+            "floor": "1",
+            "category": "Asia",
+            "title": "India: Amaravati; The Asahi Shimbun Gallery",
+            "aliases": [
+              "India: Amaravati",
+              "Room 33a",
+              "The Asahi Shimbun Gallery"
+            ],
+            "neighbors": [
+              {
+                "target_room_id": "Room 33",
+                "target_display_name": "Room 33",
+                "allocentric_direction": "east",
+                "allocentric_heading_deg": 90.0,
+                "transition_type": "passage"
+              }
+            ],
+            "synthetic": false
+          },
+          "edges": [
+            {
+              "source_room_id": "Room 33",
+              "target_room_id": "Room 33a",
+              "target_display_name": "Room 33a",
+              "allocentric_direction": "west",
+              "allocentric_heading_deg": 270.0,
+              "transition_type": "passage",
+              "added": true,
+              "before": null
+            },
+            {
+              "source_room_id": "Room 33a",
+              "target_room_id": "Room 33",
+              "target_display_name": "Room 33",
+              "allocentric_direction": "east",
+              "allocentric_heading_deg": 90.0,
+              "transition_type": "passage",
+              "added": true,
+              "before": null
+            }
+          ],
+          "before_edge_count": 78,
+          "after_edge_count": 80,
+          "node_count_after": 34
+        },
+        "room_graph_with_visual_profiles.json": {
+          "before_room33a_node": null,
+          "after_room33a_node": {
+            "room_id": "Room 33a",
+            "display_name": "Room 33a",
+            "floor": "1",
+            "category": "Asia",
+            "title": "India: Amaravati; The Asahi Shimbun Gallery",
+            "aliases": [
+              "India: Amaravati",
+              "Room 33a",
+              "The Asahi Shimbun Gallery"
+            ],
+            "neighbors": [
+              {
+                "target_room_id": "Room 33",
+                "target_display_name": "Room 33",
+                "allocentric_direction": "east",
+                "allocentric_heading_deg": 90.0,
+                "transition_type": "passage"
+              }
+            ],
+            "synthetic": false,
+            "visual_profile": {
+              "short_description": "India: Amaravati / Asahi Shimbun Gallery on Level 1, west of Room 33.",
+              "visual_cues": [
+                "Room 33a signage",
+                "India: Amaravati gallery",
+                "Asahi Shimbun Gallery",
+                "Level 1 gallery west of Room 33"
+              ]
+            }
+          },
+          "edges": [
+            {
+              "source_room_id": "Room 33",
+              "target_room_id": "Room 33a",
+              "target_display_name": "Room 33a",
+              "allocentric_direction": "west",
+              "allocentric_heading_deg": 270.0,
+              "transition_type": "passage",
+              "added": true,
+              "before": null
+            },
+            {
+              "source_room_id": "Room 33a",
+              "target_room_id": "Room 33",
+              "target_display_name": "Room 33",
+              "allocentric_direction": "east",
+              "allocentric_heading_deg": 90.0,
+              "transition_type": "passage",
+              "added": true,
+              "before": null
+            }
+          ],
+          "before_edge_count": 78,
+          "after_edge_count": 80,
+          "node_count_after": 34
+        }
+      }
+    }
+  ]
+}

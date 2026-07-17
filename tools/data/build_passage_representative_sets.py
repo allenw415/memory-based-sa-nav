@@ -40,7 +40,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--embedding-index",
-        default="artifacts/memory_localization/floor0_dinov2_salad_images_fov90.npz",
+        default="artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.npz",
     )
     parser.add_argument("--similarity-threshold", type=float, default=0.5)
     parser.add_argument("--target-clusters", type=int, default=8)

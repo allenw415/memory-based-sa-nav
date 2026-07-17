@@ -1,8 +1,10 @@
 from .memory_localization import (
     DEFAULT_DINOV2_SALAD_MODEL,
+    DEFAULT_DREAMSIM_MODEL,
     DEFAULT_EMBEDDING_MODEL,
     DEFAULT_SIGLIP2_MODEL,
     DINOv2SALADEmbedder,
+    DreamSimImageEmbedder,
     SigLIP2Embedder,
     create_image_embedder,
     resolve_embedding_model_name,
@@ -13,8 +15,10 @@ from .pano_visualization import build_visualization_payload
 __all__ = [
     "DEFAULT_SIGLIP2_MODEL",
     "DEFAULT_DINOV2_SALAD_MODEL",
+    "DEFAULT_DREAMSIM_MODEL",
     "DEFAULT_EMBEDDING_MODEL",
     "DINOv2SALADEmbedder",
+    "DreamSimImageEmbedder",
     "SigLIP2Embedder",
     "build_visualization_payload",
     "create_image_embedder",

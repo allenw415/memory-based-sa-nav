@@ -11,8 +11,10 @@
     if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
       throw new Error("Trajectory JSON must be an object.");
     }
+    const resolvedPayload = resolveEpisodePayload(payload);
+    const episodePayload = resolvedPayload.episode;
     const graph = buildGraphIndex(graphData);
-    const panoPath = requireStringArray(payload.pano_path, "pano_path");
+    const panoPath = requireStringArray(episodePayload.pano_path, "pano_path");
     if (!panoPath.length) {
       throw new Error("pano_path must contain at least one pano id.");
     }
@@ -22,7 +24,7 @@
       }
     }
 
-    const rounds = Array.isArray(payload.rounds) ? payload.rounds : [];
+    const rounds = Array.isArray(episodePayload.rounds) ? episodePayload.rounds : [];
     const movements = [];
     rounds.forEach((round, roundPosition) => {
       if (!round || typeof round !== "object" || Array.isArray(round)) {
@@ -89,8 +91,8 @@
       };
     });
 
-    const waypointRoomIds = optionalStringArray(payload.waypoint_room_ids);
-    const completedWaypointIds = new Set(optionalStringArray(payload.completed_waypoints));
+    const waypointRoomIds = optionalStringArray(episodePayload.waypoint_room_ids);
+    const completedWaypointIds = new Set(optionalStringArray(episodePayload.completed_waypoints));
     const boundaries = [];
     rounds.forEach((round, roundPosition) => {
       const boundary = round.room_boundary;
@@ -156,13 +158,57 @@
       })),
       waypointRoomIds,
       completedWaypointIds: [...completedWaypointIds],
-      orderedTargets: optionalStringArray(payload.ordered_targets),
-      targetRoomId: stringOrNull(payload.target_room_id),
-      startPanoId: stringOrNull(payload.start_pano_id) || panoPath[0],
-      finalPanoId: stringOrNull(payload.final_pano_id) || panoPath[panoPath.length - 1],
-      success: payload.success === true,
-      reason: stringOrNull(payload.reason),
-      raw: payload,
+      orderedTargets: optionalStringArray(episodePayload.ordered_targets),
+      targetRoomId: stringOrNull(episodePayload.target_room_id),
+      startPanoId: stringOrNull(episodePayload.start_pano_id) || panoPath[0],
+      finalPanoId:
+        stringOrNull(episodePayload.final_pano_id) || panoPath[panoPath.length - 1],
+      success: episodePayload.success === true,
+      reason: stringOrNull(episodePayload.reason),
+      sourceSchema: resolvedPayload.sourceSchema,
+      evaluationMetadata: resolvedPayload.evaluationMetadata,
+      raw: episodePayload,
+      rawEnvelope: resolvedPayload.envelope,
+    };
+  }
+
+  function resolveEpisodePayload(payload) {
+    if (!Object.prototype.hasOwnProperty.call(payload, "episode")) {
+      return {
+        episode: payload,
+        envelope: null,
+        sourceSchema: "standalone_episode",
+        evaluationMetadata: null,
+      };
+    }
+    const episode = payload.episode;
+    if (!episode || typeof episode !== "object" || Array.isArray(episode)) {
+      const episodeError =
+        typeof payload.episode_error === "string" && payload.episode_error.trim()
+          ? `: ${payload.episode_error.trim()}`
+          : "";
+      throw new Error(`Evaluation JSON does not contain a completed episode${episodeError}`);
+    }
+    const testCase = objectOrEmpty(payload.test_case);
+    const evaluation = objectOrEmpty(payload.evaluation);
+    return {
+      episode,
+      envelope: payload,
+      sourceSchema: "evaluation_wrapper",
+      evaluationMetadata: {
+        testId: firstString(evaluation.test_id, testCase.test_id),
+        query: firstString(evaluation.query, testCase.query),
+        difficulty: firstString(evaluation.difficulty, testCase.difficulty),
+        ratioStratum: firstString(evaluation.ratio_stratum, testCase.ratio_stratum),
+        passageProfile: firstString(
+          evaluation.passage_profile,
+          testCase.passage_profile,
+        ),
+        targetGroupTheme: firstString(
+          evaluation.target_group_theme,
+          testCase.target_group_theme,
+        ),
+      },
     };
   }
 
@@ -243,6 +289,18 @@
     return typeof value === "string" && value.trim() ? value.trim() : null;
   }
 
+  function firstString(...values) {
+    for (const value of values) {
+      const normalized = stringOrNull(value);
+      if (normalized !== null) return normalized;
+    }
+    return null;
+  }
+
+  function objectOrEmpty(value) {
+    return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+  }
+
   function normalizeHeading(value) {
     return ((value % 360) + 360) % 360;
   }
@@ -255,5 +313,6 @@
     buildGraphIndex,
     createManualSyncGate,
     parseTrajectory,
+    resolveEpisodePayload,
   };
 });

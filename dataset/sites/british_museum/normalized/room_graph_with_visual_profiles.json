@@ -1,4 +1,110 @@
 {
+  "East stairs": {
+    "room_id": "East stairs",
+    "display_name": "East stairs",
+    "floor": "0",
+    "category": "Circulation",
+    "title": "East stairs",
+    "aliases": [
+      "East stairs"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 1",
+        "target_display_name": "Room 1",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "stairs"
+      },
+      {
+        "target_room_id": "Room 27",
+        "target_display_name": "Room 27",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "stairs"
+      }
+    ],
+    "synthetic": true,
+    "visual_profile": {
+      "short_description": "East stairs circulation node between Room 1 and Room 27 on Level 0.",
+      "visual_cues": [
+        "East stairs signage",
+        "stair landing near Rooms 1 and 27",
+        "vertical circulation area"
+      ]
+    }
+  },
+  "North lift": {
+    "room_id": "North lift",
+    "display_name": "North lift",
+    "floor": "0/1",
+    "category": "Circulation",
+    "title": "North lift",
+    "aliases": [
+      "North lift",
+      "North elevator"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "North stairs",
+        "target_display_name": "North stairs",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "lift"
+      }
+    ],
+    "synthetic": true,
+    "visual_profile": {
+      "short_description": "North lift circulation node east of the North stairs.",
+      "visual_cues": [
+        "lift signage",
+        "elevator near North stairs",
+        "accessible vertical circulation"
+      ]
+    }
+  },
+  "North stairs": {
+    "room_id": "North stairs",
+    "display_name": "North stairs",
+    "floor": "0/1",
+    "category": "Circulation",
+    "title": "North stairs",
+    "aliases": [
+      "North stairs"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 24",
+        "target_display_name": "Room 24",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "stairs"
+      },
+      {
+        "target_room_id": "Room 33",
+        "target_display_name": "Room 33",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "stairs"
+      },
+      {
+        "target_room_id": "North lift",
+        "target_display_name": "North lift",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "lift"
+      }
+    ],
+    "synthetic": true,
+    "visual_profile": {
+      "short_description": "North stairs circulation node between Room 24 on Level 0 and Room 33 on Level 1.",
+      "visual_cues": [
+        "North stairs signage",
+        "stairs between Room 24 and Room 33",
+        "Montague Place entrance circulation area"
+      ]
+    }
+  },
   "Room 1": {
     "room_id": "Room 1",
     "display_name": "Room 1",
@@ -16,6 +122,13 @@
         "allocentric_direction": "south",
         "allocentric_heading_deg": 180.0,
         "transition_type": "passage"
+      },
+      {
+        "target_room_id": "East stairs",
+        "target_display_name": "East stairs",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "stairs"
       }
     ],
     "synthetic": false,
@@ -27,265 +140,6 @@
         "dense wall display cases and classified collections",
         "18th-century collecting and Enlightenment interpretation panels",
         "Sir Hans Sloane or King George III Library references"
-      ]
-    }
-  },
-  "Room 2": {
-    "room_id": "Room 2",
-    "display_name": "Room 2",
-    "floor": "0",
-    "category": "Themes",
-    "title": "Collecting the world",
-    "aliases": [
-      "Collecting the world",
-      "Room 2"
-    ],
-    "neighbors": [
-      {
-        "target_room_id": "Room 1",
-        "target_display_name": "Room 1",
-        "allocentric_direction": "north",
-        "allocentric_heading_deg": 360.0,
-        "transition_type": "passage"
-      }
-    ],
-    "synthetic": false,
-    "visual_profile": {
-      "short_description": "Gallery about collectors and the formation of the British Museum as a collection of collections.",
-      "visual_cues": [
-        "collector-focused displays",
-        "Knucklebone player sculpture",
-        "Tudor Heart pendant display",
-        "objects and labels about the founding and development of the British Museum",
-        "material about Sir Hans Sloane or collecting history"
-      ]
-    }
-  },
-  "Room 4": {
-    "room_id": "Room 4",
-    "display_name": "Room 4",
-    "floor": "0",
-    "category": "Ancient Egypt",
-    "title": "Egyptian sculpture",
-    "aliases": [
-      "Egyptian sculpture",
-      "Room 4"
-    ],
-    "neighbors": [
-      {
-        "target_room_id": "Room 6",
-        "target_display_name": "Room 6",
-        "allocentric_direction": "south",
-        "allocentric_heading_deg": 180.0,
-        "transition_type": "passage"
-      },
-      {
-        "target_room_id": "Room 8",
-        "target_display_name": "Room 8",
-        "allocentric_direction": "west",
-        "allocentric_heading_deg": 270.0,
-        "transition_type": "passage"
-      },
-      {
-        "target_room_id": "Room 9",
-        "target_display_name": "Room 9",
-        "allocentric_direction": "east",
-        "allocentric_heading_deg": 90.0,
-        "transition_type": "passage"
-      }
-    ],
-    "synthetic": false,
-    "visual_profile": {
-      "short_description": "Ancient Egyptian sculpture gallery with major pharaonic monuments and the Rosetta Stone.",
-      "visual_cues": [
-        "Rosetta Stone in a crowded display case",
-        "large Egyptian royal statues and colossal heads",
-        "statues of Ramesses II or Amenhotep III",
-        "sarcophagus of Nectanebo II",
-        "hieroglyphic inscriptions on stone monuments",
-        "Egyptian temple or tomb sculpture"
-      ]
-    }
-  },
-  "Room 6": {
-    "room_id": "Room 6",
-    "display_name": "Room 6",
-    "floor": "0",
-    "category": "Middle East",
-    "title": "Assyrian sculpture and Balawat Gates",
-    "aliases": [
-      "Assyrian sculpture and Balawat Gates",
-      "Early Greece",
-      "Room 6",
-      "Room 6 bottom"
-    ],
-    "neighbors": [
-      {
-        "target_room_id": "Room 11",
-        "target_display_name": "Room 11",
-        "allocentric_direction": "west",
-        "allocentric_heading_deg": 270.0,
-        "transition_type": "passage"
-      },
-      {
-        "target_room_id": "Room 4",
-        "target_display_name": "Room 4",
-        "allocentric_direction": "north",
-        "allocentric_heading_deg": 360.0,
-        "transition_type": "passage"
-      },
-      {
-        "target_room_id": "Room 7",
-        "target_display_name": "Room 7",
-        "allocentric_direction": "north",
-        "allocentric_heading_deg": 360.0,
-        "transition_type": "passage"
-      }
-    ],
-    "synthetic": false,
-    "visual_profile": {
-      "short_description": "Assyrian sculpture and Balawat Gates gallery with colossal winged lions, bronze gate fragments, obelisks, and stelae.",
-      "visual_cues": [
-        "Black Obelisk of Shalmaneser III",
-        "colossal winged human-headed lions",
-        "bronze Balawat Gates fragments or replicas",
-        "standing lion from the Temple of Ishtar",
-        "Assyrian obelisks and vertical inscribed stelae"
-      ]
-    }
-  },
-  "Room 7": {
-    "room_id": "Room 7",
-    "display_name": "Room 7",
-    "floor": "0",
-    "category": "Middle East",
-    "title": "Assyria: Nimrud",
-    "aliases": [
-      "Assyria: Nimrud",
-      "Room 7"
-    ],
-    "neighbors": [
-      {
-        "target_room_id": "Room 8",
-        "target_display_name": "Room 8",
-        "allocentric_direction": "north",
-        "allocentric_heading_deg": 360.0,
-        "transition_type": "passage"
-      },
-      {
-        "target_room_id": "Room 6",
-        "target_display_name": "Room 6",
-        "allocentric_direction": "south",
-        "allocentric_heading_deg": 180.0,
-        "transition_type": "passage"
-      },
-      {
-        "target_room_id": "Room 10",
-        "target_display_name": "Room 10",
-        "allocentric_direction": "west",
-        "allocentric_heading_deg": 270.0,
-        "transition_type": "passage"
-      }
-    ],
-    "synthetic": false,
-    "visual_profile": {
-      "short_description": "Assyria: Nimrud gallery showing reliefs from Ashurnasirpal II's Northwest Palace at Nimrud.",
-      "visual_cues": [
-        "Nimrud palace wall reliefs",
-        "Ashurnasirpal II panels",
-        "Northwest Palace reliefs",
-        "reliefs of king, courtiers, protective demons, ritual scenes, or hunting",
-        "walls lined with Neo-Assyrian carved stone panels"
-      ]
-    }
-  },
-  "Room 8": {
-    "room_id": "Room 8",
-    "display_name": "Room 8",
-    "floor": "0",
-    "category": "Middle East",
-    "title": "Assyria: Nimrud",
-    "aliases": [
-      "Assyria: Nimrud",
-      "Room 8"
-    ],
-    "neighbors": [
-      {
-        "target_room_id": "Room 9",
-        "target_display_name": "Room 9",
-        "allocentric_direction": "north",
-        "allocentric_heading_deg": 360.0,
-        "transition_type": "passage"
-      },
-      {
-        "target_room_id": "Room 4",
-        "target_display_name": "Room 4",
-        "allocentric_direction": "east",
-        "allocentric_heading_deg": 90.0,
-        "transition_type": "passage"
-      },
-      {
-        "target_room_id": "Room 7",
-        "target_display_name": "Room 7",
-        "allocentric_direction": "south",
-        "allocentric_heading_deg": 180.0,
-        "transition_type": "passage"
-      },
-      {
-        "target_room_id": "Room 23",
-        "target_display_name": "Room 23",
-        "allocentric_direction": "west",
-        "allocentric_heading_deg": 270.0,
-        "transition_type": "passage"
-      }
-    ],
-    "synthetic": false,
-    "visual_profile": {
-      "short_description": "Assyria: Nimrud gallery showing reliefs from Ashurnasirpal II's Northwest Palace at Nimrud.",
-      "visual_cues": [
-        "Nimrud palace wall reliefs",
-        "Ashurnasirpal II panels",
-        "Northwest Palace reliefs",
-        "reliefs of king, courtiers, protective demons, ritual scenes, or hunting"
-      ]
-    }
-  },
-  "Room 9": {
-    "room_id": "Room 9",
-    "display_name": "Room 9",
-    "floor": "0",
-    "category": "Middle East",
-    "title": "Assyria: Nineveh",
-    "aliases": [
-      "Assyria: Nineveh",
-      "Room 9"
-    ],
-    "neighbors": [
-      {
-        "target_room_id": "Room 4",
-        "target_display_name": "Room 4",
-        "allocentric_direction": "west",
-        "allocentric_heading_deg": 270.0,
-        "transition_type": "passage"
-      },
-      {
-        "target_room_id": "Room 8",
-        "target_display_name": "Room 8",
-        "allocentric_direction": "south",
-        "allocentric_heading_deg": 180.0,
-        "transition_type": "passage"
-      }
-    ],
-    "synthetic": false,
-    "visual_profile": {
-      "short_description": "Assyria: Nineveh gallery with Sennacherib's Southwest Palace carved stone panels, including lamassu transport and military campaign scenes.",
-      "visual_cues": [
-        "Sennacherib palace relief panels",
-        "Southwest Palace at Nineveh labels",
-        "reliefs showing transport of colossal human-headed winged bulls",
-        "lamassu transport or quarrying scenes",
-        "military campaign relief panels",
-        "walls lined with carved Neo-Assyrian stone panels from Nineveh"
       ]
     }
   },
@@ -791,6 +645,37 @@
       ]
     }
   },
+  "Room 2": {
+    "room_id": "Room 2",
+    "display_name": "Room 2",
+    "floor": "0",
+    "category": "Themes",
+    "title": "Collecting the world",
+    "aliases": [
+      "Collecting the world",
+      "Room 2"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 1",
+        "target_display_name": "Room 1",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Gallery about collectors and the formation of the British Museum as a collection of collections.",
+      "visual_cues": [
+        "collector-focused displays",
+        "Knucklebone player sculpture",
+        "Tudor Heart pendant display",
+        "objects and labels about the founding and development of the British Museum",
+        "material about Sir Hans Sloane or collecting history"
+      ]
+    }
+  },
   "Room 20": {
     "room_id": "Room 20",
     "display_name": "Room 20",
@@ -983,6 +868,13 @@
         "allocentric_direction": "east",
         "allocentric_heading_deg": 90.0,
         "transition_type": "passage"
+      },
+      {
+        "target_room_id": "North stairs",
+        "target_display_name": "North stairs",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "stairs"
       }
     ],
     "synthetic": false,
@@ -1052,6 +944,13 @@
         "allocentric_direction": "west",
         "allocentric_heading_deg": 270.0,
         "transition_type": "passage"
+      },
+      {
+        "target_room_id": "East stairs",
+        "target_display_name": "East stairs",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "stairs"
       }
     ],
     "synthetic": false,
@@ -1083,6 +982,13 @@
         "allocentric_direction": "east",
         "allocentric_heading_deg": 90.0,
         "transition_type": "passage"
+      },
+      {
+        "target_room_id": "West stairs",
+        "target_display_name": "West stairs",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "stairs"
       }
     ],
     "synthetic": false,
@@ -1132,6 +1038,345 @@
         "Members' Room access signage",
         "transition area between Room 24 and Room 29a",
         "possible South Asian / India-related objects if the local India label is visible"
+      ]
+    }
+  },
+  "Room 33": {
+    "room_id": "Room 33",
+    "display_name": "Room 33",
+    "floor": "1",
+    "category": "Asia",
+    "title": "China and South Asia; The Sir Joseph Hotung Gallery",
+    "aliases": [
+      "China and South Asia",
+      "Room 33",
+      "The Sir Joseph Hotung Gallery"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "North stairs",
+        "target_display_name": "North stairs",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "stairs"
+      },
+      {
+        "target_room_id": "Room 33a",
+        "target_display_name": "Room 33a",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "China and South Asia / Sir Joseph Hotung Gallery on Level 1, connected to the North stairs.",
+      "visual_cues": [
+        "Room 33 signage",
+        "China and South Asia gallery",
+        "Sir Joseph Hotung Gallery",
+        "Level 1 gallery corridor"
+      ]
+    }
+  },
+  "Room 33a": {
+    "room_id": "Room 33a",
+    "display_name": "Room 33a",
+    "floor": "1",
+    "category": "Asia",
+    "title": "India: Amaravati; The Asahi Shimbun Gallery",
+    "aliases": [
+      "India: Amaravati",
+      "Room 33a",
+      "The Asahi Shimbun Gallery"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 33",
+        "target_display_name": "Room 33",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "India: Amaravati / Asahi Shimbun Gallery on Level 1, west of Room 33.",
+      "visual_cues": [
+        "Room 33a signage",
+        "India: Amaravati gallery",
+        "Asahi Shimbun Gallery",
+        "Level 1 gallery west of Room 33"
+      ]
+    }
+  },
+  "Room 4": {
+    "room_id": "Room 4",
+    "display_name": "Room 4",
+    "floor": "0",
+    "category": "Ancient Egypt",
+    "title": "Egyptian sculpture",
+    "aliases": [
+      "Egyptian sculpture",
+      "Room 4"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 6",
+        "target_display_name": "Room 6",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 8",
+        "target_display_name": "Room 8",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 9",
+        "target_display_name": "Room 9",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "West stairs",
+        "target_display_name": "West stairs",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "stairs"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Ancient Egyptian sculpture gallery with major pharaonic monuments and the Rosetta Stone.",
+      "visual_cues": [
+        "Rosetta Stone in a crowded display case",
+        "large Egyptian royal statues and colossal heads",
+        "statues of Ramesses II or Amenhotep III",
+        "sarcophagus of Nectanebo II",
+        "hieroglyphic inscriptions on stone monuments",
+        "Egyptian temple or tomb sculpture"
+      ]
+    }
+  },
+  "Room 6": {
+    "room_id": "Room 6",
+    "display_name": "Room 6",
+    "floor": "0",
+    "category": "Middle East",
+    "title": "Assyrian sculpture and Balawat Gates",
+    "aliases": [
+      "Assyrian sculpture and Balawat Gates",
+      "Early Greece",
+      "Room 6",
+      "Room 6 bottom"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 11",
+        "target_display_name": "Room 11",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 4",
+        "target_display_name": "Room 4",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 7",
+        "target_display_name": "Room 7",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Assyrian sculpture and Balawat Gates gallery with colossal winged lions, bronze gate fragments, obelisks, and stelae.",
+      "visual_cues": [
+        "Black Obelisk of Shalmaneser III",
+        "colossal winged human-headed lions",
+        "bronze Balawat Gates fragments or replicas",
+        "standing lion from the Temple of Ishtar",
+        "Assyrian obelisks and vertical inscribed stelae"
+      ]
+    }
+  },
+  "Room 7": {
+    "room_id": "Room 7",
+    "display_name": "Room 7",
+    "floor": "0",
+    "category": "Middle East",
+    "title": "Assyria: Nimrud",
+    "aliases": [
+      "Assyria: Nimrud",
+      "Room 7"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 8",
+        "target_display_name": "Room 8",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 6",
+        "target_display_name": "Room 6",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 10",
+        "target_display_name": "Room 10",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Assyria: Nimrud gallery showing reliefs from Ashurnasirpal II's Northwest Palace at Nimrud.",
+      "visual_cues": [
+        "Nimrud palace wall reliefs",
+        "Ashurnasirpal II panels",
+        "Northwest Palace reliefs",
+        "reliefs of king, courtiers, protective demons, ritual scenes, or hunting",
+        "walls lined with Neo-Assyrian carved stone panels"
+      ]
+    }
+  },
+  "Room 8": {
+    "room_id": "Room 8",
+    "display_name": "Room 8",
+    "floor": "0",
+    "category": "Middle East",
+    "title": "Assyria: Nimrud",
+    "aliases": [
+      "Assyria: Nimrud",
+      "Room 8"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 9",
+        "target_display_name": "Room 9",
+        "allocentric_direction": "north",
+        "allocentric_heading_deg": 360.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 4",
+        "target_display_name": "Room 4",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 7",
+        "target_display_name": "Room 7",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 23",
+        "target_display_name": "Room 23",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Assyria: Nimrud gallery showing reliefs from Ashurnasirpal II's Northwest Palace at Nimrud.",
+      "visual_cues": [
+        "Nimrud palace wall reliefs",
+        "Ashurnasirpal II panels",
+        "Northwest Palace reliefs",
+        "reliefs of king, courtiers, protective demons, ritual scenes, or hunting"
+      ]
+    }
+  },
+  "Room 9": {
+    "room_id": "Room 9",
+    "display_name": "Room 9",
+    "floor": "0",
+    "category": "Middle East",
+    "title": "Assyria: Nineveh",
+    "aliases": [
+      "Assyria: Nineveh",
+      "Room 9"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 4",
+        "target_display_name": "Room 4",
+        "allocentric_direction": "west",
+        "allocentric_heading_deg": 270.0,
+        "transition_type": "passage"
+      },
+      {
+        "target_room_id": "Room 8",
+        "target_display_name": "Room 8",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "passage"
+      }
+    ],
+    "synthetic": false,
+    "visual_profile": {
+      "short_description": "Assyria: Nineveh gallery with Sennacherib's Southwest Palace carved stone panels, including lamassu transport and military campaign scenes.",
+      "visual_cues": [
+        "Sennacherib palace relief panels",
+        "Southwest Palace at Nineveh labels",
+        "reliefs showing transport of colossal human-headed winged bulls",
+        "lamassu transport or quarrying scenes",
+        "military campaign relief panels",
+        "walls lined with carved Neo-Assyrian stone panels from Nineveh"
+      ]
+    }
+  },
+  "West stairs": {
+    "room_id": "West stairs",
+    "display_name": "West stairs",
+    "floor": "0",
+    "category": "Circulation",
+    "title": "West stairs",
+    "aliases": [
+      "West stairs"
+    ],
+    "neighbors": [
+      {
+        "target_room_id": "Room 4",
+        "target_display_name": "Room 4",
+        "allocentric_direction": "south",
+        "allocentric_heading_deg": 180.0,
+        "transition_type": "stairs"
+      },
+      {
+        "target_room_id": "Room 29a",
+        "target_display_name": "Room 29a",
+        "allocentric_direction": "east",
+        "allocentric_heading_deg": 90.0,
+        "transition_type": "stairs"
+      }
+    ],
+    "synthetic": true,
+    "visual_profile": {
+      "short_description": "West stairs circulation node north of Room 4 and west of Room 29a on Level 0.",
+      "visual_cues": [
+        "West stairs signage",
+        "stair access near Room 29a",
+        "transition area north of Room 4"
       ]
     }
   }

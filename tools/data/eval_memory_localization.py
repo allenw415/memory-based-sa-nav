@@ -29,6 +29,7 @@ from memory_nav.data.memory_localization import (
     search_image_index,
     select_query_capture_records,
 )
+from memory_nav.perception.renderer import sanitize_name
 
 
 load_dotenv(PROJECT_ROOT / ".env")
@@ -36,12 +37,12 @@ load_dotenv(PROJECT_ROOT / ".env")
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Evaluate image-memory localization with pano-level queries.")
-    parser.add_argument("--index-path", default="artifacts/memory_localization/floor0_siglip2_images.npz")
+    parser.add_argument("--index-path", default="artifacts/memory_localization/floor0_1_siglip2_images_fov90.npz")
     parser.add_argument(
         "--metadata-path",
-        default="artifacts/memory_localization/floor0_siglip2_images.metadata.json",
+        default="artifacts/memory_localization/floor0_1_siglip2_images_fov90.metadata.json",
     )
-    parser.add_argument("--faiss-path", default="artifacts/memory_localization/floor0_siglip2_images.faiss")
+    parser.add_argument("--faiss-path", default="artifacts/memory_localization/floor0_1_siglip2_images_fov90.faiss")
     parser.add_argument("--no-faiss", action="store_true")
     parser.add_argument("--limit", type=int)
     parser.add_argument("--query-view-count", type=int, default=8)
@@ -60,6 +61,11 @@ def build_parser() -> argparse.ArgumentParser:
         choices=["index-captures", "rerender"],
         default="index-captures",
         help="Use indexed captures as query embeddings or render a separate query image set.",
+    )
+    parser.add_argument(
+        "--query-cache-only",
+        action="store_true",
+        help="With --query-render-mode rerender, use only existing cached query manifests and skip missing panos.",
     )
     parser.add_argument("--query-output-dir", default="renders/memory_localization_eval_queries")
     parser.add_argument(
@@ -170,6 +176,37 @@ def render_query_manifest(
         graph_path=str(artifacts_dir / "pano_graph.json"),
     )
     return Path(str(manifest["manifest_path"])).resolve()
+
+
+def load_cached_query_manifest(
+    *,
+    artifacts_dir: Path,
+    query_output_dir: Path,
+    pano_id: str,
+    capture_count: int,
+    seed: int,
+    pitch: float,
+    fov: int,
+    width: int,
+    height: int,
+) -> Path | None:
+    pano_slug = sanitize_name(pano_id)
+    manifest_path = query_output_dir / pano_slug / f"{pano_slug}_manifest.json"
+    captures_to_render = build_query_captures(count=capture_count, seed=seed)
+    cached_manifest = PanoramaRenderer._load_cached_manifest(
+        manifest_path,
+        pano_id=pano_id,
+        heading_mode="custom",
+        pitch=pitch,
+        fov=fov,
+        width=width,
+        height=height,
+        graph_path=artifacts_dir / "pano_graph.json",
+        captures_to_render=captures_to_render,
+    )
+    if cached_manifest is None:
+        return None
+    return manifest_path.resolve()
 
 
 def rank_query_embedding(
@@ -494,20 +531,37 @@ def prepare_rerendered_query_groups(
     )
     query_output_dir = (PROJECT_ROOT / args.query_output_dir).resolve()
     prepared_groups = []
+    skipped_cache = 0
     for query_offset, group in enumerate(pano_groups[:limit], start=1):
-        manifest_path = render_query_manifest(
-            renderer=renderer,
-            artifacts_dir=artifacts_dir,
-            render_api_key=args.query_render_api_key,
-            query_output_dir=query_output_dir,
-            pano_id=group["pano_id"],
-            capture_count=args.query_render_capture_count,
-            seed=args.query_render_seed + query_offset,
-            pitch=args.query_render_pitch,
-            fov=args.query_render_fov,
-            width=args.query_render_width,
-            height=args.query_render_height,
-        )
+        if args.query_cache_only:
+            manifest_path = load_cached_query_manifest(
+                artifacts_dir=artifacts_dir,
+                query_output_dir=query_output_dir,
+                pano_id=group["pano_id"],
+                capture_count=args.query_render_capture_count,
+                seed=args.query_render_seed + query_offset,
+                pitch=args.query_render_pitch,
+                fov=args.query_render_fov,
+                width=args.query_render_width,
+                height=args.query_render_height,
+            )
+            if manifest_path is None:
+                skipped_cache += 1
+                continue
+        else:
+            manifest_path = render_query_manifest(
+                renderer=renderer,
+                artifacts_dir=artifacts_dir,
+                render_api_key=args.query_render_api_key,
+                query_output_dir=query_output_dir,
+                pano_id=group["pano_id"],
+                capture_count=args.query_render_capture_count,
+                seed=args.query_render_seed + query_offset,
+                pitch=args.query_render_pitch,
+                fov=args.query_render_fov,
+                width=args.query_render_width,
+                height=args.query_render_height,
+            )
         _, captures = load_rerendered_captures(manifest_path)
         prepared_groups.append(
             {
@@ -517,6 +571,12 @@ def prepare_rerendered_query_groups(
                 "query_manifest_path": str(manifest_path),
             }
         )
+    if args.query_cache_only:
+        emit_progress(
+            f"[image-memory-eval] query_cache_only=yes cached_queries={len(prepared_groups)} skipped_missing={skipped_cache}"
+        )
+    if not prepared_groups:
+        raise RuntimeError("No cached query manifests were available for evaluation.")
     return prepared_groups
 
 

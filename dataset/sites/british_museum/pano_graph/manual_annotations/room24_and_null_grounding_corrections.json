@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "site": "british_museum",
+  "created_at": "2026-07-03",
+  "description": "Manual grounding corrections for one Room 24 pano and two null transition panos.",
+  "updates": {
+    "siY-c9FTO_IRPDdiwifTpw": "Room 24",
+    "2UN_WxfUEHnVSRetajjd1g": "null",
+    "QZNJQCKL1h7_4Sc_mbq_4g": "null"
+  },
+  "before": {
+    "siY-c9FTO_IRPDdiwifTpw": {
+      "room": "Room 26",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.519892274061405,
+      "lng": -0.127331967696806
+    },
+    "2UN_WxfUEHnVSRetajjd1g": {
+      "room": "Room 26",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.5199003985604,
+      "lng": -0.1273107349840408
+    },
+    "QZNJQCKL1h7_4Sc_mbq_4g": {
+      "room": "Room 26",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.519902412812584,
+      "lng": -0.1273024875508328
+    }
+  },
+  "after": {
+    "siY-c9FTO_IRPDdiwifTpw": {
+      "room": "Room 24",
+      "source": "manual:accepted"
+    },
+    "2UN_WxfUEHnVSRetajjd1g": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "QZNJQCKL1h7_4Sc_mbq_4g": {
+      "room": "null",
+      "source": "manual:accepted"
+    }
+  },
+  "room_counts_before": {
+    "Room 26": 3
+  },
+  "room_counts_after": {
+    "Room 24": 1,
+    "null": 2
+  },
+  "notes": [
+    "Pano graph connectivity was not changed."
+  ]
+}

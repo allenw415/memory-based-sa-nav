@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import shutil
+import tempfile
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -16,36 +17,47 @@ from ._common import (
 
 ensure_project_root_on_path()
 
-from memory_nav.common.env import get_env_value, load_dotenv, resolve_model_environment  # noqa: E402
+from memory_nav.common.env import (  # noqa: E402
+    get_env_value,
+    load_dotenv,
+    resolve_model_environment,
+    resolve_task_num_ctx,
+)
 from memory_nav.common.model_client import (  # noqa: E402
     DEFAULT_OPENAI_API_BASE,
     ModelResponseClient,
     resolve_api_kind,
 )
 from memory_nav.data.memory_localization import (  # noqa: E402
+    DEFAULT_DINOV2_SALAD_MODEL,
     DEFAULT_SIGLIP2_MODEL,
     create_image_embedder,
 )
 from memory_nav.memory.retrieval import MemoryImageRetriever, MemoryRoomLocalizer  # noqa: E402
 from memory_nav.navigation import (  # noqa: E402
     DEFAULT_PASSAGE_QUERY,
+    DetectedContrastivePassageSelector,
     DynamicPassageRetriever,
     EightViewVLMDirectionSelector,
     IndexedPanoramaViewStore,
+    MemoryTreeDirectionSelector,
     NavigationEpisodeRunner,
+    NavigationQueryParser,
+    ParsedNavigationQuery,
     PassageVLMSelector,
     RecordedDirectionSelector,
     RecordedPassageSelector,
+    strict_detected_passage_configuration,
 )
 from memory_nav.navigation.image_goal import ImagePathSimilarityDirectionPolicy  # noqa: E402
 from memory_nav.cli.run_similarity_passage_selection import (  # noqa: E402
     DreamSimImageEmbedder,
 )
 
-DEFAULT_SIGLIP_INDEX = "artifacts/memory_localization/floor0_siglip2_images_fov90.npz"
-DEFAULT_SIGLIP_METADATA = "artifacts/memory_localization/floor0_siglip2_images_fov90.metadata.json"
-DEFAULT_SALAD_INDEX = "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.npz"
-DEFAULT_SALAD_METADATA = "artifacts/memory_localization/floor0_dinov2_salad_images_fov90.metadata.json"
+DEFAULT_SIGLIP_INDEX = "artifacts/memory_localization/floor0_1_siglip2_images_fov90.npz"
+DEFAULT_SIGLIP_METADATA = "artifacts/memory_localization/floor0_1_siglip2_images_fov90.metadata.json"
+DEFAULT_SALAD_INDEX = "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.npz"
+DEFAULT_SALAD_METADATA = "artifacts/memory_localization/floor0_1_dinov2_salad_images_fov90.metadata.json"
 DEFAULT_MANIFEST_ROOT = "renders/room_grounding_fov90"
 
 
@@ -54,7 +66,11 @@ def build_parser() -> argparse.ArgumentParser:
         description="Run the complete retrieval-driven panorama navigation episode."
     )
     parser.add_argument("--start-pano-id", required=True)
-    parser.add_argument("--target-room-id", required=True)
+    parser.add_argument(
+        "--query",
+        help="Natural-language navigation query to parse into target and waypoint rooms.",
+    )
+    parser.add_argument("--target-room-id")
     parser.add_argument("--waypoint-room-id", action="append", default=[])
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--max-total-steps", type=int, default=100)
@@ -74,8 +90,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--direction-policy",
-        choices=["vlm", "image_similarity"],
-        default="vlm",
+        choices=["memory_tree", "vlm", "image_similarity"],
+        default="memory_tree",
     )
     parser.add_argument(
         "--direction-similarity-backend",
@@ -91,10 +107,58 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--direction-burst-steps", type=int, default=3)
     parser.add_argument("--direction-max-turn-deg", type=float, default=45.0)
     parser.add_argument("--direction-confidence-threshold", type=float, default=0.5)
+    parser.add_argument(
+        "--direction-commitment-mode",
+        choices=["off", "visual_hysteresis"],
+        default="off",
+        help="Persist local direction intent across bursts without graph shortest-path planning.",
+    )
+    parser.add_argument("--direction-switch-margin", type=float, default=0.03)
+    parser.add_argument("--direction-recovery-budget", type=int, default=1)
+    parser.add_argument("--memory-tree-branching-factor", type=int, default=3)
+    parser.add_argument("--memory-tree-max-depth", type=int, default=5)
+    parser.add_argument(
+        "--memory-tree-similarity-backend",
+        choices=["dreamsim", "salad", "dinov2_patch_topk"],
+        default="dinov2_patch_topk",
+        help="Similarity backend used by memory-tree direction selection.",
+    )
+    parser.add_argument("--memory-tree-dreamsim-type", default="ensemble")
+    parser.add_argument("--memory-tree-dinov2-patch-model", default="facebook/dinov2-base")
+    parser.add_argument("--memory-tree-dinov2-patch-top-k", type=int, default=5)
+    parser.add_argument("--memory-tree-dinov2-patch-max-patches", type=int, default=64)
+    parser.add_argument(
+        "--memory-tree-bridge-selection-mode",
+        choices=["weighted", "bridge_then_continuity"],
+        default="weighted",
+    )
+    parser.add_argument("--memory-tree-near-duplicate-threshold", type=float, default=0.82)
+    parser.add_argument(
+        "--memory-tree-bridge-similarity-tie-margin",
+        type=float,
+        default=0.01,
+        help=(
+            "When memory-tree bridge scores are within this margin, rank views by root-target "
+            "similarity before continuity tie-breaks."
+        ),
+    )
+    parser.add_argument(
+        "--memory-tree-allow-same-bridge-item",
+        action="store_true",
+        help=(
+            "Allow current and passage memory trees to bridge through the exact same memory item. "
+            "Default excludes same-item bridges to avoid trivial 1.0 bridge scores."
+        ),
+    )
+    parser.add_argument(
+        "--memory-tree-patch-cache-dir",
+        default="outputs/navigation_memory_tree_cache",
+        help="Cache directory for DINOv2 patch features used by memory-tree direction selection.",
+    )
     parser.add_argument("--recorded-direction-responses")
     parser.add_argument("--embedding-model", default=DEFAULT_SIGLIP2_MODEL)
     parser.add_argument("--device", default="auto")
-    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--batch-size", type=int, default=32)
 
     parser.add_argument("--localization-top-k", type=int, default=10)
     parser.add_argument("--localization-confidence-threshold", type=float, default=0.5)
@@ -103,6 +167,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--passage-top-k", type=int, default=20)
     parser.add_argument("--passage-clusters", type=int, default=8)
     parser.add_argument("--passage-confidence-threshold", type=float, default=0.5)
+    parser.add_argument(
+        "--passage-policy",
+        choices=["detected_contrastive", "vlm", "recorded"],
+        default="detected_contrastive",
+    )
 
     parser.add_argument("--recorded-vlm-responses")
     parser.add_argument(
@@ -173,12 +242,19 @@ def main() -> int:
     if not isinstance(mappings, dict):
         raise RuntimeError("pano_room_grounding.json does not contain mappings.")
 
+    target_room_id, waypoint_room_ids, parsed_query = _resolve_navigation_goal(
+        args,
+        room_graph=artifacts.room_graph or {},
+    )
+
     manifest_root = resolve_project_path(args.manifest_root)
     siglip_index = resolve_project_path(args.siglip_index_path)
     siglip_metadata = resolve_project_path(args.siglip_metadata_path)
     salad_index = resolve_project_path(args.salad_index_path)
     salad_metadata = resolve_project_path(args.salad_metadata_path)
 
+    detected_passage_config = strict_detected_passage_configuration(seed=args.seed)
+    effective_passage_policy = "recorded" if args.recorded_vlm_responses else args.passage_policy
     shared_embedder = create_image_embedder(
         model_name=args.embedding_model,
         device=args.device,
@@ -208,9 +284,18 @@ def main() -> int:
         visual_index_path=salad_index,
         visual_metadata_path=salad_metadata,
         render_root=manifest_root,
-        query=args.passage_query,
-        retrieval_top_k=args.passage_top_k,
+        query=(
+            detected_passage_config["combined_passage_query"]
+            if effective_passage_policy == "detected_contrastive"
+            else args.passage_query
+        ),
+        retrieval_top_k=(
+            int(detected_passage_config["passage_candidate_limit"])
+            if effective_passage_policy == "detected_contrastive"
+            else args.passage_top_k
+        ),
         target_clusters=args.passage_clusters,
+        cluster_candidates=effective_passage_policy != "detected_contrastive",
         embedding_model=args.embedding_model,
         device=args.device,
         batch_size=args.batch_size,
@@ -237,7 +322,48 @@ def main() -> int:
     )
 
     passage_client = None
-    if args.recorded_vlm_responses:
+    if effective_passage_policy == "detected_contrastive":
+        from memory_nav.cli.run_detected_passage_contrastive_selection import create_detector
+
+        visual_retriever = MemoryImageRetriever(
+            metadata_path=salad_metadata,
+            project_root=PROJECT_ROOT,
+            render_root=manifest_root,
+            use_faiss=False,
+        )
+        detected_image_embedder = create_image_embedder(
+            model_name=DEFAULT_DINOV2_SALAD_MODEL,
+            device=args.device,
+            batch_size=args.batch_size,
+        )
+        selector = DetectedContrastivePassageSelector(
+            visual_retriever=visual_retriever,
+            room_graph=artifacts.room_graph or {},
+            detector=create_detector(
+                backend=detected_passage_config["detector_backend"],
+                model_name=detected_passage_config["detector_model"],
+                device=args.device,
+                box_threshold=float(detected_passage_config["box_threshold"]),
+                text_threshold=float(detected_passage_config["text_threshold"]),
+                cache_dir=resolve_project_path("models/huggingface"),
+            ),
+            image_embedder=detected_image_embedder,
+            output_root=_passage_selection_output_root(args.output_path),
+            pano_graph=artifacts.pano_graph or {},
+            pano_room_mappings=mappings,
+            seed=args.seed,
+            configuration={
+                **detected_passage_config,
+                "siglip_index_path": str(siglip_index),
+                "salad_index_path": str(salad_index),
+                "salad_metadata_path": str(salad_metadata),
+                "room_graph_path": str(resolve_project_path(args.artifacts_dir) / "room_graph.json"),
+                "manifest_root": str(manifest_root),
+            },
+        )
+    elif effective_passage_policy == "recorded":
+        if not args.recorded_vlm_responses:
+            raise RuntimeError("--passage-policy recorded requires --recorded-vlm-responses.")
         selector = RecordedPassageSelector.from_path(
             resolve_project_path(args.recorded_vlm_responses)
         )
@@ -265,7 +391,27 @@ def main() -> int:
 
     direction_selector = None
     direction_client = None
-    if args.direction_policy == "vlm":
+    if args.direction_policy == "memory_tree":
+        direction_selector = MemoryTreeDirectionSelector(
+            metadata_items=view_store.metadata_items,
+            image_embedder=_build_memory_tree_embedder(args),
+            render_root=manifest_root,
+            branching_factor=args.memory_tree_branching_factor,
+            max_depth=args.memory_tree_max_depth,
+            similarity_backend=args.memory_tree_similarity_backend,
+            dreamsim_type=args.memory_tree_dreamsim_type,
+            bridge_selection_mode=args.memory_tree_bridge_selection_mode,
+            exclude_same_bridge_item=not args.memory_tree_allow_same_bridge_item,
+            bridge_similarity_tie_margin=args.memory_tree_bridge_similarity_tie_margin,
+            near_duplicate_threshold=args.memory_tree_near_duplicate_threshold,
+            dinov2_patch_model=args.memory_tree_dinov2_patch_model,
+            dinov2_patch_top_k=args.memory_tree_dinov2_patch_top_k,
+            dinov2_patch_max_patches=args.memory_tree_dinov2_patch_max_patches,
+            patch_cache_dir=resolve_project_path(args.memory_tree_patch_cache_dir),
+            device=args.device,
+            batch_size=args.batch_size,
+        )
+    elif args.direction_policy == "vlm":
         if args.recorded_direction_responses:
             direction_selector = RecordedDirectionSelector.from_path(
                 resolve_project_path(args.recorded_direction_responses)
@@ -293,23 +439,56 @@ def main() -> int:
         direction_confidence_threshold=args.direction_confidence_threshold,
         direction_burst_steps=args.direction_burst_steps,
         direction_max_turn_deg=args.direction_max_turn_deg,
+        direction_commitment_mode=args.direction_commitment_mode,
+        direction_switch_margin=args.direction_switch_margin,
+        direction_recovery_budget=args.direction_recovery_budget,
         progress_callback=lambda message: print(message, file=sys.stderr, flush=True),
         seed=args.seed,
     )
     result = runner.run(
         start_pano_id=args.start_pano_id,
-        target_room_id=args.target_room_id,
-        waypoint_room_ids=args.waypoint_room_id,
+        target_room_id=target_room_id,
+        waypoint_room_ids=waypoint_room_ids,
         max_total_steps=args.max_total_steps,
         max_local_steps=args.max_local_steps,
     )
     payload = {
-        "method": "retrieval_localize_plan_select_eight_view",
+        "method": _method_id(args, effective_passage_policy),
         "configuration": {
             "seed": args.seed,
-            "passage_query": args.passage_query,
-            "passage_top_k": args.passage_top_k,
-            "passage_clusters": args.passage_clusters,
+            "navigation_query": parsed_query.to_dict() if parsed_query is not None else None,
+            "target_room_id": target_room_id,
+            "waypoint_room_ids": list(waypoint_room_ids),
+            "passage_policy": effective_passage_policy,
+            "passage_query": (
+                detected_passage_config["passage_query"]
+                if effective_passage_policy == "detected_contrastive"
+                else args.passage_query
+            ),
+            "passage_queries": (
+                detected_passage_config["passage_queries"]
+                if effective_passage_policy == "detected_contrastive"
+                else None
+            ),
+            "passage_query_fusion": (
+                detected_passage_config["passage_query_fusion"]
+                if effective_passage_policy == "detected_contrastive"
+                else None
+            ),
+            "passage_candidate_limit": (
+                detected_passage_config["passage_candidate_limit"]
+                if effective_passage_policy == "detected_contrastive"
+                else None
+            ),
+            "passage_top_k": (
+                detected_passage_config["passage_candidate_limit"]
+                if effective_passage_policy == "detected_contrastive"
+                else args.passage_top_k
+            ),
+            "passage_clusters": (
+                None if effective_passage_policy == "detected_contrastive" else args.passage_clusters
+            ),
+            "passage_clustering": effective_passage_policy != "detected_contrastive",
             "passage_confidence_threshold": args.passage_confidence_threshold,
             "same_pano_localization_excluded": True,
             "siglip_index_path": str(siglip_index),
@@ -318,6 +497,90 @@ def main() -> int:
             "direction_burst_steps": args.direction_burst_steps,
             "direction_max_turn_deg": args.direction_max_turn_deg,
             "direction_confidence_threshold": args.direction_confidence_threshold,
+            "direction_commitment_mode": args.direction_commitment_mode,
+            "direction_switch_margin": args.direction_switch_margin,
+            "direction_recovery_budget": args.direction_recovery_budget,
+            "memory_tree_branching_factor": (
+                args.memory_tree_branching_factor
+                if args.direction_policy == "memory_tree"
+                else None
+            ),
+            "memory_tree_max_depth": (
+                args.memory_tree_max_depth
+                if args.direction_policy == "memory_tree"
+                else None
+            ),
+            "memory_tree_similarity_backend": (
+                args.memory_tree_similarity_backend
+                if args.direction_policy == "memory_tree"
+                else None
+            ),
+            "memory_tree_alignment_mode": (
+                "bidirection" if args.direction_policy == "memory_tree" else None
+            ),
+            "memory_tree_bridge_score_mode": (
+                "bidirection"
+                if args.direction_policy == "memory_tree"
+                and args.memory_tree_bridge_selection_mode == "weighted"
+                else (args.memory_tree_bridge_selection_mode if args.direction_policy == "memory_tree" else None)
+            ),
+            "memory_tree_bridge_selection_mode": (
+                args.memory_tree_bridge_selection_mode
+                if args.direction_policy == "memory_tree"
+                else None
+            ),
+            "memory_tree_near_duplicate_threshold": (
+                args.memory_tree_near_duplicate_threshold
+                if args.direction_policy == "memory_tree"
+                else None
+            ),
+            "memory_tree_exclude_same_bridge_item": (
+                not args.memory_tree_allow_same_bridge_item
+                if args.direction_policy == "memory_tree"
+                else None
+            ),
+            "memory_tree_bridge_similarity_tie_margin": (
+                args.memory_tree_bridge_similarity_tie_margin
+                if args.direction_policy == "memory_tree"
+                else None
+            ),
+            "memory_tree_expansion_score_mode": (
+                "path_continuity" if args.direction_policy == "memory_tree" else None
+            ),
+            "memory_tree_similarity_model": (
+                _memory_tree_similarity_model_label(args)
+                if args.direction_policy == "memory_tree"
+                else None
+            ),
+            "memory_tree_dreamsim_type": (
+                args.memory_tree_dreamsim_type
+                if args.direction_policy == "memory_tree"
+                and args.memory_tree_similarity_backend == "dreamsim"
+                else None
+            ),
+            "memory_tree_dinov2_patch_top_k": (
+                args.memory_tree_dinov2_patch_top_k
+                if args.direction_policy == "memory_tree"
+                and args.memory_tree_similarity_backend == "dinov2_patch_topk"
+                else None
+            ),
+            "memory_tree_dinov2_patch_max_patches": (
+                args.memory_tree_dinov2_patch_max_patches
+                if args.direction_policy == "memory_tree"
+                and args.memory_tree_similarity_backend == "dinov2_patch_topk"
+                else None
+            ),
+            "memory_tree_patch_cache_dir": (
+                str(resolve_project_path(args.memory_tree_patch_cache_dir))
+                if args.direction_policy == "memory_tree"
+                and args.memory_tree_similarity_backend == "dinov2_patch_topk"
+                else None
+            ),
+            "detected_passage_selection": (
+                _detected_passage_configuration_summary(detected_passage_config)
+                if effective_passage_policy == "detected_contrastive"
+                else None
+            ),
             "direction_similarity_backend": (
                 args.direction_similarity_backend
                 if args.direction_policy == "image_similarity"
@@ -366,6 +629,110 @@ def main() -> int:
         _write_navigation_output_bundle(output, output_bundle)
     print(output)
     return 0 if result.success else 1
+
+
+def _resolve_navigation_goal(
+    args,
+    *,
+    room_graph: dict,
+) -> tuple[str, list[str], ParsedNavigationQuery | None]:
+    query = str(args.query or "").strip()
+    if query:
+        if args.target_room_id or args.waypoint_room_id:
+            raise RuntimeError(
+                "--query cannot be combined with --target-room-id or --waypoint-room-id."
+            )
+        parser = _build_navigation_query_parser(args, room_graph=room_graph)
+        parsed_query = parser.parse(query)
+        return parsed_query.target_room_id, list(parsed_query.waypoint_room_ids), parsed_query
+
+    target_room_id = str(args.target_room_id or "").strip()
+    if not target_room_id:
+        raise RuntimeError("--target-room-id is required unless --query is provided.")
+    return target_room_id, list(args.waypoint_room_id or []), None
+
+
+def _build_navigation_query_parser(args, *, room_graph: dict) -> NavigationQueryParser:
+    if not room_graph:
+        raise RuntimeError("Cannot parse navigation query without a room graph.")
+    settings = resolve_model_environment(
+        default_model=args.model,
+        default_api_base=args.api_base,
+        default_api_kind=args.api_kind,
+        profile=args.provider,
+    )
+    provider = args.provider or settings.provider
+    model_name = settings.model_name or args.model
+    api_base = (settings.api_base or args.api_base).rstrip("/")
+    api_kind = resolve_api_kind(settings.api_kind or args.api_kind)
+    timeout = settings.request_timeout or args.timeout
+    client = ModelResponseClient(
+        provider=provider,
+        api_key=args.api_key or settings.api_key or get_env_value("OPENAI_API_KEY"),
+        api_base=api_base,
+        api_kind=api_kind,
+        request_timeout=timeout,
+        num_ctx=resolve_task_num_ctx(
+            "parse_instruction",
+            fallback_num_ctx=settings.num_ctx,
+        ),
+        temperature=settings.temperature,
+    )
+    if not client.is_configured():
+        raise RuntimeError(
+            "Missing query parser model configuration. Pass --api-key or configure a model profile."
+        )
+    return NavigationQueryParser(
+        model_client=client,
+        model=model_name,
+        room_graph=room_graph,
+    )
+
+
+def _method_id(args, passage_policy: str) -> str:
+    if passage_policy == "detected_contrastive" and args.direction_policy == "memory_tree":
+        return "retrieval_localize_plan_detected_contrastive_memory_tree_direction"
+    return "retrieval_localize_plan_select_eight_view"
+
+
+def _passage_selection_output_root(output_path: str | Path | None) -> Path:
+    if output_path:
+        return _navigation_output_dir(output_path) / "passage_selection"
+    return Path(tempfile.gettempdir()) / "memory_nav_passage_selection"
+
+
+def _detected_passage_configuration_summary(configuration: dict) -> dict:
+    keys = [
+        "passage_query",
+        "passage_queries",
+        "passage_query_fusion",
+        "passage_candidate_limit",
+        "passage_clustering",
+        "detector_prompt",
+        "detector_backend",
+        "detector_model",
+        "box_threshold",
+        "text_threshold",
+        "min_box_area_ratio",
+        "min_box_width_ratio",
+        "min_box_height_ratio",
+        "min_box_aspect_ratio",
+        "max_box_aspect_ratio",
+        "min_box_bottom_ratio",
+        "max_box_area_ratio",
+        "max_crop_area_ratio",
+        "crop_padding_ratio",
+        "current_image_mode",
+        "max_detections_per_image",
+        "target_sample_count",
+        "negative_sample_count",
+        "similarity_top_m",
+        "target_scoring",
+        "contrastive_negative_weight",
+        "similarity_backend",
+        "visual_similarity_model",
+    ]
+    return {key: configuration[key] for key in keys if key in configuration}
 
 
 @dataclass(frozen=True)
@@ -552,11 +919,14 @@ def _selected_passage_metadata(round_payload: dict, label: str) -> dict:
     candidates = round_payload.get("current_room_passages")
     if not isinstance(candidates, list):
         return {}
+    image_goal = round_payload.get("image_goal")
+    source_label = image_goal.get("source_label") if isinstance(image_goal, dict) else None
+    labels = [label, source_label]
     chosen = next(
         (
             item
             for item in candidates
-            if isinstance(item, dict) and str(item.get("label")) == label
+            if isinstance(item, dict) and str(item.get("label")) in {str(value) for value in labels if value}
         ),
         None,
     )
@@ -574,6 +944,8 @@ def _selected_passage_metadata(round_payload: dict, label: str) -> dict:
         "cluster_id",
         "cluster_size",
         "image_path",
+        "source_image_path",
+        "detection_status",
     ]
     return {key: chosen[key] for key in keys if key in chosen}
 
@@ -585,7 +957,33 @@ def _safe_path_token(value: object) -> str:
     ).strip("_") or "value"
 
 
+def _build_memory_tree_embedder(args):
+    if args.memory_tree_similarity_backend == "dinov2_patch_topk":
+        return None
+    if args.memory_tree_similarity_backend == "salad":
+        return create_image_embedder(
+            model_name=DEFAULT_DINOV2_SALAD_MODEL,
+            device=args.device,
+            batch_size=args.batch_size,
+        )
+    return DreamSimImageEmbedder(
+        dreamsim_type=args.memory_tree_dreamsim_type,
+        device=args.device,
+        batch_size=args.batch_size,
+    )
+
+
+def _memory_tree_similarity_model_label(args) -> str:
+    if args.memory_tree_similarity_backend == "salad":
+        return DEFAULT_DINOV2_SALAD_MODEL
+    if args.memory_tree_similarity_backend == "dinov2_patch_topk":
+        return args.memory_tree_dinov2_patch_model
+    return f"dreamsim:{args.memory_tree_dreamsim_type}"
+
+
 def _direction_scoring_label(args) -> str:
+    if args.direction_policy == "memory_tree":
+        return f"{args.memory_tree_similarity_backend}_passage_memory_tree"
     if args.direction_policy == "vlm":
         return "eight_view_vlm"
     if args.direction_similarity_backend == "dreamsim":

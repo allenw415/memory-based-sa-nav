@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "site": "british_museum",
+  "created_at": "2026-07-03",
+  "description": "Manual correction removing an invalid edge and marking two boundary/transition panos as null.",
+  "remove_pair": {
+    "source_pano_id": "HfqQpo_R3wySsPZUiyx-Bw",
+    "source_room_before": "Room 2",
+    "target_pano_id": "YIlnkB-aR5fTbqtuQJtDBg",
+    "target_room_before": "Room 1"
+  },
+  "null_pano_ids": [
+    "ap_zE7On39gXRQnhyIzjSg",
+    "YIlnkB-aR5fTbqtuQJtDBg",
+    "kL2aLK_dUAbq6oId62OSfQ"
+  ],
+  "before_grounding": {
+    "ap_zE7On39gXRQnhyIzjSg": {
+      "room": "Room 1",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.519277259619415,
+      "lng": -0.12608846804109158
+    },
+    "YIlnkB-aR5fTbqtuQJtDBg": {
+      "room": "Room 1",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51929082225961,
+      "lng": -0.1260821576572045
+    },
+    "kL2aLK_dUAbq6oId62OSfQ": {
+      "room": "Room 1",
+      "source": "manual:accepted",
+      "floor": "0",
+      "lat": 51.51995746070661,
+      "lng": -0.12683686912282463
+    }
+  },
+  "after_grounding": {
+    "ap_zE7On39gXRQnhyIzjSg": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "YIlnkB-aR5fTbqtuQJtDBg": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "kL2aLK_dUAbq6oId62OSfQ": {
+      "room": "null",
+      "source": "manual:accepted"
+    }
+  },
+  "removed_edges": [
+    {
+      "source_pano_id": "HfqQpo_R3wySsPZUiyx-Bw",
+      "source_room": "Room 2",
+      "target_pano_id": "YIlnkB-aR5fTbqtuQJtDBg",
+      "target_room": "Room 1",
+      "geocentric_heading_deg": 284.14575,
+      "description": null
+    },
+    {
+      "source_pano_id": "YIlnkB-aR5fTbqtuQJtDBg",
+      "source_room": "Room 1",
+      "target_pano_id": "HfqQpo_R3wySsPZUiyx-Bw",
+      "target_room": "Room 2",
+      "geocentric_heading_deg": 104.145744,
+      "description": null
+    }
+  ],
+  "before_edge_count": 12092,
+  "after_edge_count": 12090,
+  "room_counts_before": {
+    "Room 1": 3
+  },
+  "room_counts_after": {
+    "null": 3
+  },
+  "notes": [
+    "HfqQpo_R3wySsPZUiyx-Bw remains grounded to Room 2.",
+    "ap_zE7On39gXRQnhyIzjSg and YIlnkB-aR5fTbqtuQJtDBg are marked null.",
+    "Follow-up update added kL2aLK_dUAbq6oId62OSfQ as null."
+  ],
+  "follow_up_updates": [
+    {
+      "created_at": "2026-07-03",
+      "description": "Added one additional Room 1 boundary/transition pano as null.",
+      "pano_ids": [
+        "kL2aLK_dUAbq6oId62OSfQ"
+      ],
+      "before_grounding": {
+        "kL2aLK_dUAbq6oId62OSfQ": {
+          "room": "Room 1",
+          "source": "manual:accepted",
+          "floor": "0",
+          "lat": 51.51995746070661,
+          "lng": -0.12683686912282463
+        }
+      },
+      "after_grounding": {
+        "kL2aLK_dUAbq6oId62OSfQ": {
+          "room": "null",
+          "source": "manual:accepted"
+        }
+      }
+    }
+  ]
+}

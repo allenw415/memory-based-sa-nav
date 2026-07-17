@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "status": "draft",
+  "floor": "1",
+  "description": "Manual pano-to-room draft for British Museum Level 1 rooms 33a and 33.",
+  "method": {
+    "type": "explicit_room_ids",
+    "default_floor_room_id": "Room 33",
+    "explicit_room_id": "Room 33a",
+    "explicit_pano_ids": [
+      "qNckVsOYmdHWgUYwowesMw",
+      "z8XTYe8AsLJC70t98SQK5g",
+      "tzGK-08nHSRH3w9OMrTEDQ",
+      "XILhCYt6OUbJygKvnGza5A",
+      "fe7CGu9_U76p2sSRUW2qyg",
+      "3uHGhU6fOv1-8cnyTXnxOQ",
+      "-XF0snkmQfcJC2RzyTiFzw",
+      "Pqg7Veh5r1gkP0_2Yr_NJg",
+      "UbmxrnGauxoEYaA9pUvlVg",
+      "YdkKblm-yk2JmyLrRrC2cA",
+      "DfQb4SHnvMfWwu32Uk3fRg",
+      "9TU8u6DOresXgVfqm-uJcw",
+      "ER_RL-d8WJD2PEP_kogamQ",
+      "e-rI6OYjHhNn54Q6M5VrCQ",
+      "5vhK6fWLek0bHByeVxZzaw"
+    ]
+  },
+  "counts": {
+    "Room 33a": 15,
+    "Room 33": 200
+  },
+  "review_notes": [
+    "Room 33a uses the explicit pano IDs supplied during manual review; all other floor 1 panos are assigned to Room 33.",
+    "The user-supplied XF0snkmQfcJC2RzyTiFzw ID is normalized to the dataset pano ID -XF0snkmQfcJC2RzyTiFzw.",
+    "This draft intentionally does not separate Room 33b yet."
+  ],
+  "cross_boundary_edges": [
+    [
+      "3rPIvO4jg_VYaNvsPqT-IA",
+      "5vhK6fWLek0bHByeVxZzaw"
+    ],
+    [
+      "8g9nsevrOZflYD1snMtJ4w",
+      "UbmxrnGauxoEYaA9pUvlVg"
+    ],
+    [
+      "8g9nsevrOZflYD1snMtJ4w",
+      "YdkKblm-yk2JmyLrRrC2cA"
+    ],
+    [
+      "UbmxrnGauxoEYaA9pUvlVg",
+      "jIEhAvImyhVuEugUQuPmXQ"
+    ],
+    [
+      "e-rI6OYjHhNn54Q6M5VrCQ",
+      "hfpbUv5cvywOHjHDUstpAg"
+    ]
+  ],
+  "generated_artifacts": {
+    "visual_review_png": "outputs/pano_annotation/floor1_room33_explicit.png",
+    "expanded_candidate_mappings": "outputs/pano_annotation/floor1_room33_explicit.json"
+  }
+}

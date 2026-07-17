@@ -1,0 +1,553 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "site": "british_museum",
+  "created_at": "2026-07-03",
+  "description": "Manual East stairs alignment and connectivity between Room 1-side transition pano and Room 27.",
+  "label": "East stairs",
+  "east_stair_pano_ids": [
+    "HVRe6CyVU1wNk8cxTMIJsA",
+    "uylwS83DFFy9kWxBBl-nlg",
+    "DMjCUvbsqkqhp4DyTUIIrA",
+    "yXtFWs2QsPC1-4Fgl-IjEA",
+    "KMAf8NOYTqB8cqXeaKiNvA"
+  ],
+  "main_chain": [
+    "kL2aLK_dUAbq6oId62OSfQ",
+    "HVRe6CyVU1wNk8cxTMIJsA",
+    "DMjCUvbsqkqhp4DyTUIIrA",
+    "yXtFWs2QsPC1-4Fgl-IjEA",
+    "n6yc-Ltt6wsg7d3peOph5Q"
+  ],
+  "side_relation": {
+    "pano_id": "uylwS83DFFy9kWxBBl-nlg",
+    "relative_to": "HVRe6CyVU1wNk8cxTMIJsA",
+    "bearing_deg": 62.39497,
+    "distance_m": 1.538375599753392,
+    "inference": {
+      "original_main_edge": "HVRe6CyVU1wNk8cxTMIJsA->DMjCUvbsqkqhp4DyTUIIrA",
+      "original_main_heading_deg": 71.7513,
+      "current_main_heading_deg": 329.99999,
+      "rotation_delta_deg": 258.24869,
+      "original_side_heading_deg": 164.14628
+    }
+  },
+  "kma_side_placement": {
+    "pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+    "relative_to": "yXtFWs2QsPC1-4Fgl-IjEA",
+    "bearing_deg": 62.39497,
+    "distance_m": 3.6593912537067763,
+    "note": "KMA was moved closer to yXt while remaining farther than the HVRe-to-uylw side pair."
+  },
+  "before_anchor": {
+    "source_pano_id": "kL2aLK_dUAbq6oId62OSfQ",
+    "target_pano_id": "n6yc-Ltt6wsg7d3peOph5Q",
+    "heading_deg": 329.53508,
+    "distance_m": 8.011481136076629
+  },
+  "after_chain_headings": [
+    {
+      "source_pano_id": "kL2aLK_dUAbq6oId62OSfQ",
+      "target_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+      "heading_deg": 330.0
+    },
+    {
+      "source_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+      "target_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "heading_deg": 329.99999
+    },
+    {
+      "source_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "target_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "heading_deg": 329.99998
+    },
+    {
+      "source_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "target_pano_id": "n6yc-Ltt6wsg7d3peOph5Q",
+      "heading_deg": 330.00015
+    }
+  ],
+  "before_coordinates": {
+    "kL2aLK_dUAbq6oId62OSfQ": {
+      "lat": 51.51995746070661,
+      "lng": -0.12683686912282463
+    },
+    "n6yc-Ltt6wsg7d3peOph5Q": {
+      "lat": 51.52001956257064,
+      "lng": -0.12689557563645487
+    },
+    "HVRe6CyVU1wNk8cxTMIJsA": {
+      "lat": 51.51955417531597,
+      "lng": -0.1277773564130143
+    },
+    "uylwS83DFFy9kWxBBl-nlg": {
+      "lat": 51.519540866621355,
+      "lng": -0.1277712825265533
+    },
+    "DMjCUvbsqkqhp4DyTUIIrA": {
+      "lat": 51.519560062001865,
+      "lng": -0.12774866476037353
+    },
+    "yXtFWs2QsPC1-4Fgl-IjEA": {
+      "lat": 51.51956594673229,
+      "lng": -0.12772176801532495
+    },
+    "KMAf8NOYTqB8cqXeaKiNvA": {
+      "lat": 51.51953988127083,
+      "lng": -0.12771841789343677
+    }
+  },
+  "after_coordinates": {
+    "kL2aLK_dUAbq6oId62OSfQ": {
+      "lat": 51.51995716630869,
+      "lng": -0.12683768097444242
+    },
+    "n6yc-Ltt6wsg7d3peOph5Q": {
+      "lat": 51.52001956257064,
+      "lng": -0.12689557563645487
+    },
+    "HVRe6CyVU1wNk8cxTMIJsA": {
+      "lat": 51.51997276536974,
+      "lng": -0.126852154644903
+    },
+    "uylwS83DFFy9kWxBBl-nlg": {
+      "lat": 51.51997917611877,
+      "lng": -0.12683245166699944
+    },
+    "DMjCUvbsqkqhp4DyTUIIrA": {
+      "lat": 51.51998836442899,
+      "lng": -0.12686662832527854
+    },
+    "yXtFWs2QsPC1-4Fgl-IjEA": {
+      "lat": 51.520003963486445,
+      "lng": -0.12688110201556901
+    },
+    "KMAf8NOYTqB8cqXeaKiNvA": {
+      "lat": 51.52001921294812,
+      "lng": -0.1268342338336375
+    }
+  },
+  "before_grounding": {
+    "kL2aLK_dUAbq6oId62OSfQ": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "n6yc-Ltt6wsg7d3peOph5Q": {
+      "room": "Room 27",
+      "source": "manual:accepted"
+    },
+    "HVRe6CyVU1wNk8cxTMIJsA": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "uylwS83DFFy9kWxBBl-nlg": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "DMjCUvbsqkqhp4DyTUIIrA": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "yXtFWs2QsPC1-4Fgl-IjEA": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "KMAf8NOYTqB8cqXeaKiNvA": {
+      "room": "null",
+      "source": "manual:accepted"
+    }
+  },
+  "after_grounding": {
+    "kL2aLK_dUAbq6oId62OSfQ": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "n6yc-Ltt6wsg7d3peOph5Q": {
+      "room": "null",
+      "source": "manual:accepted"
+    },
+    "HVRe6CyVU1wNk8cxTMIJsA": {
+      "room": "East stairs",
+      "source": "manual:accepted"
+    },
+    "uylwS83DFFy9kWxBBl-nlg": {
+      "room": "East stairs",
+      "source": "manual:accepted"
+    },
+    "DMjCUvbsqkqhp4DyTUIIrA": {
+      "room": "East stairs",
+      "source": "manual:accepted"
+    },
+    "yXtFWs2QsPC1-4Fgl-IjEA": {
+      "room": "East stairs",
+      "source": "manual:accepted"
+    },
+    "KMAf8NOYTqB8cqXeaKiNvA": {
+      "room": "East stairs",
+      "source": "manual:accepted"
+    }
+  },
+  "removed_edges": [
+    {
+      "source_pano_id": "kL2aLK_dUAbq6oId62OSfQ",
+      "source_room_before": "null",
+      "target_pano_id": "n6yc-Ltt6wsg7d3peOph5Q",
+      "target_room_before": "Room 27",
+      "geocentric_heading_deg": 329.56146,
+      "description": null
+    },
+    {
+      "source_pano_id": "n6yc-Ltt6wsg7d3peOph5Q",
+      "source_room_before": "Room 27",
+      "target_pano_id": "kL2aLK_dUAbq6oId62OSfQ",
+      "target_room_before": "null",
+      "geocentric_heading_deg": 149.56146,
+      "description": null
+    }
+  ],
+  "added_edges": [
+    {
+      "source_pano_id": "kL2aLK_dUAbq6oId62OSfQ",
+      "source_room_after": "null",
+      "target_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+      "target_room_after": "East stairs",
+      "geocentric_heading_deg": 330.0,
+      "description": "manual:east_stairs_room1_room27"
+    },
+    {
+      "source_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+      "source_room_after": "East stairs",
+      "target_pano_id": "kL2aLK_dUAbq6oId62OSfQ",
+      "target_room_after": "null",
+      "geocentric_heading_deg": 149.99999,
+      "description": "manual:east_stairs_room1_room27"
+    },
+    {
+      "source_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+      "source_room_after": "East stairs",
+      "target_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "target_room_after": "East stairs",
+      "geocentric_heading_deg": 329.99999,
+      "description": "manual:east_stairs_room1_room27"
+    },
+    {
+      "source_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "source_room_after": "East stairs",
+      "target_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+      "target_room_after": "East stairs",
+      "geocentric_heading_deg": 149.99998,
+      "description": "manual:east_stairs_room1_room27"
+    },
+    {
+      "source_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "source_room_after": "East stairs",
+      "target_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "target_room_after": "East stairs",
+      "geocentric_heading_deg": 329.99998,
+      "description": "manual:east_stairs_room1_room27"
+    },
+    {
+      "source_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "source_room_after": "East stairs",
+      "target_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+      "target_room_after": "East stairs",
+      "geocentric_heading_deg": 149.99997,
+      "description": "manual:east_stairs_room1_room27"
+    },
+    {
+      "source_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "source_room_after": "East stairs",
+      "target_pano_id": "n6yc-Ltt6wsg7d3peOph5Q",
+      "target_room_after": "null",
+      "geocentric_heading_deg": 330.00015,
+      "description": "manual:east_stairs_room1_room27"
+    },
+    {
+      "source_pano_id": "n6yc-Ltt6wsg7d3peOph5Q",
+      "source_room_after": "null",
+      "target_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "target_room_after": "East stairs",
+      "geocentric_heading_deg": 150.00014,
+      "description": "manual:east_stairs_room1_room27"
+    },
+    {
+      "source_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "source_room_after": "East stairs",
+      "target_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+      "target_room_after": "East stairs",
+      "geocentric_heading_deg": 62.39497,
+      "description": "manual:east_stairs_room1_room27"
+    },
+    {
+      "source_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+      "source_room_after": "East stairs",
+      "target_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+      "target_room_after": "East stairs",
+      "geocentric_heading_deg": 242.39501,
+      "description": "manual:east_stairs_room1_room27"
+    }
+  ],
+  "side_edges": [
+    {
+      "source_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+      "target_pano_id": "uylwS83DFFy9kWxBBl-nlg",
+      "geocentric_heading_deg": 62.39497,
+      "description": "manual:east_stairs_room1_room27"
+    },
+    {
+      "source_pano_id": "uylwS83DFFy9kWxBBl-nlg",
+      "target_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+      "geocentric_heading_deg": 242.39499,
+      "description": "manual:east_stairs_room1_room27"
+    }
+  ],
+  "before_edge_count": 12090,
+  "after_edge_count": 12098,
+  "notes": [
+    "Room 27 endpoint n6yc-Ltt6wsg7d3peOph5Q was kept fixed.",
+    "kL2aLK_dUAbq6oId62OSfQ remains null and was moved minimally to align the East stairs chain to 330 degrees.",
+    "The direct kL2aLK_dUAbq6oId62OSfQ <-> n6yc-Ltt6wsg7d3peOph5Q edge was removed so the graph traverses the East stairs panos instead of skipping them.",
+    "Follow-up update added graph connectivity between KMAf8NOYTqB8cqXeaKiNvA and yXtFWs2QsPC1-4Fgl-IjEA after explicit manual request.",
+    "Follow-up update inferred HVRe6CyVU1wNk8cxTMIJsA -> uylwS83DFFy9kWxBBl-nlg from the original side relation and current main-chain rotation; the resulting heading is about 62 degrees, not 90 degrees.",
+    "Follow-up update set n6yc-Ltt6wsg7d3peOph5Q grounding to null.",
+    "Follow-up update adjusted KMAf8NOYTqB8cqXeaKiNvA relative to uylwS83DFFy9kWxBBl-nlg to the same approximately 62-degree side direction instead of due east.",
+    "Follow-up update corrected KMAf8NOYTqB8cqXeaKiNvA so the yXtFWs2QsPC1-4Fgl-IjEA -> KMAf8NOYTqB8cqXeaKiNvA edge is about 60 degrees.",
+    "Follow-up update moved KMAf8NOYTqB8cqXeaKiNvA closer to yXtFWs2QsPC1-4Fgl-IjEA while keeping it farther than the HVRe6CyVU1wNk8cxTMIJsA and uylwS83DFFy9kWxBBl-nlg pair."
+  ],
+  "follow_up_updates": [
+    {
+      "created_at": "2026-07-03",
+      "description": "Adjusted uylwS83DFFy9kWxBBl-nlg from due east to the inferred rotated original side relation from HVRe6CyVU1wNk8cxTMIJsA.",
+      "before_coordinates": {
+        "HVRe6CyVU1wNk8cxTMIJsA": {
+          "lat": 51.51997276536974,
+          "lng": -0.126852154644903
+        },
+        "uylwS83DFFy9kWxBBl-nlg": {
+          "lat": 51.51997276536764,
+          "lng": -0.12682992061242163
+        },
+        "KMAf8NOYTqB8cqXeaKiNvA": {
+          "lat": 51.51997276535575,
+          "lng": -0.12677703176549324
+        }
+      },
+      "after_coordinates": {
+        "HVRe6CyVU1wNk8cxTMIJsA": {
+          "lat": 51.51997276536974,
+          "lng": -0.126852154644903
+        },
+        "uylwS83DFFy9kWxBBl-nlg": {
+          "lat": 51.51997917611877,
+          "lng": -0.12683245166699944
+        },
+        "KMAf8NOYTqB8cqXeaKiNvA": {
+          "lat": 51.51997917610688,
+          "lng": -0.1267795628126262
+        }
+      },
+      "before_edges": {
+        "HVRe6CyVU1wNk8cxTMIJsA": [
+          {
+            "target_pano_id": "kL2aLK_dUAbq6oId62OSfQ",
+            "geocentric_heading_deg": 149.99999,
+            "description": "manual:east_stairs_room1_room27"
+          },
+          {
+            "target_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+            "geocentric_heading_deg": 329.99999,
+            "description": "manual:east_stairs_room1_room27"
+          },
+          {
+            "target_pano_id": "uylwS83DFFy9kWxBBl-nlg",
+            "geocentric_heading_deg": 90.0,
+            "description": "manual:east_stairs_room1_room27"
+          }
+        ],
+        "uylwS83DFFy9kWxBBl-nlg": [
+          {
+            "target_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+            "geocentric_heading_deg": 270.00002,
+            "description": "manual:east_stairs_room1_room27"
+          }
+        ]
+      },
+      "after_edges": {
+        "HVRe6CyVU1wNk8cxTMIJsA": [
+          {
+            "target_pano_id": "kL2aLK_dUAbq6oId62OSfQ",
+            "geocentric_heading_deg": 149.99999,
+            "description": "manual:east_stairs_room1_room27"
+          },
+          {
+            "target_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+            "geocentric_heading_deg": 329.99999,
+            "description": "manual:east_stairs_room1_room27"
+          },
+          {
+            "target_pano_id": "uylwS83DFFy9kWxBBl-nlg",
+            "geocentric_heading_deg": 62.39497,
+            "description": "manual:east_stairs_room1_room27"
+          }
+        ],
+        "uylwS83DFFy9kWxBBl-nlg": [
+          {
+            "target_pano_id": "HVRe6CyVU1wNk8cxTMIJsA",
+            "geocentric_heading_deg": 242.39499,
+            "description": "manual:east_stairs_room1_room27"
+          }
+        ]
+      },
+      "inferred_hv_to_uylw_heading_deg": 62.39497,
+      "side_distance_m": 1.538375599753392
+    },
+    {
+      "created_at": "2026-07-03",
+      "description": "Set n6yc-Ltt6wsg7d3peOph5Q grounding to null and adjusted KMAf8NOYTqB8cqXeaKiNvA to approximately 62 degrees from uylwS83DFFy9kWxBBl-nlg.",
+      "before_grounding": {
+        "n6yc-Ltt6wsg7d3peOph5Q": {
+          "room": "Room 27",
+          "source": "manual:accepted"
+        }
+      },
+      "after_grounding": {
+        "n6yc-Ltt6wsg7d3peOph5Q": {
+          "room": "null",
+          "source": "manual:accepted"
+        }
+      },
+      "before_coordinates": {
+        "KMAf8NOYTqB8cqXeaKiNvA": {
+          "lat": 51.51997917610688,
+          "lng": -0.1267795628126262
+        }
+      },
+      "after_coordinates": {
+        "KMAf8NOYTqB8cqXeaKiNvA": {
+          "lat": 51.51999442558044,
+          "lng": -0.12678558351057684
+        }
+      },
+      "relative_placement": {
+        "source_pano_id": "uylwS83DFFy9kWxBBl-nlg",
+        "target_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+        "bearing_deg": 62.39497,
+        "distance_m": 3.6593912537067763,
+        "note": "No graph edge was added for this relation."
+      }
+    },
+    {
+      "created_at": "2026-07-03",
+      "description": "Added bidirectional graph connectivity between KMAf8NOYTqB8cqXeaKiNvA and yXtFWs2QsPC1-4Fgl-IjEA.",
+      "before_edge_count": 12096,
+      "after_edge_count": 12098,
+      "before_neighbors": {
+        "yXtFWs2QsPC1-4Fgl-IjEA": [
+          {
+            "target_pano_id": "DMjCUvbsqkqhp4DyTUIIrA",
+            "geocentric_heading_deg": 149.99997,
+            "description": "manual:east_stairs_room1_room27"
+          },
+          {
+            "target_pano_id": "n6yc-Ltt6wsg7d3peOph5Q",
+            "geocentric_heading_deg": 330.00015,
+            "description": "manual:east_stairs_room1_room27"
+          }
+        ],
+        "KMAf8NOYTqB8cqXeaKiNvA": []
+      },
+      "after_edges": {
+        "yXtFWs2QsPC1-4Fgl-IjEA": [
+          {
+            "target_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+            "geocentric_heading_deg": 99.11676,
+            "description": "manual:east_stairs_room1_room27"
+          }
+        ],
+        "KMAf8NOYTqB8cqXeaKiNvA": [
+          {
+            "target_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+            "geocentric_heading_deg": 279.11683,
+            "description": "manual:east_stairs_room1_room27"
+          }
+        ]
+      }
+    },
+    {
+      "created_at": "2026-07-03",
+      "description": "Corrected KMAf8NOYTqB8cqXeaKiNvA placement so the yXtFWs2QsPC1-4Fgl-IjEA to KMA edge is approximately 60 degrees instead of approximately 99 degrees.",
+      "before_coordinates": {
+        "KMAf8NOYTqB8cqXeaKiNvA": {
+          "lat": 51.51999442558044,
+          "lng": -0.12678558351057684
+        }
+      },
+      "after_coordinates": {
+        "KMAf8NOYTqB8cqXeaKiNvA": {
+          "lat": 51.520031856707746,
+          "lng": -0.12679537403220642
+        }
+      },
+      "distance_m_preserved_from_yXt_to_KMA": 6.693499352689991,
+      "before_headings": {
+        "yXt_to_KMA": 99.11676,
+        "KMA_to_yXt": 279.11683
+      },
+      "after_edges": {
+        "yXtFWs2QsPC1-4Fgl-IjEA": [
+          {
+            "target_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+            "geocentric_heading_deg": 62.39497,
+            "description": "manual:east_stairs_room1_room27"
+          }
+        ],
+        "KMAf8NOYTqB8cqXeaKiNvA": [
+          {
+            "target_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+            "geocentric_heading_deg": 242.39504,
+            "description": "manual:east_stairs_room1_room27"
+          }
+        ]
+      }
+    },
+    {
+      "created_at": "2026-07-03",
+      "description": "Moved KMAf8NOYTqB8cqXeaKiNvA closer to yXtFWs2QsPC1-4Fgl-IjEA while preserving the approximately 62-degree edge direction.",
+      "before_coordinates": {
+        "KMAf8NOYTqB8cqXeaKiNvA": {
+          "lat": 51.520031856707746,
+          "lng": -0.12679537403220642
+        }
+      },
+      "after_coordinates": {
+        "KMAf8NOYTqB8cqXeaKiNvA": {
+          "lat": 51.52001921294812,
+          "lng": -0.1268342338336375
+        }
+      },
+      "distance_constraints": {
+        "HVRe_to_uylw_distance_m": 1.5383777250145718,
+        "old_yXt_to_KMA_distance_m": 6.693499353501859,
+        "new_yXt_to_KMA_distance_m": 3.6593912537067763,
+        "new_distance_is_greater_than_HVRe_to_uylw": true,
+        "new_distance_is_less_than_old_yXt_to_KMA": true
+      },
+      "after_edges": {
+        "yXtFWs2QsPC1-4Fgl-IjEA": [
+          {
+            "target_pano_id": "KMAf8NOYTqB8cqXeaKiNvA",
+            "geocentric_heading_deg": 62.39497,
+            "description": "manual:east_stairs_room1_room27"
+          }
+        ],
+        "KMAf8NOYTqB8cqXeaKiNvA": [
+          {
+            "target_pano_id": "yXtFWs2QsPC1-4Fgl-IjEA",
+            "geocentric_heading_deg": 242.39501,
+            "description": "manual:east_stairs_room1_room27"
+          }
+        ]
+      }
+    }
+  ]
+}

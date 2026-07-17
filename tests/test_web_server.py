@@ -10,7 +10,7 @@ except ModuleNotFoundError:
     TestClient = None
 
 if TestClient is not None:
-    from memory_nav.web import MemoryGuidanceConfig, PanoExportConfig, WebConfig, create_app
+    from memory_nav.web import PanoExportConfig, WebConfig, create_app
 
 
 @unittest.skipIf(TestClient is None, "FastAPI test dependencies are not installed")
@@ -23,7 +23,6 @@ class WebServerTests(unittest.TestCase):
         (pano_dir / "trajectory.js").write_text("window.PanoTrajectory = {};", encoding="utf-8")
         config = WebConfig(
             pano_export="never",
-            memory_guidance=MemoryGuidanceConfig(upload_dir=str(Path(tmpdir) / "uploads")),
             pano_viewer=PanoExportConfig(output_dir=str(pano_dir)),
         )
         return TestClient(create_app(config))
@@ -36,10 +35,6 @@ class WebServerTests(unittest.TestCase):
             self.assertEqual(health.status_code, 200)
             self.assertEqual(health.json()["status"], "ok")
 
-            memory_page = client.get("/memory-guidance/")
-            self.assertEqual(memory_page.status_code, 200)
-            self.assertIn("RAG", memory_page.text)
-
             pano_data = client.get("/pano-viewer/viewer_data.json")
             self.assertEqual(pano_data.status_code, 200)
             self.assertEqual(pano_data.json(), {})
@@ -47,14 +42,6 @@ class WebServerTests(unittest.TestCase):
             trajectory_script = client.get("/pano-viewer/trajectory.js")
             self.assertEqual(trajectory_script.status_code, 200)
             self.assertIn("PanoTrajectory", trajectory_script.text)
-
-    def test_memory_guidance_missing_target(self) -> None:
-        with tempfile.TemporaryDirectory() as tmpdir:
-            client = self.make_client(tmpdir)
-            response = client.post("/memory-guidance/api/guide", json={})
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["action_request"], "missing_target")
 
     def test_copy_pano_viewer_includes_trajectory_parser(self) -> None:
         from memory_nav.web.pano_export import copy_viewer

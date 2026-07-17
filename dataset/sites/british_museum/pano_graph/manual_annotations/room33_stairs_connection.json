@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "status": "applied",
+  "site": "british_museum",
+  "created_at": "2026-07-03",
+  "description": "Manual cross-floor stairs connection from the relocated Room 24 stairs/elevator cluster to the Room 33 endpoint.",
+  "source_pano_id": "JVokeJ_hp3iYinNNVxL9Jg",
+  "target_pano_id": "2Rr-tJj2VN11Ev40-1HLzg",
+  "target_room_grounding": "Room 33",
+  "desired_source_to_target_heading_deg": 330.0,
+  "manual_edge_description": "manual:room33_stairs_connection",
+  "before": {
+    "source_to_target_heading": 4.56485,
+    "target_to_source_heading": 184.56486,
+    "source_to_target_distance_m": 9.51259678873249,
+    "target_coordinates": {
+      "lat": 51.520123827157825,
+      "lng": -0.12764857437016397
+    },
+    "target_room_grounding": "Room 33",
+    "target_grounding_source": "manual:accepted",
+    "target_neighbors": [
+      {
+        "target_pano_id": "XFxMhUF07LH9KJOxIQTEYA",
+        "geocentric_heading_deg": 62.4103,
+        "description": null
+      }
+    ],
+    "room33_neighbor_to_target_edges": [
+      {
+        "target_pano_id": "2Rr-tJj2VN11Ev40-1HLzg",
+        "geocentric_heading_deg": 242.41035,
+        "description": null
+      }
+    ]
+  },
+  "after": {
+    "source_to_target_heading": 330.0,
+    "target_to_source_heading": 149.99995,
+    "source_to_target_distance_m": 9.512596787979724,
+    "target_coordinates": {
+      "lat": 51.52011263713794,
+      "lng": -0.12772825913388594
+    },
+    "target_room_grounding": "Room 33",
+    "target_grounding_source": "manual:accepted",
+    "target_neighbors": [
+      {
+        "target_pano_id": "XFxMhUF07LH9KJOxIQTEYA",
+        "geocentric_heading_deg": 324.61344,
+        "description": null
+      },
+      {
+        "target_pano_id": "JVokeJ_hp3iYinNNVxL9Jg",
+        "geocentric_heading_deg": 149.99995,
+        "description": "manual:room33_stairs_connection"
+      }
+    ],
+    "room33_neighbor_to_target_edges": [
+      {
+        "target_pano_id": "2Rr-tJj2VN11Ev40-1HLzg",
+        "geocentric_heading_deg": 144.61343,
+        "description": null
+      }
+    ]
+  },
+  "notes": [
+    "The target pano remains grounded to Room 33.",
+    "The target pano was translated to preserve its prior distance from the source while making source->target equal to 330 degrees.",
+    "Existing target<->Room 33 neighbor connectivity was preserved and headings were recomputed from the updated coordinates.",
+    "Corrected source/target room metadata from West stairs to North stairs for the Room 24/33 stair endpoints."
+  ],
+  "follow_up_updates": [
+    {
+      "description": "Upgraded the single 2Rr endpoint adjustment into a full Room 33/Room 33a translation.",
+      "translation_annotation_path": "/home/allenw4/memory-based-sa-nav/dataset/sites/british_museum/pano_graph/manual_annotations/room33_room33a_translation.json",
+      "rooms": [
+        "Room 33",
+        "Room 33a"
+      ],
+      "moved_pano_count": 214,
+      "translation_delta": {
+        "lat": -1.1190019883144942e-05,
+        "lng": -7.968476372197109e-05
+      },
+      "after_key_edges": {
+        "source_to_target": [
+          {
+            "target_pano_id": "2Rr-tJj2VN11Ev40-1HLzg",
+            "geocentric_heading_deg": 330.0,
+            "description": "manual:room33_stairs_connection"
+          }
+        ],
+        "target_to_source": [
+          {
+            "target_pano_id": "JVokeJ_hp3iYinNNVxL9Jg",
+            "geocentric_heading_deg": 149.99995,
+            "description": "manual:room33_stairs_connection"
+          }
+        ],
+        "target_neighbors": [
+          {
+            "target_pano_id": "XFxMhUF07LH9KJOxIQTEYA",
+            "geocentric_heading_deg": 324.61344,
+            "description": null
+          },
+          {
+            "target_pano_id": "JVokeJ_hp3iYinNNVxL9Jg",
+            "geocentric_heading_deg": 149.99995,
+            "description": "manual:room33_stairs_connection"
+          }
+        ]
+      }
+    },
+    {
+      "created_at": "2026-07-03",
+      "description": "Added an additional valid West stairs to Room 33 endpoint connection.",
+      "pair": {
+        "source_pano_id": "AWx2MeydUowr3t9xi77W3w",
+        "source_room": "North stairs",
+        "target_pano_id": "2Rr-tJj2VN11Ev40-1HLzg",
+        "target_room": "Room 33"
+      },
+      "added_edges": [
+        {
+          "source_pano_id": "AWx2MeydUowr3t9xi77W3w",
+          "source_room": "North stairs",
+          "target_pano_id": "2Rr-tJj2VN11Ev40-1HLzg",
+          "target_room": "Room 33",
+          "geocentric_heading_deg": 341.9492,
+          "description": "manual:room33_stairs_connection"
+        },
+        {
+          "source_pano_id": "2Rr-tJj2VN11Ev40-1HLzg",
+          "source_room": "Room 33",
+          "target_pano_id": "AWx2MeydUowr3t9xi77W3w",
+          "target_room": "North stairs",
+          "geocentric_heading_deg": 161.94917,
+          "description": "manual:room33_stairs_connection"
+        }
+      ],
+      "before_edge_count": 12090,
+      "after_edge_count": 12092
+    }
+  ],
+  "additional_edges": [
+    {
+      "source_pano_id": "AWx2MeydUowr3t9xi77W3w",
+      "source_room": "North stairs",
+      "target_pano_id": "2Rr-tJj2VN11Ev40-1HLzg",
+      "target_room": "Room 33",
+      "geocentric_heading_deg": 341.9492,
+      "description": "manual:room33_stairs_connection"
+    },
+    {
+      "source_pano_id": "2Rr-tJj2VN11Ev40-1HLzg",
+      "source_room": "Room 33",
+      "target_pano_id": "AWx2MeydUowr3t9xi77W3w",
+      "target_room": "North stairs",
+      "geocentric_heading_deg": 161.94917,
+      "description": "manual:room33_stairs_connection"
+    }
+  ]
+}

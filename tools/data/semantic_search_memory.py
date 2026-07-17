@@ -29,11 +29,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--top-k", type=int, default=10)
     parser.add_argument(
         "--index-path",
-        default="artifacts/memory_localization/floor0_siglip2_images_fov90.npz",
+        default="artifacts/memory_localization/floor0_1_siglip2_images_fov90.npz",
     )
     parser.add_argument(
         "--metadata-path",
-        default="artifacts/memory_localization/floor0_siglip2_images_fov90.metadata.json",
+        default="artifacts/memory_localization/floor0_1_siglip2_images_fov90.metadata.json",
     )
     parser.add_argument("--embedding-model", default=DEFAULT_SIGLIP2_MODEL)
     parser.add_argument("--device", default="auto")

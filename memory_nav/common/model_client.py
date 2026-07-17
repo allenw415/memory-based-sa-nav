@@ -208,11 +208,15 @@ class ModelResponseClient:
                 )
             ),
         )
+        self.logical_request_count = 0
+        self.http_attempt_count = 0
+        self.retry_count = 0
 
     def is_configured(self) -> bool:
         return self.response_client is not None or bool(self.api_key) or self.api_base != DEFAULT_OPENAI_API_BASE
 
     def create(self, request_body: dict) -> dict:
+        self.logical_request_count += 1
         if self.response_client is not None:
             return self._normalize_payload(self.response_client(request_body))
 
@@ -247,11 +251,13 @@ class ModelResponseClient:
             method="POST",
         )
         for attempt in range(1, self.max_http_retries + 1):
+            self.http_attempt_count += 1
             try:
                 with urllib.request.urlopen(request, timeout=self.request_timeout) as response:
                     return self._normalize_payload(json.loads(response.read().decode("utf-8")))
             except TimeoutError as exc:
                 if attempt < self.max_http_retries:
+                    self.retry_count += 1
                     self._sleep_before_retry(attempt)
                     continue
                 raise TimeoutError(
@@ -259,6 +265,7 @@ class ModelResponseClient:
                 ) from exc
             except socket.timeout as exc:
                 if attempt < self.max_http_retries:
+                    self.retry_count += 1
                     self._sleep_before_retry(attempt)
                     continue
                 raise TimeoutError(
@@ -267,6 +274,7 @@ class ModelResponseClient:
             except urllib.error.HTTPError as exc:
                 body = _read_http_error_body(exc)
                 if exc.code in TRANSIENT_HTTP_STATUS_CODES and attempt < self.max_http_retries:
+                    self.retry_count += 1
                     self._sleep_before_retry(attempt)
                     continue
                 detail = _format_http_error_detail(body)
@@ -275,6 +283,7 @@ class ModelResponseClient:
                 ) from exc
             except urllib.error.URLError as exc:
                 if attempt < self.max_http_retries:
+                    self.retry_count += 1
                     self._sleep_before_retry(attempt)
                     continue
                 raise RuntimeError(f"Model API request failed from {endpoint}: {exc.reason}") from exc
@@ -419,6 +428,19 @@ class ModelResponseClient:
             generation_config["temperature"] = self.temperature
         elif gemini_schema is not None:
             generation_config["temperature"] = 0
+        model_name = str(request_body.get("model") or "")
+        reasoning = request_body.get("reasoning")
+        reasoning_effort = (
+            str(reasoning.get("effort") or "").strip().lower()
+            if isinstance(reasoning, dict)
+            else ""
+        )
+        if model_name.startswith("gemma-4-") and reasoning_effort:
+            generation_config["thinkingConfig"] = {
+                "thinkingLevel": (
+                    "high" if reasoning_effort == "high" else "minimal"
+                )
+            }
         if generation_config:
             payload["generationConfig"] = generation_config
         return payload

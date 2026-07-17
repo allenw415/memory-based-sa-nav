@@ -36,12 +36,12 @@ load_dotenv(PROJECT_ROOT / ".env")
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run image-memory localization for a single pano id.")
     parser.add_argument("--pano-id", required=True)
-    parser.add_argument("--index-path", default="artifacts/memory_localization/floor0_siglip2_images.npz")
+    parser.add_argument("--index-path", default="artifacts/memory_localization/floor0_1_siglip2_images_fov90.npz")
     parser.add_argument(
         "--metadata-path",
-        default="artifacts/memory_localization/floor0_siglip2_images.metadata.json",
+        default="artifacts/memory_localization/floor0_1_siglip2_images_fov90.metadata.json",
     )
-    parser.add_argument("--faiss-path", default="artifacts/memory_localization/floor0_siglip2_images.faiss")
+    parser.add_argument("--faiss-path", default="artifacts/memory_localization/floor0_1_siglip2_images_fov90.faiss")
     parser.add_argument("--no-faiss", action="store_true")
     parser.add_argument("--artifacts-dir", default="dataset/sites/british_museum/normalized")
     parser.add_argument("--embedding-model", default=DEFAULT_EMBEDDING_MODEL)
